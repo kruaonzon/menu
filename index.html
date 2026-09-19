@@ -11,6 +11,7 @@
             --primary: #107c41;
             --primary-dark: #0b5e31;
             --gold: #d4af37;
+            --danger: #ef4444;
             --bg-dark: #121820;
             --text-main: #1f2937;
             --text-muted: #6b7280;
@@ -67,7 +68,41 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.25s ease, filter 0.25s ease;
+        }
+
+        /* เอฟเฟกต์รูปภาพเมื่อสินค้าหมด (เฟดจาง 65%) */
+        .hero-img.is-soldout {
+            opacity: 0.35 !important;
+            filter: grayscale(40%);
+        }
+
+        /* ป้ายลอยคาดทับรูปภาพใหญ่เมื่อสินค้าหมด */
+        .soldout-hero-banner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(220, 38, 38, 0.92);
+            backdrop-filter: blur(4px);
+            color: #ffffff;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            z-index: 8;
+            display: none;
+            text-align: center;
+            white-space: nowrap;
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
         .top-bar {
@@ -129,7 +164,6 @@
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        /* ปุ่มดูรูปขนาดใหญ่ */
         .zoom-btn {
             width: 34px;
             height: 34px;
@@ -281,7 +315,6 @@
         }
         .carousel-track::-webkit-scrollbar { display: none; }
 
-        /* ตัวคั่นระหว่างหมวดหมู่ */
         .category-divider {
             flex: 0 0 auto;
             display: flex;
@@ -325,6 +358,7 @@
             cursor: pointer;
             text-align: center;
             transition: transform 0.2s;
+            position: relative;
         }
         .thumb-item:active { transform: scale(0.95); }
 
@@ -338,6 +372,7 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             margin-bottom: 4px;
             flex-shrink: 0;
+            position: relative;
         }
 
         .thumb-item.active .thumb-circle {
@@ -350,11 +385,35 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: opacity 0.2s, filter 0.2s;
+        }
+
+        /* รูปวงกลมเมื่อสินค้าหมด (เฟดจาง 60%) */
+        .thumb-item.sold-out .thumb-circle img {
+            opacity: 0.35;
+            filter: grayscale(40%);
+        }
+
+        /* ป้ายคาดลอยบนรูปวงกลม */
+        .thumb-soldout-tag {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(220, 38, 38, 0.95);
+            color: #ffffff;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            pointer-events: none;
         }
 
         .thumb-text-box {
             width: 100%;
-            min-height: 38px; /* ล็อกความสูงให้เท่ากันทุกเมนู */
+            min-height: 38px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -374,6 +433,10 @@
             word-break: break-word;
         }
 
+        .thumb-item.sold-out .thumb-name-main {
+            color: var(--text-muted);
+        }
+
         .thumb-name-sub {
             font-size: 9.5px;
             color: var(--primary);
@@ -383,6 +446,10 @@
             word-break: break-word;
         }
 
+        .thumb-item.sold-out .thumb-name-sub {
+            color: #9ca3af;
+        }
+
         .thumb-price {
             font-size: 11px;
             font-weight: 700;
@@ -390,7 +457,11 @@
             margin-top: 2px;
         }
 
-        /* แถวล่างสุด: ข้อมูลและปุ่มโทร */
+        .thumb-item.sold-out .thumb-price {
+            color: #9ca3af;
+        }
+
+        /* แถบล่างสุด: ปุ่มโทรขนาดเล็ก */
         .bottom-action-bar {
             display: flex;
             align-items: center;
@@ -404,7 +475,6 @@
             color: var(--text-muted);
         }
 
-        /* ปุ่มโทรขนาดเล็ก กะทัดรัด สไตล์ Minimal Pill */
         .compact-call-btn {
             background-color: var(--primary);
             color: #fff;
@@ -421,7 +491,7 @@
         }
         .compact-call-btn:active { background-color: var(--primary-dark); }
 
-        /* หน้าต่างดูภาพใหญ่เต็มจอ (Fullscreen Modal) */
+        /* Lightbox ภาพขนาดใหญ่ */
         .lightbox-modal {
             position: fixed;
             inset: 0;
@@ -494,7 +564,7 @@
     <div class="hero-section" onclick="openLightbox()">
         <div class="top-bar">
             <div class="shop-brand">
-                <img class="shop-logo" id="shopLogo" src="logo.png" onerror="handleLogoError(this)" alt="โลโก้">
+                <img class="shop-logo" id="shopLogo" src="Logo.png" onerror="handleLogoError(this)" alt="โลโก้">
                 <span class="shop-title">ครัวออนซอน</span>
             </div>
             <div class="top-right-actions">
@@ -505,6 +575,9 @@
 
         <button class="nav-btn nav-prev" onclick="event.stopPropagation(); prevMenu()">❮</button>
         <button class="nav-btn nav-next" onclick="event.stopPropagation(); nextMenu()">❯</button>
+
+        <!-- ป้ายคาดลอยเมื่อสินค้าหมด -->
+        <div class="soldout-hero-banner" id="soldOutBanner">❌ สินค้าหมดชั่วคราว</div>
 
         <img id="heroImg" class="hero-img" src="" alt="อาหาร">
     </div>
@@ -527,7 +600,7 @@
             <div class="category-scroll" id="catScroll"></div>
         </div>
 
-        <!-- รายการเมนูย่อยเลื่อนแนวนอนแบบต่อเนื่อง -->
+        <!-- รายการ Carousel เมนูย่อยต่อเนื่อง -->
         <div>
             <div class="carousel-header-row">
                 <div class="carousel-title" id="carouselCount">เมนูทั้งหมด:</div>
@@ -535,7 +608,7 @@
             <div class="carousel-track" id="menuCarousel"></div>
         </div>
 
-        <!-- แถบล่างสุด: ปุ่มโทรสั่งอาหารขนาดเล็ก -->
+        <!-- แถบล่างสุด: ปุ่มโทรขนาดเล็ก -->
         <div class="bottom-action-bar">
             <div class="shop-info-text">สด สะอาด อร่อย ทุกวัน</div>
             <a href="tel:0974624632" class="compact-call-btn" id="phoneCallBtn">
@@ -556,9 +629,9 @@
     // ==========================================
     // ⚙️ ตั้งค่าข้อมูลร้านค้าของคุณ
     // ==========================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwvk1lGTKvUcoNfcrIF42qMdXBsPPyf94uFNg6C8NVoPdyIasqghxTAzmfwKEw2Uv_A/exec'; // 👈 URL จาก Sheet ของคุณ
-    const SHOP_PHONE = '0974624632'; // 👈 เบอร์โทรจริงของร้านคุณ
-    const SHOP_LOGO_URL = 'Logo.png'; // 👈 ชื่อไฟล์รูปโลโก้บน GitHub
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwvk1lGTKvUcoNfcrIF42qMdXBsPPyf94uFNg6C8NVoPdyIasqghxTAzmfwKEw2Uv_A/exec';
+    const SHOP_PHONE = '0974624632';
+    const SHOP_LOGO_URL = 'Logo.png'; // รองรับทั้ง Logo.png และ logo.png
 
     const FALLBACK_IMG = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600';
 
@@ -566,12 +639,12 @@
     let categories = [];
     let currentIndex = 0;
 
-    // ติดตั้งเบอร์โทร
     document.getElementById('phoneCallBtn').href = `tel:${SHOP_PHONE}`;
 
-    // จัดการข้อผิดพลาดของโลโก้
     function handleLogoError(img) {
-        if (!img.src.includes('logo.jpg')) {
+        if (!img.src.includes('logo.png')) {
+            img.src = 'logo.png';
+        } else if (!img.src.includes('logo.jpg')) {
             img.src = 'logo.jpg';
         } else {
             img.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=100';
@@ -581,7 +654,6 @@
         document.getElementById('shopLogo').src = SHOP_LOGO_URL;
     }
 
-    // ฟังก์ชันแยกชื่ออาหารและข้อความในวงเล็บ
     function parseMenuName(rawName) {
         if (!rawName) return { main: '', sub: '' };
         const match = rawName.match(/^(.+?)\s*(\([^\)]+\))\s*$/);
@@ -594,7 +666,6 @@
         return { main: rawName.trim(), sub: '' };
     }
 
-    // ฟังก์ชันแปลงลิงก์ Google Drive ให้เปิดบนเว็บได้แบบคมชัด
     function getDriveId(url) {
         if (!url) return null;
         let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -635,7 +706,6 @@
         }
     }
 
-    // ดึงรายชื่อหมวดหมู่
     function initCategories() {
         const catScroll = document.getElementById('catScroll');
         const rawCats = [...new Set(allMenus.map(m => m.category).filter(Boolean))];
@@ -652,7 +722,7 @@
         });
     }
 
-    // วาด Carousel ยาวต่อเนื่องทุกหมวด พร้อมตัวคั่นระหว่างหมวด
+    // วาด Carousel พร้อมป้าย "หมด" บนการ์ดเมนูที่หมด
     function renderContinuousCarousel() {
         const track = document.getElementById('menuCarousel');
         track.innerHTML = '';
@@ -660,7 +730,6 @@
         let lastCategory = null;
 
         allMenus.forEach((item, idx) => {
-            // เพิ่มตัวคั่นระหว่างหมวด
             if (item.category && item.category !== lastCategory) {
                 if (lastCategory !== null) {
                     const divider = document.createElement('div');
@@ -675,8 +744,10 @@
             }
 
             const parsed = parseMenuName(item.name);
+            const isSoldOut = (item.isAvailable === false || item.isAvailable === 'false');
+
             const div = document.createElement('div');
-            div.className = `thumb-item ${idx === 0 ? 'active' : ''}`;
+            div.className = `thumb-item ${idx === 0 ? 'active' : ''} ${isSoldOut ? 'sold-out' : ''}`;
             div.id = `thumb-${idx}`;
             div.onclick = () => selectMenu(idx);
 
@@ -687,6 +758,7 @@
                 <div class="thumb-circle">
                     <img src="${primarySrc}" loading="lazy" 
                          onerror="if(this.src!=='${altSrc}'){this.src='${altSrc}'}else{this.src='${FALLBACK_IMG}'}">
+                    ${isSoldOut ? '<div class="thumb-soldout-tag">หมด</div>' : ''}
                 </div>
                 <div class="thumb-text-box">
                     <div class="thumb-name-main">${parsed.main}</div>
@@ -698,7 +770,6 @@
         });
     }
 
-    // เลื่อนไปหาหมวดหมู่ที่คลิก
     function scrollToCategory(category) {
         const targetIdx = allMenus.findIndex(m => m.category === category);
         if (targetIdx !== -1) {
@@ -706,7 +777,6 @@
         }
     }
 
-    // อัปเดตแถบชิปหมวดหมู่ด้านบนให้ตรงกับเมนูที่กำลังแสดง
     function updateActiveCategoryChip(currentCat) {
         categories.forEach((cat, idx) => {
             const chip = document.getElementById(`chip-${idx}`);
@@ -719,16 +789,16 @@
             }
         });
 
-        // อัปเดตจำนวนเมนูในหมวดนี้ เช่น (12 เมนู)
         const countInCat = allMenus.filter(m => m.category === currentCat).length;
         document.getElementById('carouselCount').innerText = `${currentCat} (${countInCat} เมนู):`;
     }
 
-    // เลือกเมนูมาแสดง
+    // แสดงเมนูที่เลือก พร้อมเอฟเฟกต์เฟดภาพและป้ายคาดเมื่อสินค้าหมด
     function selectMenu(idx) {
         if (!allMenus[idx]) return;
         currentIndex = idx;
         const item = allMenus[idx];
+        const isSoldOut = (item.isAvailable === false || item.isAvailable === 'false');
 
         // ไฮไลต์ไอคอนวงกลม
         document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
@@ -738,10 +808,20 @@
             activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
-        // เปลี่ยนภาพใหญ่
+        // จัดการสถานะภาพใหญ่และป้ายสินค้าหมด
         const heroImg = document.getElementById('heroImg');
-        heroImg.style.opacity = '0.3';
-        
+        const soldOutBanner = document.getElementById('soldOutBanner');
+
+        heroImg.style.opacity = '0.2';
+
+        if (isSoldOut) {
+            heroImg.classList.add('is-soldout');
+            soldOutBanner.style.display = 'block';
+        } else {
+            heroImg.classList.remove('is-soldout');
+            soldOutBanner.style.display = 'none';
+        }
+
         const primarySrc = formatDriveImage(item.imageUrl, false);
         const altSrc = formatDriveImage(item.imageUrl, true);
 
@@ -754,10 +834,12 @@
                     this.src = FALLBACK_IMG;
                 }
             };
-            heroImg.style.opacity = '1';
+            if (!isSoldOut) {
+                heroImg.style.opacity = '1';
+            }
         }, 100);
 
-        // แสดงชื่อเมนูแบบแยกบรรทัด
+        // แสดงชื่อเมนู
         const parsed = parseMenuName(item.name);
         document.getElementById('heroNameMain').innerText = parsed.main;
         document.getElementById('heroNameSub').innerText = parsed.sub;
@@ -774,7 +856,6 @@
         }
         document.getElementById('heroSubPrice').innerText = subText;
 
-        // อัปเดตแถบหมวดหมู่
         updateActiveCategoryChip(item.category);
     }
 
@@ -788,16 +869,16 @@
         selectMenu(newIdx);
     }
 
-    // ระบบดูภาพใหญ่ (Lightbox)
     function openLightbox() {
         const item = allMenus[currentIndex];
         if (!item) return;
         const modal = document.getElementById('lightboxModal');
         const img = document.getElementById('lightboxImg');
         const caption = document.getElementById('lightboxCaption');
+        const isSoldOut = (item.isAvailable === false || item.isAvailable === 'false');
 
         img.src = formatDriveImage(item.imageUrl, false);
-        caption.innerText = item.name + ` - ฿${item.normalPrice || 0}`;
+        caption.innerText = item.name + ` - ฿${item.normalPrice || 0}` + (isSoldOut ? ' (สินค้าหมด)' : '');
         modal.style.display = 'flex';
     }
 
