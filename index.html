@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="referrer" content="no-referrer">
     <title>ครัวออนซอน - เมนูอาหารออนไลน์</title>
+    <!-- Preconnect เร่งสปีดการโหลด Font และ CDN รูปภาพล่วงหน้า -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://lh3.googleusercontent.com">
+    <link rel="preconnect" href="https://script.google.com">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,7 +20,7 @@
             --bg-dark: #121820;
             --text-main: #1f2937;
             --text-muted: #6b7280;
-            --card-width: 104px; /* ขยายความกว้างเพื่อรองรับรูป 84px */
+            --card-width: 104px;
         }
 
         * {
@@ -200,7 +205,7 @@
         .nav-prev { left: 8px; }
         .nav-next { right: 8px; }
 
-        /* 2. การ์ดรายละเอียดด้านล่าง: ปรับให้ชิดติดกัน ไม่ดันแยกออกจากกัน */
+        /* 2. การ์ดรายละเอียดด้านล่าง: กระชับ แน่น สวยงาม */
         .detail-sheet {
             width: 100%;
             height: 58%;
@@ -213,12 +218,11 @@
             padding: 14px 16px 12px 16px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* สำคัญ: ยกเลิก space-between เพื่อไม่ให้เกิดช่องว่างโล่ง */
-            gap: 8px; /* ควบคุมระยะห่างระหว่างกลุ่มให้กระชับพอดี */
+            justify-content: flex-start;
+            gap: 8px;
             box-shadow: 0 -8px 25px rgba(0,0,0,0.08);
         }
 
-        /* หัวเรื่องและราคา */
         .header-row {
             display: flex;
             justify-content: space-between;
@@ -232,7 +236,7 @@
         }
 
         .menu-name-main {
-            font-size: 21px; /* ขยายชื่อเมนูให้ใหญ่ ชัดเจน */
+            font-size: 21px;
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.15;
@@ -252,7 +256,7 @@
         }
 
         .menu-price {
-            font-size: 26px; /* ขยายราคาให้เด่นชัด */
+            font-size: 26px;
             font-weight: 700;
             color: var(--primary);
             line-height: 1;
@@ -265,7 +269,6 @@
             line-height: 1;
         }
 
-        /* แถบหมวดหมู่: อยู่ชิดกับหัวเรื่อง */
         .category-scroll {
             display: flex;
             gap: 6px;
@@ -293,9 +296,8 @@
             font-weight: 600;
         }
 
-        /* ส่วน Carousel เมนูย่อย (ชิดติดกับแถบหมวดหมู่ทันที ไม่มีช่องว่างแล้ว) */
         .carousel-container {
-            flex: 1; /* ใช้พื้นที่ความสูงที่เหลืออย่างเต็มที่ */
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -358,7 +360,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* การ์ดเมนูทรงกลม */
         .thumb-item {
             flex: 0 0 var(--card-width);
             width: var(--card-width);
@@ -372,7 +373,6 @@
         }
         .thumb-item:active { transform: scale(0.95); }
 
-        /* ขยายขนาดรูปเมนูด้านล่างให้ใหญ่เด่นชัดมากถึง 84px! */
         .thumb-circle {
             width: 84px;
             height: 84px;
@@ -420,7 +420,6 @@
             pointer-events: none;
         }
 
-        /* กล่องข้อความและราคาด้านล่าง: ขยายให้อ่านง่าย ชัดเจน */
         .thumb-text-box {
             width: 100%;
             min-height: 34px;
@@ -431,7 +430,7 @@
         }
 
         .thumb-name-main {
-            font-size: 11.5px; /* ขยายตัวหนังสือชื่อเมนูย่อย */
+            font-size: 11.5px;
             font-weight: 500;
             color: var(--text-main);
             width: 100%;
@@ -461,7 +460,7 @@
         }
 
         .thumb-price {
-            font-size: 12.5px; /* ขยายราคาให้ตัวใหญ่เห็นชัด */
+            font-size: 12.5px;
             font-weight: 700;
             color: var(--primary);
             margin-top: 1px;
@@ -472,7 +471,6 @@
             color: #9ca3af;
         }
 
-        /* แถบล่างสุด: ชิดติดขึ้นมาพอดี ไม่หลุดตกจอ */
         .bottom-action-bar {
             display: flex;
             align-items: center;
@@ -503,7 +501,6 @@
         }
         .compact-call-btn:active { background-color: var(--primary-dark); }
 
-        /* Lightbox */
         .lightbox-modal {
             position: fixed;
             inset: 0;
@@ -561,6 +558,7 @@
             z-index: 100;
             gap: 12px;
             color: var(--text-muted);
+            transition: opacity 0.2s ease;
         }
     </style>
 </head>
@@ -572,7 +570,7 @@
         <div>กำลังเตรียมเมนูอร่อย...</div>
     </div>
 
-    <!-- ส่วนรูปภาพใหญ่ Hero -->
+    <!-- Hero Section -->
     <div class="hero-section" onclick="openLightbox()">
         <div class="top-bar">
             <div class="shop-brand">
@@ -593,7 +591,7 @@
         <img id="heroImg" class="hero-img" src="" alt="อาหาร">
     </div>
 
-    <!-- แผ่นรายละเอียดด้านล่าง: แน่น ชิด กระชับ ไม่มีช่องว่างโล่งแล้ว -->
+    <!-- Detail Sheet -->
     <div class="detail-sheet">
         <div>
             <div class="header-row">
@@ -607,11 +605,9 @@
                 </div>
             </div>
 
-            <!-- แถบเลือกหมวดหมู่ -->
             <div class="category-scroll" id="catScroll"></div>
         </div>
 
-        <!-- รายการ Carousel เมนูย่อย (ขยายรูปใหญ่ 84px และชิดติดเข้ามาพอดี) -->
         <div class="carousel-container">
             <div class="carousel-header-row">
                 <div class="carousel-title" id="carouselCount">เมนูทั้งหมด:</div>
@@ -619,7 +615,6 @@
             <div class="carousel-track" id="menuCarousel"></div>
         </div>
 
-        <!-- แถบล่างสุด: ชิดติดขึ้นมา สวยงามพอดีจอ -->
         <div class="bottom-action-bar">
             <div class="shop-info-text">สด สะอาด อร่อย ทุกวัน</div>
             <a href="tel:0974624632" class="compact-call-btn" id="phoneCallBtn">
@@ -644,6 +639,7 @@
     const SHOP_PHONE = '0974624632';
     const SHOP_LOGO_URL = 'Logo.png';
 
+    const CACHE_KEY = 'kruaonzon_menus_v1';
     const FALLBACK_IMG = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600';
 
     let allMenus = [];
@@ -693,27 +689,54 @@
             if (useAlternative) {
                 return `https://drive.google.com/uc?export=view&id=${driveId}`;
             }
-            return `https://drive.google.com/thumbnail?id=${driveId}&sz=w800`;
+            // ขนาด w600 โหลดเร็ว คมชัดมาก
+            return `https://drive.google.com/thumbnail?id=${driveId}&sz=w600`;
         }
         return url;
     }
 
+    // ระบบแสดงข้อมูลเมนูบนหน้าจอ
+    function applyMenuData(data) {
+        if (!data || data.length === 0) return;
+        allMenus = data;
+        document.getElementById('loading').style.display = 'none';
+        initCategories();
+        renderContinuousCarousel();
+        selectMenu(currentIndex || 0);
+    }
+
+    // ⚡ ระบบ Instant Load & Background Sync
     async function loadData() {
+        // 1. ตรวจสอบข้อมูล Cache ในเครื่องผู้ใช้ (ถ้ามี โชว์ทันทีใน 0.1 วินาที!)
+        const cachedData = localStorage.getItem(CACHE_KEY);
+        if (cachedData) {
+            try {
+                const parsed = JSON.parse(cachedData);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    applyMenuData(parsed);
+                }
+            } catch (e) {
+                console.warn("Cache parse error", e);
+            }
+        }
+
+        // 2. ดึงข้อมูลสดใหม่ล่าสุดจาก Google Sheet ในพื้นหลัง
         try {
             const res = await fetch(API_URL + '?action=get_menu');
-            allMenus = await res.json();
+            const freshData = await res.json();
 
-            if (allMenus && allMenus.length > 0) {
-                document.getElementById('loading').style.display = 'none';
-                initCategories();
-                renderContinuousCarousel();
-                selectMenu(0);
-            } else {
-                document.getElementById('loading').innerHTML = 'ยังไม่มีรายการเมนูอาหารในระบบ';
+            if (freshData && freshData.length > 0) {
+                // บันทึกเก็บไว้ใช้ในการเปิดครั้งต่อไป
+                localStorage.setItem(CACHE_KEY, JSON.stringify(freshData));
+                // อัปเดตหน้าจอด้วยข้อมูลล่าสุด
+                applyMenuData(freshData);
             }
         } catch (err) {
-            document.getElementById('loading').innerHTML = 'โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
-            console.error(err);
+            console.error("Network fetch failed:", err);
+            // หากเน็ตหลุด แต่มีแคชเก่าอยู่แล้ว ก็ยังใช้งานต่อได้ไม่มีปัญหา
+            if (!cachedData) {
+                document.getElementById('loading').innerHTML = 'เชื่อมต่อเครือข่ายไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
+            }
         }
     }
 
@@ -757,7 +780,7 @@
             const isSoldOut = (item.isAvailable === false || item.isAvailable === 'false');
 
             const div = document.createElement('div');
-            div.className = `thumb-item ${idx === 0 ? 'active' : ''} ${isSoldOut ? 'sold-out' : ''}`;
+            div.className = `thumb-item ${idx === currentIndex ? 'active' : ''} ${isSoldOut ? 'sold-out' : ''}`;
             div.id = `thumb-${idx}`;
             div.onclick = () => selectMenu(idx);
 
@@ -844,7 +867,7 @@
             if (!isSoldOut) {
                 heroImg.style.opacity = '1';
             }
-        }, 100);
+        }, 60);
 
         const parsed = parseMenuName(item.name);
         document.getElementById('heroNameMain').innerText = parsed.main;
