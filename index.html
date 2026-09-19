@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="referrer" content="no-referrer">
     <title>ครัวออนซอน - เมนูอาหารออนไลน์</title>
-    <!-- Preconnect เร่งสปีดการโหลด Font และ CDN รูปภาพล่วงหน้า -->
+    <!-- เร่งสปีดการโหลด -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://lh3.googleusercontent.com">
@@ -205,7 +205,7 @@
         .nav-prev { left: 8px; }
         .nav-next { right: 8px; }
 
-        /* 2. การ์ดรายละเอียดด้านล่าง: กระชับ แน่น สวยงาม */
+        /* 2. การ์ดรายละเอียดด้านล่าง */
         .detail-sheet {
             width: 100%;
             height: 58%;
@@ -219,7 +219,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            gap: 8px;
+            gap: 6px;
             box-shadow: 0 -8px 25px rgba(0,0,0,0.08);
         }
 
@@ -296,6 +296,7 @@
             font-weight: 600;
         }
 
+        /* ส่วนบรรจุ Carousel */
         .carousel-container {
             flex: 1;
             display: flex;
@@ -307,7 +308,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 2px;
         }
 
         .carousel-title {
@@ -316,13 +317,15 @@
             color: var(--text-muted);
         }
 
+        /* รางเลื่อนเมนู: เพิ่ม padding-top เผื่อพื้นที่ให้วงกลมและเงา ไม่ถูกตัดแหว่ง */
         .carousel-track {
             display: flex;
             align-items: flex-start;
             gap: 10px;
             overflow-x: auto;
             scrollbar-width: none;
-            padding-bottom: 2px;
+            padding-top: 8px; /* 👈 สำคัญ: เผื่อพื้นที่ด้านบนรูป ไม่ให้แหว่ง */
+            padding-bottom: 4px;
             scroll-behavior: smooth;
         }
         .carousel-track::-webkit-scrollbar { display: none; }
@@ -373,6 +376,7 @@
         }
         .thumb-item:active { transform: scale(0.95); }
 
+        /* การ์ดรูปทรงกลม 84px พร้อมขอบมนสมบูรณ์ */
         .thumb-circle {
             width: 84px;
             height: 84px;
@@ -380,16 +384,17 @@
             overflow: hidden;
             background: #f3f4f6;
             border: 2.5px solid transparent;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             margin-bottom: 4px;
             flex-shrink: 0;
             position: relative;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
+        /* เมื่อถูกเลือก (Active): สวยงาม กลมมน เต็มวง ไม่แหว่งด้านบน */
         .thumb-item.active .thumb-circle {
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(16, 124, 65, 0.45);
-            transform: scale(1.04);
+            box-shadow: 0 0 0 2px rgba(16, 124, 65, 0.2), 0 4px 10px rgba(16, 124, 65, 0.35);
         }
 
         .thumb-circle img {
@@ -608,6 +613,7 @@
             <div class="category-scroll" id="catScroll"></div>
         </div>
 
+        <!-- รางเลื่อนเมนูที่เพิ่มระยะเผื่อด้านบน ไม่แหว่งแล้ว -->
         <div class="carousel-container">
             <div class="carousel-header-row">
                 <div class="carousel-title" id="carouselCount">เมนูทั้งหมด:</div>
@@ -689,13 +695,11 @@
             if (useAlternative) {
                 return `https://drive.google.com/uc?export=view&id=${driveId}`;
             }
-            // ขนาด w600 โหลดเร็ว คมชัดมาก
             return `https://drive.google.com/thumbnail?id=${driveId}&sz=w600`;
         }
         return url;
     }
 
-    // ระบบแสดงข้อมูลเมนูบนหน้าจอ
     function applyMenuData(data) {
         if (!data || data.length === 0) return;
         allMenus = data;
@@ -705,9 +709,7 @@
         selectMenu(currentIndex || 0);
     }
 
-    // ⚡ ระบบ Instant Load & Background Sync
     async function loadData() {
-        // 1. ตรวจสอบข้อมูล Cache ในเครื่องผู้ใช้ (ถ้ามี โชว์ทันทีใน 0.1 วินาที!)
         const cachedData = localStorage.getItem(CACHE_KEY);
         if (cachedData) {
             try {
@@ -716,24 +718,20 @@
                     applyMenuData(parsed);
                 }
             } catch (e) {
-                console.warn("Cache parse error", e);
+                console.warn("Cache error", e);
             }
         }
 
-        // 2. ดึงข้อมูลสดใหม่ล่าสุดจาก Google Sheet ในพื้นหลัง
         try {
             const res = await fetch(API_URL + '?action=get_menu');
             const freshData = await res.json();
 
             if (freshData && freshData.length > 0) {
-                // บันทึกเก็บไว้ใช้ในการเปิดครั้งต่อไป
                 localStorage.setItem(CACHE_KEY, JSON.stringify(freshData));
-                // อัปเดตหน้าจอด้วยข้อมูลล่าสุด
                 applyMenuData(freshData);
             }
         } catch (err) {
-            console.error("Network fetch failed:", err);
-            // หากเน็ตหลุด แต่มีแคชเก่าอยู่แล้ว ก็ยังใช้งานต่อได้ไม่มีปัญหา
+            console.error("Fetch failed:", err);
             if (!cachedData) {
                 document.getElementById('loading').innerHTML = 'เชื่อมต่อเครือข่ายไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
             }
