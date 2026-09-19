@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="referrer" content="no-referrer">
     <title>ครัวออนซอน - เมนูอาหารออนไลน์</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
             --bg-dark: #121820;
             --text-main: #1f2937;
             --text-muted: #6b7280;
-            --card-width: 96px; /* ขยายความกว้างรองรับรูปที่ใหญ่ขึ้น */
+            --card-width: 90px;
         }
 
         * {
@@ -32,13 +32,14 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh;
         }
 
         .mobile-container {
             width: 100%;
             max-width: 430px;
             height: 100vh;
-            max-height: 890px;
+            height: 100dvh; /* ใช้ dynamic viewport เพื่อให้พอดีกับความสูงจอจริงของ Chrome */
             background-color: #fff;
             position: relative;
             overflow: hidden;
@@ -49,19 +50,19 @@
 
         @media (max-width: 480px) {
             .mobile-container {
-                max-height: 100vh;
                 box-shadow: none;
             }
         }
 
-        /* 1. ส่วนรูปภาพเด่นขนาดใหญ่ (Hero) */
+        /* 1. ส่วนรูปภาพเด่นขนาดใหญ่ (Hero) ปรับความสูงให้พอดี 40% */
         .hero-section {
             width: 100%;
-            height: 46%; /* ปรับสัดส่วนให้ส่วนล่างมีพื้นที่กว้างและแน่นขึ้น */
+            height: 40%;
             position: relative;
             background-color: #1a222d;
             overflow: hidden;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .hero-img {
@@ -84,9 +85,9 @@
             background: rgba(220, 38, 38, 0.92);
             backdrop-filter: blur(4px);
             color: #ffffff;
-            padding: 8px 24px;
+            padding: 6px 20px;
             border-radius: 30px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             letter-spacing: 0.5px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
@@ -105,9 +106,9 @@
 
         .top-bar {
             position: absolute;
-            top: 14px;
-            left: 14px;
-            right: 14px;
+            top: 12px;
+            left: 12px;
+            right: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -115,33 +116,31 @@
             pointer-events: none;
         }
 
-        /* กล่องโลโก้ร้านแบบปรับขนาดอัตโนมัติ ไม่บังคับทรงกลม */
         .shop-brand {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: rgba(18, 24, 32, 0.82);
             backdrop-filter: blur(8px);
-            padding: 3px 12px 3px 4px;
-            border-radius: 24px;
+            padding: 3px 10px 3px 4px;
+            border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             pointer-events: auto;
         }
 
-        /* โลโก้ปรับตามสัดส่วนจริง (วงรี / ผืนผ้า / จัตุรัส สวยงามทั้งหมด) */
         .shop-logo {
-            height: 34px;
+            height: 30px;
             width: auto;
-            max-width: 65px;
-            border-radius: 10px;
+            max-width: 55px;
+            border-radius: 8px;
             object-fit: contain;
             background: transparent;
         }
 
         .shop-title {
             color: #fff;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 600;
             letter-spacing: 0.2px;
         }
@@ -149,7 +148,7 @@
         .top-right-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             pointer-events: auto;
         }
 
@@ -157,16 +156,16 @@
             background: rgba(18, 24, 32, 0.82);
             backdrop-filter: blur(8px);
             color: var(--gold);
-            padding: 5px 12px;
-            border-radius: 18px;
-            font-size: 11.5px;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 11px;
             font-weight: 600;
             border: 1px solid rgba(212, 175, 55, 0.35);
         }
 
         .zoom-btn {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: rgba(18, 24, 32, 0.82);
             backdrop-filter: blur(8px);
@@ -176,7 +175,7 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
@@ -184,8 +183,8 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(4px);
             border-radius: 50%;
@@ -195,36 +194,36 @@
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            font-size: 14px;
+            font-size: 13px;
             z-index: 10;
         }
-        .nav-prev { left: 10px; }
-        .nav-next { right: 10px; }
+        .nav-prev { left: 8px; }
+        .nav-next { right: 8px; }
 
-        /* 2. การ์ดรายละเอียดด้านล่าง (ปรับให้ชิด กระชับ ไม่โหลงเหลง) */
+        /* 2. การ์ดรายละเอียดด้านล่าง ปรับให้เต็มพื้นที่ 60% พร้อมระยะชิดกระชับ */
         .detail-sheet {
             width: 100%;
-            height: 54%;
+            height: 60%;
             background: #ffffff;
-            border-top-left-radius: 24px;
-            border-top-right-radius: 24px;
-            margin-top: -20px;
+            border-top-left-radius: 22px;
+            border-top-right-radius: 22px;
+            margin-top: -16px;
             position: relative;
             z-index: 5;
-            padding: 14px 16px 12px 16px;
+            padding: 12px 14px 10px 14px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-shadow: 0 -8px 25px rgba(0,0,0,0.08);
         }
 
-        /* หัวเรื่องและราคา ชิดกระชับ */
+        /* หัวเรื่องและราคา */
         .header-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 4px;
+            gap: 8px;
+            margin-bottom: 2px;
         }
 
         .menu-name-container {
@@ -232,18 +231,18 @@
         }
 
         .menu-name-main {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.15;
         }
 
         .menu-name-sub {
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--primary);
             line-height: 1.1;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
         .price-box {
@@ -252,35 +251,35 @@
         }
 
         .menu-price {
-            font-size: 24px;
+            font-size: 23px;
             font-weight: 700;
             color: var(--primary);
             line-height: 1;
         }
 
         .sub-price {
-            font-size: 11px;
+            font-size: 10.5px;
             color: var(--text-muted);
-            margin-top: 2px;
+            margin-top: 1px;
             line-height: 1;
         }
 
-        /* แท็บหมวดหมู่แบบกะทัดรัด */
+        /* แถบหมวดหมู่: ร่นระยะห่างให้น้อยลง */
         .category-scroll {
             display: flex;
-            gap: 6px;
+            gap: 5px;
             overflow-x: auto;
             scrollbar-width: none;
-            margin: 4px 0 6px 0;
+            margin: 3px 0 2px 0; /* ลดระยะลง */
             padding-bottom: 2px;
         }
         .category-scroll::-webkit-scrollbar { display: none; }
 
         .cat-chip {
             flex-shrink: 0;
-            padding: 4px 12px;
-            border-radius: 14px;
-            font-size: 11.5px;
+            padding: 4px 11px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 500;
             background-color: #f1f3f5;
             color: var(--text-muted);
@@ -293,27 +292,29 @@
             font-weight: 600;
         }
 
-        /* Carousel เมนูย่อย: ขยายรูปให้ใหญ่ขึ้น เด่นชัด */
+        /* ส่วนหัวของ Carousel เมนูย่อย (ร่นระยะช่องว่างลูกศรบน) */
         .carousel-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
+            margin-top: 2px;
+            margin-bottom: 3px;
         }
 
         .carousel-title {
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-muted);
         }
 
+        /* Carousel เมนูย่อย */
         .carousel-track {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
             scrollbar-width: none;
-            padding-bottom: 4px;
+            padding-bottom: 2px;
             scroll-behavior: smooth;
         }
         .carousel-track::-webkit-scrollbar { display: none; }
@@ -324,8 +325,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 110px;
-            padding: 0 8px;
+            height: 95px;
+            padding: 0 6px;
             margin: 0 2px;
             position: relative;
         }
@@ -342,16 +343,16 @@
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             color: var(--text-muted);
-            padding: 4px 8px;
-            border-radius: 10px;
-            font-size: 10.5px;
+            padding: 3px 7px;
+            border-radius: 8px;
+            font-size: 10px;
             font-weight: 600;
             white-space: nowrap;
             z-index: 2;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* การ์ดเมนูทรงกลมใหญ่ขึ้น 74px */
+        /* การ์ดเมนูทรงกลม */
         .thumb-item {
             flex: 0 0 var(--card-width);
             width: var(--card-width);
@@ -365,24 +366,24 @@
         }
         .thumb-item:active { transform: scale(0.95); }
 
-        /* ขยายขนาดรูปเมนูด้านล่างจาก 58px -> 74px */
+        /* ขนาดรูป 70px ชัดเจนพอดีจอ */
         .thumb-circle {
-            width: 74px;
-            height: 74px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             overflow: hidden;
             background: #f3f4f6;
-            border: 2.5px solid transparent;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-            margin-bottom: 4px;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            margin-bottom: 3px;
             flex-shrink: 0;
             position: relative;
         }
 
         .thumb-item.active .thumb-circle {
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(16, 124, 65, 0.4);
-            transform: scale(1.04);
+            box-shadow: 0 4px 10px rgba(16, 124, 65, 0.4);
+            transform: scale(1.03);
         }
 
         .thumb-circle img {
@@ -404,19 +405,18 @@
             transform: translate(-50%, -50%);
             background: rgba(220, 38, 38, 0.95);
             color: #ffffff;
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 8px;
+            padding: 2px 6px;
+            border-radius: 6px;
             white-space: nowrap;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             pointer-events: none;
         }
 
-        /* ขยับข้อความให้ชิดขึ้น กระชับขึ้น */
         .thumb-text-box {
             width: 100%;
-            min-height: 32px;
+            min-height: 30px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -424,7 +424,7 @@
         }
 
         .thumb-name-main {
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 500;
             color: var(--text-main);
             width: 100%;
@@ -441,7 +441,7 @@
         }
 
         .thumb-name-sub {
-            font-size: 9.5px;
+            font-size: 9px;
             color: var(--primary);
             line-height: 1.05;
             margin-top: 1px;
@@ -454,7 +454,7 @@
         }
 
         .thumb-price {
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--primary);
             margin-top: 1px;
@@ -465,31 +465,31 @@
             color: #9ca3af;
         }
 
-        /* แถบล่างสุด: ชิดกระชับ */
+        /* แถบล่างสุด: ร่นระยะช่องว่างลูกศรล่าง ให้ชิดกระชับ ไม่หลุดจอ */
         .bottom-action-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 6px;
-            margin-top: 2px;
+            padding-top: 5px;
+            margin-top: 1px;
             border-top: 1px solid #f1f5f9;
         }
 
         .shop-info-text {
-            font-size: 11.5px;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
         .compact-call-btn {
             background-color: var(--primary);
             color: #fff;
-            padding: 7px 15px;
-            border-radius: 18px;
+            padding: 6px 14px;
+            border-radius: 16px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             text-decoration: none;
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
             box-shadow: 0 3px 8px rgba(16, 124, 65, 0.25);
             transition: background-color 0.2s;
@@ -586,7 +586,7 @@
         <img id="heroImg" class="hero-img" src="" alt="อาหาร">
     </div>
 
-    <!-- แผ่นรายละเอียดด้านล่าง -->
+    <!-- แผ่นรายละเอียดด้านล่าง (ร่นระยะช่องว่างให้พอดีจอ 100%) -->
     <div class="detail-sheet">
         <div>
             <div class="header-row">
@@ -604,7 +604,7 @@
             <div class="category-scroll" id="catScroll"></div>
         </div>
 
-        <!-- รายการ Carousel เมนูย่อย (รูปใหญ่ ชัดเจน) -->
+        <!-- รายการ Carousel เมนูย่อย (ชิดติดขึ้นมาพอดี) -->
         <div>
             <div class="carousel-header-row">
                 <div class="carousel-title" id="carouselCount">เมนูทั้งหมด:</div>
@@ -612,7 +612,7 @@
             <div class="carousel-track" id="menuCarousel"></div>
         </div>
 
-        <!-- แถบล่างสุด: ข้อมูลร้านและปุ่มโทร -->
+        <!-- แถบล่างสุด: ลอยขึ้นมาให้เห็นชัด ไม่หลุดจอ -->
         <div class="bottom-action-bar">
             <div class="shop-info-text">สด สะอาด อร่อย ทุกวัน</div>
             <a href="tel:0974624632" class="compact-call-btn" id="phoneCallBtn">
@@ -622,7 +622,7 @@
     </div>
 </div>
 
-<!-- หน้าต่างดูภาพใหญ่เต็มจอ (Lightbox) -->
+<!-- Lightbox Modal -->
 <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
     <button class="lightbox-close" onclick="closeLightbox()">✕</button>
     <img class="lightbox-img" id="lightboxImg" src="" alt="ภาพขนาดใหญ่" onclick="event.stopPropagation()">
