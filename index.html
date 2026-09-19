@@ -15,7 +15,7 @@
             --bg-dark: #121820;
             --text-main: #1f2937;
             --text-muted: #6b7280;
-            --card-width: 86px;
+            --card-width: 96px; /* ขยายความกว้างรองรับรูปที่ใหญ่ขึ้น */
         }
 
         * {
@@ -57,7 +57,7 @@
         /* 1. ส่วนรูปภาพเด่นขนาดใหญ่ (Hero) */
         .hero-section {
             width: 100%;
-            height: 48%;
+            height: 46%; /* ปรับสัดส่วนให้ส่วนล่างมีพื้นที่กว้างและแน่นขึ้น */
             position: relative;
             background-color: #1a222d;
             overflow: hidden;
@@ -71,13 +71,11 @@
             transition: opacity 0.25s ease, filter 0.25s ease;
         }
 
-        /* เอฟเฟกต์รูปภาพเมื่อสินค้าหมด (เฟดจาง 65%) */
         .hero-img.is-soldout {
             opacity: 0.35 !important;
             filter: grayscale(40%);
         }
 
-        /* ป้ายลอยคาดทับรูปภาพใหญ่เมื่อสินค้าหมด */
         .soldout-hero-banner {
             position: absolute;
             top: 50%;
@@ -107,9 +105,9 @@
 
         .top-bar {
             position: absolute;
-            top: 16px;
-            left: 16px;
-            right: 16px;
+            top: 14px;
+            left: 14px;
+            right: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -117,26 +115,28 @@
             pointer-events: none;
         }
 
+        /* กล่องโลโก้ร้านแบบปรับขนาดอัตโนมัติ ไม่บังคับทรงกลม */
         .shop-brand {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(18, 24, 32, 0.78);
+            background: rgba(18, 24, 32, 0.82);
             backdrop-filter: blur(8px);
-            padding: 4px 12px 4px 4px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            padding: 3px 12px 3px 4px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             pointer-events: auto;
         }
 
+        /* โลโก้ปรับตามสัดส่วนจริง (วงรี / ผืนผ้า / จัตุรัส สวยงามทั้งหมด) */
         .shop-logo {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1.5px solid var(--gold);
-            background: #2a3441;
+            height: 34px;
+            width: auto;
+            max-width: 65px;
+            border-radius: 10px;
+            object-fit: contain;
+            background: transparent;
         }
 
         .shop-title {
@@ -154,21 +154,21 @@
         }
 
         .hero-badge {
-            background: rgba(18, 24, 32, 0.78);
+            background: rgba(18, 24, 32, 0.82);
             backdrop-filter: blur(8px);
             color: var(--gold);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 5px 12px;
+            border-radius: 18px;
+            font-size: 11.5px;
             font-weight: 600;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.35);
         }
 
         .zoom-btn {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: rgba(18, 24, 32, 0.78);
+            background: rgba(18, 24, 32, 0.82);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.25);
             color: #fff;
@@ -176,7 +176,7 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
@@ -184,9 +184,9 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.9);
+            width: 34px;
+            height: 34px;
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(4px);
             border-radius: 50%;
             display: flex;
@@ -195,34 +195,36 @@
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            font-size: 15px;
+            font-size: 14px;
             z-index: 10;
         }
-        .nav-prev { left: 12px; }
-        .nav-next { right: 12px; }
+        .nav-prev { left: 10px; }
+        .nav-next { right: 10px; }
 
-        /* 2. การ์ดรายละเอียดด้านล่าง */
+        /* 2. การ์ดรายละเอียดด้านล่าง (ปรับให้ชิด กระชับ ไม่โหลงเหลง) */
         .detail-sheet {
             width: 100%;
-            height: 52%;
+            height: 54%;
             background: #ffffff;
-            border-top-left-radius: 28px;
-            border-top-right-radius: 28px;
-            margin-top: -24px;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            margin-top: -20px;
             position: relative;
             z-index: 5;
-            padding: 18px 18px 16px 18px;
+            padding: 14px 16px 12px 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             box-shadow: 0 -8px 25px rgba(0,0,0,0.08);
         }
 
+        /* หัวเรื่องและราคา ชิดกระชับ */
         .header-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 12px;
+            gap: 10px;
+            margin-bottom: 4px;
         }
 
         .menu-name-container {
@@ -230,18 +232,18 @@
         }
 
         .menu-name-main {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             color: var(--text-main);
-            line-height: 1.25;
+            line-height: 1.15;
         }
 
         .menu-name-sub {
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 500;
             color: var(--primary);
+            line-height: 1.1;
             margin-top: 2px;
-            line-height: 1.2;
         }
 
         .price-box {
@@ -250,7 +252,7 @@
         }
 
         .menu-price {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--primary);
             line-height: 1;
@@ -259,25 +261,26 @@
         .sub-price {
             font-size: 11px;
             color: var(--text-muted);
-            margin-top: 3px;
+            margin-top: 2px;
+            line-height: 1;
         }
 
-        /* แท็บหมวดหมู่ */
+        /* แท็บหมวดหมู่แบบกะทัดรัด */
         .category-scroll {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
             scrollbar-width: none;
-            margin: 8px 0 6px 0;
+            margin: 4px 0 6px 0;
             padding-bottom: 2px;
         }
         .category-scroll::-webkit-scrollbar { display: none; }
 
         .cat-chip {
             flex-shrink: 0;
-            padding: 6px 14px;
-            border-radius: 16px;
-            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 14px;
+            font-size: 11.5px;
             font-weight: 500;
             background-color: #f1f3f5;
             color: var(--text-muted);
@@ -290,16 +293,16 @@
             font-weight: 600;
         }
 
-        /* Carousel เมนูย่อยต่อเนื่องข้ามหมวด */
+        /* Carousel เมนูย่อย: ขยายรูปให้ใหญ่ขึ้น เด่นชัด */
         .carousel-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .carousel-title {
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
             color: var(--text-muted);
         }
@@ -310,7 +313,7 @@
             gap: 10px;
             overflow-x: auto;
             scrollbar-width: none;
-            padding-bottom: 6px;
+            padding-bottom: 4px;
             scroll-behavior: smooth;
         }
         .carousel-track::-webkit-scrollbar { display: none; }
@@ -321,9 +324,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 95px;
-            padding: 0 10px;
-            margin: 0 4px;
+            height: 110px;
+            padding: 0 8px;
+            margin: 0 2px;
             position: relative;
         }
 
@@ -339,16 +342,16 @@
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             color: var(--text-muted);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10.5px;
             font-weight: 600;
             white-space: nowrap;
             z-index: 2;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* การ์ดเมนูทรงกลม */
+        /* การ์ดเมนูทรงกลมใหญ่ขึ้น 74px */
         .thumb-item {
             flex: 0 0 var(--card-width);
             width: var(--card-width);
@@ -362,14 +365,15 @@
         }
         .thumb-item:active { transform: scale(0.95); }
 
+        /* ขยายขนาดรูปเมนูด้านล่างจาก 58px -> 74px */
         .thumb-circle {
-            width: 58px;
-            height: 58px;
+            width: 74px;
+            height: 74px;
             border-radius: 50%;
             overflow: hidden;
             background: #f3f4f6;
             border: 2.5px solid transparent;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
             margin-bottom: 4px;
             flex-shrink: 0;
             position: relative;
@@ -377,8 +381,8 @@
 
         .thumb-item.active .thumb-circle {
             border-color: var(--primary);
-            box-shadow: 0 4px 10px rgba(16, 124, 65, 0.35);
-            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(16, 124, 65, 0.4);
+            transform: scale(1.04);
         }
 
         .thumb-circle img {
@@ -388,13 +392,11 @@
             transition: opacity 0.2s, filter 0.2s;
         }
 
-        /* รูปวงกลมเมื่อสินค้าหมด (เฟดจาง 60%) */
         .thumb-item.sold-out .thumb-circle img {
             opacity: 0.35;
             filter: grayscale(40%);
         }
 
-        /* ป้ายคาดลอยบนรูปวงกลม */
         .thumb-soldout-tag {
             position: absolute;
             top: 50%;
@@ -402,18 +404,19 @@
             transform: translate(-50%, -50%);
             background: rgba(220, 38, 38, 0.95);
             color: #ffffff;
-            font-size: 10.5px;
+            font-size: 11px;
             font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 6px;
+            padding: 2px 8px;
+            border-radius: 8px;
             white-space: nowrap;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             pointer-events: none;
         }
 
+        /* ขยับข้อความให้ชิดขึ้น กระชับขึ้น */
         .thumb-text-box {
             width: 100%;
-            min-height: 38px;
+            min-height: 32px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -425,7 +428,7 @@
             font-weight: 500;
             color: var(--text-main);
             width: 100%;
-            line-height: 1.2;
+            line-height: 1.15;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -440,7 +443,7 @@
         .thumb-name-sub {
             font-size: 9.5px;
             color: var(--primary);
-            line-height: 1.1;
+            line-height: 1.05;
             margin-top: 1px;
             font-weight: 500;
             word-break: break-word;
@@ -451,47 +454,49 @@
         }
 
         .thumb-price {
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 700;
             color: var(--primary);
-            margin-top: 2px;
+            margin-top: 1px;
+            line-height: 1.1;
         }
 
         .thumb-item.sold-out .thumb-price {
             color: #9ca3af;
         }
 
-        /* แถบล่างสุด: ปุ่มโทรขนาดเล็ก */
+        /* แถบล่างสุด: ชิดกระชับ */
         .bottom-action-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding-top: 6px;
+            margin-top: 2px;
             border-top: 1px solid #f1f5f9;
         }
 
         .shop-info-text {
-            font-size: 12px;
+            font-size: 11.5px;
             color: var(--text-muted);
         }
 
         .compact-call-btn {
             background-color: var(--primary);
             color: #fff;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 7px 15px;
+            border-radius: 18px;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 600;
-            box-shadow: 0 3px 10px rgba(16, 124, 65, 0.25);
+            box-shadow: 0 3px 8px rgba(16, 124, 65, 0.25);
             transition: background-color 0.2s;
         }
         .compact-call-btn:active { background-color: var(--primary-dark); }
 
-        /* Lightbox ภาพขนาดใหญ่ */
+        /* Lightbox */
         .lightbox-modal {
             position: fixed;
             inset: 0;
@@ -576,7 +581,6 @@
         <button class="nav-btn nav-prev" onclick="event.stopPropagation(); prevMenu()">❮</button>
         <button class="nav-btn nav-next" onclick="event.stopPropagation(); nextMenu()">❯</button>
 
-        <!-- ป้ายคาดลอยเมื่อสินค้าหมด -->
         <div class="soldout-hero-banner" id="soldOutBanner">❌ สินค้าหมดชั่วคราว</div>
 
         <img id="heroImg" class="hero-img" src="" alt="อาหาร">
@@ -600,7 +604,7 @@
             <div class="category-scroll" id="catScroll"></div>
         </div>
 
-        <!-- รายการ Carousel เมนูย่อยต่อเนื่อง -->
+        <!-- รายการ Carousel เมนูย่อย (รูปใหญ่ ชัดเจน) -->
         <div>
             <div class="carousel-header-row">
                 <div class="carousel-title" id="carouselCount">เมนูทั้งหมด:</div>
@@ -608,7 +612,7 @@
             <div class="carousel-track" id="menuCarousel"></div>
         </div>
 
-        <!-- แถบล่างสุด: ปุ่มโทรขนาดเล็ก -->
+        <!-- แถบล่างสุด: ข้อมูลร้านและปุ่มโทร -->
         <div class="bottom-action-bar">
             <div class="shop-info-text">สด สะอาด อร่อย ทุกวัน</div>
             <a href="tel:0974624632" class="compact-call-btn" id="phoneCallBtn">
@@ -631,7 +635,7 @@
     // ==========================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwvk1lGTKvUcoNfcrIF42qMdXBsPPyf94uFNg6C8NVoPdyIasqghxTAzmfwKEw2Uv_A/exec';
     const SHOP_PHONE = '0974624632';
-    const SHOP_LOGO_URL = 'Logo.png'; // รองรับทั้ง Logo.png และ logo.png
+    const SHOP_LOGO_URL = 'Logo.png';
 
     const FALLBACK_IMG = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600';
 
@@ -722,7 +726,6 @@
         });
     }
 
-    // วาด Carousel พร้อมป้าย "หมด" บนการ์ดเมนูที่หมด
     function renderContinuousCarousel() {
         const track = document.getElementById('menuCarousel');
         track.innerHTML = '';
@@ -793,14 +796,12 @@
         document.getElementById('carouselCount').innerText = `${currentCat} (${countInCat} เมนู):`;
     }
 
-    // แสดงเมนูที่เลือก พร้อมเอฟเฟกต์เฟดภาพและป้ายคาดเมื่อสินค้าหมด
     function selectMenu(idx) {
         if (!allMenus[idx]) return;
         currentIndex = idx;
         const item = allMenus[idx];
         const isSoldOut = (item.isAvailable === false || item.isAvailable === 'false');
 
-        // ไฮไลต์ไอคอนวงกลม
         document.querySelectorAll('.thumb-item').forEach(el => el.classList.remove('active'));
         const activeThumb = document.getElementById(`thumb-${idx}`);
         if (activeThumb) {
@@ -808,7 +809,6 @@
             activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
-        // จัดการสถานะภาพใหญ่และป้ายสินค้าหมด
         const heroImg = document.getElementById('heroImg');
         const soldOutBanner = document.getElementById('soldOutBanner');
 
@@ -839,7 +839,6 @@
             }
         }, 100);
 
-        // แสดงชื่อเมนู
         const parsed = parseMenuName(item.name);
         document.getElementById('heroNameMain').innerText = parsed.main;
         document.getElementById('heroNameSub').innerText = parsed.sub;
@@ -847,7 +846,6 @@
         document.getElementById('heroPrice').innerText = `฿${item.normalPrice || 0}`;
         document.getElementById('heroCategory').innerText = item.category || '';
 
-        // ราคาพิเศษ / กับข้าว
         let subText = '';
         if (item.hasSideDish) {
             subText = `ราดข้าว ฿${item.normalPrice} | กับข้าว ฿${item.sideDishNormalPrice || item.normalPrice}`;
