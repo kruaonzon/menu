@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="Logo.png">
     <link rel="shortcut icon" href="Logo.png">
 
-    <!-- Web App Manifest แบบ Embedded (ไม่ต้องอัปโหลดไฟล์เพิ่ม) -->
+    <!-- Web App Manifest แบบ Embedded -->
     <link rel="manifest" href='data:application/manifest+json,{"name":"ครัวออนซอน","short_name":"ครัวออนซอน","start_url":".","display":"standalone","background_color":"#121820","theme_color":"#107c41","icons":[{"src":"Logo.png","sizes":"192x192","type":"image/png"},{"src":"Logo.png","sizes":"512x512","type":"image/png"}]}'>
 
     <!-- Preconnect เร่งสปีด -->
@@ -281,12 +281,12 @@
         .recommend-tag {
             background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
-            font-size: 10.5px;
+            font-size: 11px;
             font-weight: 700;
             padding: 2px 8px;
-            border-radius: 10px;
+            border-radius: 12px;
             white-space: nowrap;
-            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
             display: inline-flex;
             align-items: center;
             gap: 3px;
@@ -355,6 +355,7 @@
         .cat-chip.featured.active {
             background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
+            border-color: transparent;
         }
 
         /* Carousel เมนูย่อย */
@@ -483,20 +484,24 @@
             pointer-events: none;
         }
 
-        /* ป้าย Badge 👑 บนรูปอาหารย่อย */
+        /* ป้ายมงกุฎสีทองสวยหรูบนรูปกลม ไม่โดนขอบตัดแน่นอน */
         .thumb-rec-badge {
             position: absolute;
-            top: 2px;
-            right: 2px;
+            bottom: 2px;
+            right: 4px;
             background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 1px 5px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+            border: 1.5px solid #ffffff;
             pointer-events: none;
-            z-index: 3;
+            z-index: 4;
         }
 
         .thumb-text-box {
@@ -531,7 +536,7 @@
             line-height: 1.1;
         }
 
-        /* แถบล่างสุด: สลับการแสดงผลอัตโนมัติ */
+        /* แถบล่างสุด */
         .bottom-action-container {
             width: 100%;
             padding-top: 6px;
@@ -919,7 +924,7 @@
                 </div>
             </div>
 
-            <!-- หมวดหมู่ (จะมี ⭐ แนะนำ เป็นอันดับแรกเสมอ) -->
+            <!-- หมวดหมู่ -->
             <div class="category-scroll" id="catScroll"></div>
         </div>
 
@@ -1034,10 +1039,11 @@
     const LINE_ID = '@136nrxrl';
     const SHOP_LOGO_URL = 'Logo.png';
 
-    const CACHE_KEY = 'kruaonzon_menus_v4';
+    const CACHE_KEY = 'kruaonzon_menus_v5';
     const FALLBACK_IMG = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600';
 
-    let allMenus = [];
+    let rawMenus = [];
+    let displayList = []; // ลิสต์เมนูที่จัดเรียงเอา "เมนูแนะนำ" มารวมกลุ่มหน้าสุด
     let categories = [];
     let currentIndex = 0;
     let cart = [];
@@ -1130,14 +1136,31 @@
         return url;
     }
 
+    // จัดเรียงข้อมูล: นำเมนูแนะนำทั้งหมดมารวมกลุ่มหน้าสุดเป็นกลุ่มแรก!
+    function organizeMenus(data) {
+        rawMenus = data;
+        const recommendedItems = [];
+        const otherItems = [];
+
+        data.forEach(item => {
+            if (isItemRecommended(item)) {
+                recommendedItems.push({ ...item, displayCategory: '⭐ เมนูแนะนำ' });
+            }
+            otherItems.push({ ...item, displayCategory: item.category });
+        });
+
+        // ลิสต์ที่จะแสดงใน Carousel: กลุ่มเมนูแนะนำมาก่อน แล้วตามด้วยหมวดหมู่อื่นๆ
+        displayList = [...recommendedItems, ...otherItems];
+    }
+
     function applyMenuData(data, storeStatus = true) {
         if (!data || data.length === 0) return;
-        allMenus = data;
+        organizeMenus(data);
         document.getElementById('loading').style.display = 'none';
         renderStoreStatus(storeStatus);
         initCategories();
         renderContinuousCarousel();
-        selectMenu(currentIndex || 0);
+        selectMenu(0);
     }
 
     async function loadData() {
@@ -1175,13 +1198,12 @@
         }
     }
 
-    // สร้างหมวดหมู่ โดยมี "⭐ แนะนำ" เป็นหมวดแรกสุดเสมอ!
     function initCategories() {
         const catScroll = document.getElementById('catScroll');
-        const rawCats = [...new Set(allMenus.map(m => m.category).filter(Boolean))];
+        const rawCats = [...new Set(rawMenus.map(m => m.category).filter(Boolean))];
         const normalCats = rawCats.filter(c => c !== 'ทั้งหมด' && c !== 'แนะนำ' && c !== 'เมนูแนะนำ');
 
-        // ใส่หมวด "⭐ แนะนำ" ไว้หน้าสุดเสมอ
+        // มี "⭐ เมนูแนะนำ" เป็นหมวดแรกสุดเสมอ
         categories = ['⭐ เมนูแนะนำ', ...normalCats];
 
         catScroll.innerHTML = '';
@@ -1202,18 +1224,18 @@
 
         let lastCategory = null;
 
-        allMenus.forEach((item, idx) => {
-            if (item.category && item.category !== lastCategory) {
+        displayList.forEach((item, idx) => {
+            if (item.displayCategory && item.displayCategory !== lastCategory) {
                 if (lastCategory !== null) {
                     const divider = document.createElement('div');
                     divider.className = 'category-divider';
                     divider.innerHTML = `
                         <div class="divider-line"></div>
-                        <div class="divider-label">${item.category}</div>
+                        <div class="divider-label">${item.displayCategory}</div>
                     `;
                     track.appendChild(divider);
                 }
-                lastCategory = item.category;
+                lastCategory = item.displayCategory;
             }
 
             const parsed = parseMenuName(item.name);
@@ -1233,8 +1255,8 @@
                     <img src="${primarySrc}" loading="lazy" 
                          onerror="if(this.src!=='${altSrc}'){this.src='${altSrc}'}else{this.src='${FALLBACK_IMG}'}">
                     ${isSoldOut ? '<div class="thumb-soldout-tag">หมด</div>' : ''}
-                    ${isRec && !isSoldOut ? '<div class="thumb-rec-badge">👑 แนะนำ</div>' : ''}
                 </div>
+                ${isRec && !isSoldOut ? '<div class="thumb-rec-badge" title="เมนูแนะนำ">👑</div>' : ''}
                 <div class="thumb-text-box">
                     <div class="thumb-name-main">${parsed.main}</div>
                 </div>
@@ -1245,34 +1267,19 @@
     }
 
     function scrollToCategory(category) {
-        if (category === '⭐ เมนูแนะนำ') {
-            const firstRecIdx = allMenus.findIndex(m => isItemRecommended(m));
-            if (firstRecIdx !== -1) {
-                selectMenu(firstRecIdx);
-            } else {
-                selectMenu(0);
-            }
-            return;
-        }
-
-        const targetIdx = allMenus.findIndex(m => m.category === category);
+        const targetIdx = displayList.findIndex(m => m.displayCategory === category);
         if (targetIdx !== -1) {
             selectMenu(targetIdx);
         }
     }
 
     function updateActiveCategoryChip(item) {
-        const isRec = isItemRecommended(item);
+        const currentCat = item.displayCategory;
 
         categories.forEach((cat, idx) => {
             const chip = document.getElementById(`chip-${idx}`);
             if (chip) {
-                let isActive = false;
-                if (cat === '⭐ เมนูแนะนำ') {
-                    isActive = isRec;
-                } else {
-                    isActive = (!isRec && cat === item.category);
-                }
+                const isActive = (cat === currentCat);
                 chip.classList.toggle('active', isActive);
                 if (isActive) {
                     chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -1280,14 +1287,14 @@
             }
         });
 
-        const countInCat = allMenus.filter(m => m.category === item.category).length;
-        document.getElementById('carouselCount').innerText = `${item.category} (${countInCat} เมนู):`;
+        const countInCat = displayList.filter(m => m.displayCategory === currentCat).length;
+        document.getElementById('carouselCount').innerText = `${currentCat} (${countInCat} เมนู):`;
     }
 
     function selectMenu(idx) {
-        if (!allMenus[idx]) return;
+        if (!displayList[idx]) return;
         currentIndex = idx;
-        const item = allMenus[idx];
+        const item = displayList[idx];
         const isSoldOut = (item.isAvailable === false || item.isAvailable === 'false');
         const isRec = isItemRecommended(item);
 
@@ -1365,12 +1372,12 @@
     }
 
     function prevMenu() {
-        const newIdx = currentIndex > 0 ? currentIndex - 1 : allMenus.length - 1;
+        const newIdx = currentIndex > 0 ? currentIndex - 1 : displayList.length - 1;
         selectMenu(newIdx);
     }
 
     function nextMenu() {
-        const newIdx = currentIndex < allMenus.length - 1 ? currentIndex + 1 : 0;
+        const newIdx = currentIndex < displayList.length - 1 ? currentIndex + 1 : 0;
         selectMenu(newIdx);
     }
 
@@ -1395,7 +1402,7 @@
     // Order & Cart Engine
     function openOptionModal() {
         if (!isStoreCurrentlyOpen) return;
-        const item = allMenus[currentIndex];
+        const item = displayList[currentIndex];
         if (!item) return;
 
         document.getElementById('optItemTitle').innerText = item.name;
@@ -1456,7 +1463,7 @@
     }
 
     function confirmAddToCart() {
-        const item = allMenus[currentIndex];
+        const item = displayList[currentIndex];
         if (!item) return;
 
         let note = selectedDishType;
@@ -1576,7 +1583,7 @@
         const resultsEl = document.getElementById('searchResults');
         resultsEl.innerHTML = '';
 
-        const matched = allMenus.filter(m => 
+        const matched = rawMenus.filter(m => 
             m.name.toLowerCase().includes(query) || 
             (m.category && m.category.toLowerCase().includes(query))
         );
@@ -1587,7 +1594,7 @@
         }
 
         matched.forEach(item => {
-            const originalIndex = allMenus.findIndex(m => m.id === item.id);
+            const originalIndex = displayList.findIndex(m => m.id === item.id);
             const isRec = isItemRecommended(item);
             const row = document.createElement('div');
             row.className = 'search-result-item';
@@ -1610,7 +1617,7 @@
 
     // Lightbox
     function openLightbox() {
-        const item = allMenus[currentIndex];
+        const item = displayList[currentIndex];
         if (!item) return;
         const modal = document.getElementById('lightboxModal');
         const img = document.getElementById('lightboxImg');
