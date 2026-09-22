@@ -6,7 +6,7 @@
     <meta name="referrer" content="no-referrer">
     <title>ครัวออนซอน - เมนูอาหารและสั่งออนไลน์</title>
 
-    <!-- ================= PWA & ICON SETUP ================= -->
+    <!-- ================= PWA & ICON AUTO-FIT SETUP ================= -->
     <meta name="theme-color" content="#107c41">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,39 +14,80 @@
     <meta name="apple-mobile-web-app-title" content="ครัวออนซอน">
 
     <link rel="icon" type="image/png" href="Logo.png">
-    <link rel="apple-touch-icon" href="Logo.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="Logo.png">
     <link rel="shortcut icon" href="Logo.png">
 
-    <!-- สร้าง Web App Manifest อัตโนมัติจาก URL ปัจจุบัน เพื่อให้รูป Logo ดึงได้ 100% -->
+    <!-- Script คำนวณและปรับสัดส่วน Icon ให้อยู่ใน Safe Zone พอดี ไม่โดนขอบมือถือตัด -->
     <script>
         (function() {
             const origin = window.location.origin;
             const path = window.location.pathname.replace(/[^\/]+$/, '');
             const fullBase = origin + path;
-            const logoFull = fullBase + 'Logo.png';
+            const rawLogoUrl = fullBase + 'Logo.png';
 
-            const pwaManifest = {
-                name: "ครัวออนซอน",
-                short_name: "ครัวออนซอน",
-                start_url: fullBase,
-                display: "standalone",
-                background_color: "#121820",
-                theme_color: "#107c41",
-                icons: [
-                    { src: logoFull, sizes: "192x192", type: "image/png", purpose: "any maskable" },
-                    { src: logoFull, sizes: "512x512", type: "image/png", purpose: "any maskable" },
-                    { src: "Logo.png", sizes: "192x192", type: "image/png" }
-                ]
-            };
+            // ฟังก์ชันวาดรูปไอคอนให้อยู่กึ่งกลาง และเว้นระยะ Safe Zone พอดีกับหน้าจอมือถือ
+            function generateFittedIcon(src, targetSize, callback) {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+                    const ctx = canvas.getContext('2d');
 
-            const manifestBlob = new Blob([JSON.stringify(pwaManifest)], {type: 'application/json'});
-            const manifestLink = document.createElement('link');
-            manifestLink.rel = 'manifest';
-            manifestLink.href = URL.createObjectURL(manifestBlob);
-            document.head.appendChild(manifestLink);
+                    // พื้นหลังสีเดียวกับธีมของร้าน เผื่อขอบเซฟโซน
+                    ctx.fillStyle = '#107c41';
+                    ctx.fillRect(0, 0, targetSize, targetSize);
 
-            // Service Worker ในตัว รองรับ PWA ติดตั้งเป็นแอปได้ทันที
+                    // คำนวณขนาดภาพให้อยู่ในเซฟโซน 75% ของขนาดไอคอน (ป้องกัน Android ตัดขอบขาด)
+                    const safeFactor = 0.76;
+                    const maxBound = targetSize * safeFactor;
+                    const scale = Math.min(maxBound / img.width, maxBound / img.height);
+                    const drawWidth = img.width * scale;
+                    const drawHeight = img.height * scale;
+                    const offsetX = (targetSize - drawWidth) / 2;
+                    const offsetY = (targetSize - drawHeight) / 2;
+
+                    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+                    callback(canvas.toDataURL('image/png'));
+                };
+                img.onerror = function() {
+                    callback(src);
+                };
+                img.src = src;
+            }
+
+            // สร้าง Manifest อัตโนมัติเมื่อไอคอนปรับขนาดเสร็จ
+            generateFittedIcon(rawLogoUrl, 512, function(fitted512) {
+                generateFittedIcon(rawLogoUrl, 192, function(fitted192) {
+                    // กำหนด Apple Touch Icon สำหรับ iOS
+                    const appleIcon = document.createElement('link');
+                    appleIcon.rel = 'apple-touch-icon';
+                    appleIcon.href = fitted192;
+                    document.head.appendChild(appleIcon);
+
+                    const pwaManifest = {
+                        name: "ครัวออนซอน",
+                        short_name: "ครัวออนซอน",
+                        start_url: fullBase,
+                        display: "standalone",
+                        background_color: "#121820",
+                        theme_color: "#107c41",
+                        icons: [
+                            { src: fitted192, sizes: "192x192", type: "image/png", purpose: "any maskable" },
+                            { src: fitted512, sizes: "512x512", type: "image/png", purpose: "any maskable" },
+                            { src: rawLogoUrl, sizes: "512x512", type: "image/png" }
+                        ]
+                    };
+
+                    const manifestBlob = new Blob([JSON.stringify(pwaManifest)], {type: 'application/json'});
+                    const manifestLink = document.createElement('link');
+                    manifestLink.rel = 'manifest';
+                    manifestLink.href = URL.createObjectURL(manifestBlob);
+                    document.head.appendChild(manifestLink);
+                });
+            });
+
+            // Service Worker ฝังในตัว
             if ('serviceWorker' in navigator) {
                 const swCode = `
                     self.addEventListener('install', e => self.skipWaiting());
@@ -945,7 +986,7 @@
         <button class="nav-btn nav-prev" onclick="event.stopPropagation(); prevMenu()">❮</button>
         <button class="nav-btn nav-next" onclick="event.stopPropagation(); nextMenu()">❯</button>
 
-        <div class="soldout-hero-banner" id="soldOutBanner"> สินค้าหมดชั่วคราว</div>
+        <div class="soldout-hero-banner" id="soldOutBanner">สินค้าหมดชั่วคราว</div>
         <img id="heroImg" class="hero-img" src="" alt="อาหาร">
     </div>
 
@@ -1078,7 +1119,7 @@
     const SHOP_PHONE = '0974624632';
     const LINE_ID = '@136nrxrl';
 
-    const CACHE_KEY = 'kruaonzon_menus_v9';
+    const CACHE_KEY = 'kruaonzon_menus_v10';
     const FALLBACK_IMG = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600';
 
     let rawMenus = [];
@@ -1357,7 +1398,6 @@
             document.getElementById('btnAddOrder').disabled = false;
             document.getElementById('btnDirectLine').style.opacity = '1';
 
-            // ข้อความสำหรับสั่งด่วนผ่าน LINE (ระบุเป็นสั่งกลับบ้าน Take Away ชัดเจน)
             const lineText = encodeURIComponent(`สวัสดีครับ สั่งกลับบ้าน (Take Away):\n- ${item.name} (฿${item.normalPrice}) จำนวน 1 ที่ครับ\n⏱️ เวลารับ:\n📞 เบอร์ติดต่อ:`);
             document.getElementById('btnDirectLine').href = `https://line.me/R/oaMessage/${LINE_ID}/?${lineText}`;
         }
@@ -1577,14 +1617,11 @@
         document.getElementById('cartModal').style.display = 'none';
     }
 
-    // ==========================================
-    // 💬 ฟังก์ชันส่งออเดอร์เข้า LINE: รูปแบบ Take Away โดยเฉพาะ
-    // ==========================================
     function sendOrderToLine() {
         if (cart.length === 0 || !isStoreCurrentlyOpen) return;
 
-        let message = `🍽️ *สั่งอาหารกลับบ้าน (Take Away) - ครัวออนซอน*\n`;
-        message += `-----------------------------\n`;
+        let message = `🍽️ สั่งอาหาร 🍽️ - ครัวออนซอน*\n`;
+        message += `----------------------------------\n`;
 
         let total = 0;
         cart.forEach((item, idx) => {
@@ -1594,7 +1631,7 @@
             if (item.note) message += `   (${item.note})\n`;
         });
 
-        message += `-----------------------------\n`;
+        message += `----------------------------------\n`;
         message += `💰 *ยอดรวมทั้งสิ้น: ฿${total}*\n\n`;
         message += `⏱️ เวลาที่ต้องการรับ:\n`;
         message += `📞 เบอร์โทรติดต่อ:\n`;
