@@ -2,10 +2,18 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
   <title>ครัวออนซอน - สั่งอาหาร Take Away</title>
-  
   <meta name="theme-color" content="#FF6F00">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="ครัวออนซอน">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="Logo.png">
+  <link rel="shortcut icon" href="Logo.png">
+  <link rel="apple-touch-icon" href="Logo.png">
 
   <!-- Google Fonts & Font Awesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,11 +66,13 @@
       box-shadow: 0 2px 8px rgba(255, 111, 0, 0.25);
       display: none;
     }
+
     .marquee-text {
       display: inline-block;
       padding-left: 100%;
       animation: marquee 20s linear infinite;
     }
+
     @keyframes marquee {
       0% { transform: translate(0, 0); }
       100% { transform: translate(-100%, 0); }
@@ -85,7 +95,7 @@
     /* Header */
     header {
       background: var(--card-bg);
-      padding: 16px 20px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -93,12 +103,15 @@
       position: sticky;
       top: 0;
       z-index: 90;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
+
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
+
     .brand img {
       width: 44px;
       height: 44px;
@@ -106,40 +119,46 @@
       object-fit: cover;
       border: 2px solid var(--primary);
     }
+
     .brand-text h1 {
       font-size: 1.15rem;
       font-weight: 700;
       color: #1A202C;
       line-height: 1.2;
     }
+
     .brand-text span {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       background-color: var(--primary-light);
       color: var(--primary-dark);
       padding: 2px 8px;
       border-radius: 20px;
       font-weight: 600;
+      display: inline-block;
+      margin-top: 2px;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
+
     .user-profile-btn {
       background: #F1F5F9;
       border: none;
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       color: var(--text);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       position: relative;
     }
+
     .profile-badge {
       position: absolute;
       top: 2px;
@@ -160,9 +179,11 @@
       border-bottom: 1px solid #EDF2F7;
       scrollbar-width: none;
     }
+
     .tabs-wrapper::-webkit-scrollbar {
       display: none;
     }
+
     .tab-btn {
       background: #F1F5F9;
       border: none;
@@ -175,6 +196,7 @@
       margin-right: 8px;
       transition: all 0.2s;
     }
+
     .tab-btn.active {
       background: var(--primary);
       color: white;
@@ -186,6 +208,7 @@
     .search-container {
       padding: 12px 16px 4px;
     }
+
     .search-box {
       background: var(--card-bg);
       border: 1px solid #E2E8F0;
@@ -196,6 +219,7 @@
       gap: 10px;
       box-shadow: var(--shadow);
     }
+
     .search-box input {
       border: none;
       background: transparent;
@@ -211,11 +235,13 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 14px;
     }
+
     @media (min-width: 640px) {
       .menu-container {
         grid-template-columns: repeat(3, 1fr);
       }
     }
+
     @media (min-width: 1024px) {
       .menu-container {
         grid-template-columns: repeat(4, 1fr);
@@ -232,20 +258,24 @@
       position: relative;
       transition: transform 0.15s;
     }
+
     .menu-card:active {
       transform: scale(0.98);
     }
+
     .menu-img-wrap {
       width: 100%;
       aspect-ratio: 1 / 1;
       position: relative;
       background: #EDF2F7;
     }
+
     .menu-img-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+
     .badge-recommend {
       position: absolute;
       top: 8px;
@@ -258,6 +288,7 @@
       font-weight: 600;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
+
     .menu-card-body {
       padding: 10px 12px 12px;
       display: flex;
@@ -265,6 +296,7 @@
       flex-grow: 1;
       justify-content: space-between;
     }
+
     .menu-name {
       font-size: 0.92rem;
       font-weight: 600;
@@ -276,19 +308,23 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+
     .menu-prices {
       margin-bottom: 10px;
     }
+
     .price-normal {
       font-size: 1.05rem;
       font-weight: 700;
       color: var(--primary-dark);
     }
+
     .price-special {
       font-size: 0.78rem;
       color: var(--text-muted);
       margin-left: 4px;
     }
+
     .add-btn {
       background: var(--primary);
       color: white;
@@ -303,10 +339,12 @@
       justify-content: center;
       gap: 6px;
     }
+
     .menu-card.out-of-stock {
       opacity: 0.55;
       filter: grayscale(80%);
     }
+
     .menu-card.out-of-stock .add-btn {
       background: #A0AEC0;
       cursor: not-allowed;
@@ -323,12 +361,14 @@
       align-items: flex-end;
       justify-content: center;
     }
+
     @media (min-width: 600px) {
       .modal-overlay {
         align-items: center;
         padding: 20px;
       }
     }
+
     .modal-content {
       background: white;
       width: 100%;
@@ -340,16 +380,19 @@
       box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
       animation: slideUp 0.25s ease-out;
     }
+
     @media (min-width: 600px) {
       .modal-content {
         border-radius: 24px;
         animation: fadeIn 0.2s ease-out;
       }
     }
+
     @keyframes slideUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
@@ -363,10 +406,12 @@
       padding-bottom: 12px;
       border-bottom: 1px solid #EDF2F7;
     }
+
     .modal-header h3 {
       font-size: 1.15rem;
       font-weight: 700;
     }
+
     .close-btn {
       background: #EDF2F7;
       border: none;
@@ -381,17 +426,20 @@
     .option-group {
       margin-bottom: 16px;
     }
+
     .option-title {
       font-size: 0.9rem;
       font-weight: 600;
       margin-bottom: 8px;
       color: #4A5568;
     }
+
     .choice-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
     }
+
     .choice-card {
       border: 1.5px solid #E2E8F0;
       border-radius: 12px;
@@ -402,11 +450,13 @@
       align-items: center;
       transition: all 0.15s;
     }
+
     .choice-card.selected {
       border-color: var(--primary);
       background: #FFF7ED;
       font-weight: 600;
     }
+
     .choice-card input {
       display: none;
     }
@@ -422,15 +472,18 @@
       margin-bottom: 8px;
       cursor: pointer;
     }
+
     .addon-item.selected {
       border-color: var(--primary);
       background: #FFF7ED;
     }
+
     .addon-left {
       display: flex;
       align-items: center;
       gap: 10px;
     }
+
     .addon-price {
       font-weight: 600;
       color: var(--primary-dark);
@@ -446,6 +499,7 @@
       outline: none;
       margin-bottom: 16px;
     }
+
     .qty-selector {
       display: flex;
       align-items: center;
@@ -453,6 +507,7 @@
       gap: 16px;
       margin-bottom: 20px;
     }
+
     .qty-btn {
       width: 36px;
       height: 36px;
@@ -467,6 +522,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .qty-num {
       font-size: 1.2rem;
       font-weight: 700;
@@ -507,11 +563,13 @@
       cursor: pointer;
       display: none;
     }
+
     .cart-info {
       display: flex;
       align-items: center;
       gap: 12px;
     }
+
     .cart-badge {
       background: var(--primary);
       color: white;
@@ -524,11 +582,13 @@
       align-items: center;
       justify-content: center;
     }
+
     .cart-total {
       font-size: 1.1rem;
       font-weight: 700;
       color: #FFD54F;
     }
+
     .cart-action {
       display: flex;
       align-items: center;
@@ -540,6 +600,7 @@
     .form-group {
       margin-bottom: 14px;
     }
+
     .form-input {
       width: 100%;
       padding: 12px;
@@ -548,6 +609,7 @@
       font-size: 0.95rem;
       outline: none;
     }
+
     .form-input:focus {
       border-color: var(--primary);
     }
@@ -560,24 +622,29 @@
       justify-content: space-between;
       align-items: flex-start;
     }
+
     .cart-item-detail {
       flex-grow: 1;
     }
+
     .cart-item-title {
       font-weight: 600;
       font-size: 0.95rem;
     }
+
     .cart-item-sub {
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
+
     .cart-item-price {
       font-weight: 700;
       color: var(--primary-dark);
       font-size: 0.95rem;
       margin-left: 12px;
     }
+
     .cart-item-remove {
       color: var(--danger);
       background: none;
@@ -609,6 +676,7 @@
       text-align: center;
       padding: 60px 20px;
     }
+
     .spinner {
       border: 4px solid rgba(0,0,0,0.1);
       border-left-color: var(--primary);
@@ -618,6 +686,7 @@
       animation: spin 1s linear infinite;
       margin: 0 auto 16px;
     }
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -639,13 +708,22 @@
   <!-- Header -->
   <header>
     <div class="brand">
-      <img src="https://picsum.photos/seed/krua/100" alt="ครัวออนซอน">
+      <img src="Logo.png" alt="ครัวออนซอน" onerror="this.src='https://picsum.photos/seed/krua/100'">
       <div class="brand-text">
         <h1>ครัวออนซอน</h1>
         <span><i class="fa-solid fa-bag-shopping"></i> Take Away</span>
       </div>
     </div>
     <div class="header-actions">
+      <a href="https://maps.app.goo.gl/1gqHHatDkNYgHLP96" target="_blank" class="user-profile-btn" style="color:#DC2626; background:#FEE2E2; text-decoration:none;" title="แผนที่ร้าน Google Maps">
+        <i class="fa-solid fa-location-dot"></i>
+      </a>
+      <a href="tel:0974624632" class="user-profile-btn" style="color:#D97706; background:#FEF3C7; text-decoration:none;" title="โทรสั่งอาหาร">
+        <i class="fa-solid fa-phone"></i>
+      </a>
+      <a href="https://line.me/R/ti/p/@788siyvm" target="_blank" class="user-profile-btn" style="color:#059669; background:#D1FAE5; text-decoration:none;" title="LINE ร้าน">
+        <i class="fa-brands fa-line"></i>
+      </a>
       <button class="user-profile-btn" onclick="openProfileModal()" title="ข้อมูลผู้สั่ง">
         <i class="fa-regular fa-user"></i>
         <div id="profileBadge" class="profile-badge"></div>
@@ -705,7 +783,7 @@
 
       <!-- Dish Type Options -->
       <div id="dishTypeGroup" class="option-group" style="display: none;">
-        <div class="option-title">1. รูปแบบอาหาร</div>
+        <div class="option-title">รูปแบบอาหาร</div>
         <div class="choice-grid">
           <div id="choicePlate" class="choice-card selected" onclick="selectDishType('plate')">
             <span>🍛 ราดข้าว / จานเดียว</span>
@@ -720,7 +798,7 @@
 
       <!-- Size Options -->
       <div id="sizeGroup" class="option-group">
-        <div class="option-title">2. ขนาด / ปริมาณ</div>
+        <div class="option-title">ขนาด / ปริมาณ</div>
         <div class="choice-grid">
           <div id="choiceNormal" class="choice-card selected" onclick="selectSize('normal')">
             <span>ธรรมดา</span>
@@ -733,9 +811,9 @@
         </div>
       </div>
 
-      <!-- Addons & Toppings (5 รายการใหม่) -->
+      <!-- Addons & Toppings (ตัวเลือกเสริม & ท็อปปิ้ง) -->
       <div id="addonsGroup" class="option-group">
-        <div class="option-title">3. ตัวเลือกเสริม & ท็อปปิ้ง</div>
+        <div class="option-title">ตัวเลือกเสริม & ท็อปปิ้ง</div>
         
         <div class="addon-item" onclick="toggleAddon('friedEgg', this)">
           <div class="addon-left">
@@ -848,7 +926,6 @@
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
         บันทึกข้อมูลของคุณไว้ที่นี่ เพื่อความสะดวกรวดเร็วในการสั่งซื้อครั้งต่อไป ไม่ต้องพิมพ์ใหม่
       </p>
-
       <div class="form-group">
         <label>ชื่อลูกค้า</label>
         <input type="text" id="profName" class="form-input" placeholder="เช่น คุณสมชาย">
@@ -857,7 +934,6 @@
         <label>เบอร์โทรศัพท์</label>
         <input type="tel" id="profPhone" class="form-input" placeholder="เช่น 081-234-5678">
       </div>
-
       <button class="confirm-btn" onclick="saveCustomerProfile()">
         บันทึกข้อมูล
       </button>
@@ -868,7 +944,7 @@
     // ==========================================
     // ใส่ URL Google Apps Script Web App ที่นี่
     // ==========================================
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2hyep-ST1HZlHErpteymmfcikV0NYn4nz1EF7oYCdlr2n0C-zk9KMhhVA5bLb4ILe/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby2hyep-ST1HZlHErpteymmfcikV0NYn4nz1EF7oYCdlr2n0C-zk9KMhhVA5bLb4ILe/exec";
 
     let storeData = {
       isStoreOpen: true,
@@ -888,7 +964,6 @@
     let activeCategory = "ทั้งหมด";
     let activeSearch = "";
     let currentModalItem = null;
-
     let modalDishType = "plate";
     let modalSize = "normal";
     let modalQty = 1;
@@ -899,12 +974,29 @@
       fetchMenuData();
     });
 
+    function getDriveId(url) {
+      if (!url) return null;
+      let match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) return match[1];
+      match = url.match(/id=([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) return match[1];
+      return null;
+    }
+
+    function formatDriveImage(url) {
+      if (!url || url.trim() === '') return '';
+      const driveId = getDriveId(url);
+      if (driveId) {
+        return `https://drive.google.com/thumbnail?id=${driveId}&sz=w600`;
+      }
+      return url;
+    }
+
     async function fetchMenuData() {
       if (!SCRIPT_URL) {
         useSampleData();
         return;
       }
-
       try {
         const res = await fetch(SCRIPT_URL);
         const data = await res.json();
@@ -934,12 +1026,12 @@
           riceNoodles: 10
         },
         items: [
-          { id: 1, name: "ผัดกะเพราหมูกรอบ", normalPrice: 60, specialPrice: 70, sideDishNormalPrice: 80, sideDishSpecialPrice: 100, hasSpecialPrice: true, hasSideDish: true, category: "เมนูแนะนำ", imageUrl: "https://picsum.photos/seed/kaprao/300", isAvailable: true, isRecommended: true },
-          { id: 2, name: "ข้าวผัดปู", normalPrice: 80, specialPrice: 100, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, category: "เมนูแนะนำ", imageUrl: "https://picsum.photos/seed/crabrice/300", isAvailable: true, isRecommended: true },
-          { id: 3, name: "ต้มยำกุ้งน้ำข้น", normalPrice: 150, specialPrice: 200, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, category: "ต้ม/แกง", imageUrl: "https://picsum.photos/seed/tomyum/300", isAvailable: true, isRecommended: true },
-          { id: 4, name: "หมูทอดกระเทียมพริกไทย", normalPrice: 50, specialPrice: 60, sideDishNormalPrice: 70, sideDishSpecialPrice: 80, hasSpecialPrice: true, hasSideDish: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/garlicpork/300", isAvailable: true, isRecommended: false },
-          { id: 5, name: "ส้มตำไทย", normalPrice: 40, specialPrice: 50, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, category: "ตำ/ยำ", imageUrl: "https://picsum.photos/seed/somtum/300", isAvailable: true, isRecommended: false },
-          { id: 6, name: "สตรอว์เบอร์รีสมูทตี้", normalPrice: 55, specialPrice: 65, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, category: "สมูทตี้", imageUrl: "https://picsum.photos/seed/strawberry/300", isAvailable: true, isRecommended: false }
+          { id: 1, name: "ผัดกะเพราหมูกรอบ", normalPrice: 60, specialPrice: 70, sideDishNormalPrice: 80, sideDishSpecialPrice: 100, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "เมนูแนะนำ", imageUrl: "https://picsum.photos/seed/kaprao/300", isAvailable: true, isRecommended: true },
+          { id: 2, name: "ข้าวผัดปู", normalPrice: 80, specialPrice: 100, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: true, category: "เมนูแนะนำ", imageUrl: "https://picsum.photos/seed/crabrice/300", isAvailable: true, isRecommended: true },
+          { id: 3, name: "ต้มยำกุ้งน้ำข้น", normalPrice: 150, specialPrice: 200, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ต้ม/แกง", imageUrl: "https://picsum.photos/seed/tomyum/300", isAvailable: true, isRecommended: true },
+          { id: 4, name: "หมูทอดกระเทียมพริกไทย", normalPrice: 50, specialPrice: 60, sideDishNormalPrice: 70, sideDishSpecialPrice: 80, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/garlicpork/300", isAvailable: true, isRecommended: false },
+          { id: 5, name: "ส้มตำไทย", normalPrice: 40, specialPrice: 50, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ตำ/ยำ", imageUrl: "https://picsum.photos/seed/somtum/300", isAvailable: true, isRecommended: false },
+          { id: 6, name: "สตรอว์เบอร์รีสมูทตี้", normalPrice: 55, specialPrice: 65, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "สมูทตี้", imageUrl: "https://picsum.photos/seed/strawberry/300", isAvailable: true, isRecommended: false }
         ]
       };
       applyStoreConfig();
@@ -1001,8 +1093,8 @@
       list.forEach(item => {
         const card = document.createElement("div");
         card.className = `menu-card ${item.isAvailable ? "" : "out-of-stock"}`;
-
-        const imgUrl = item.imageUrl || `https://picsum.photos/seed/${item.id}/200`;
+        const rawImg = formatDriveImage(item.imageUrl);
+        const imgUrl = rawImg || `https://picsum.photos/seed/${item.id}/200`;
 
         card.innerHTML = `
           <div class="menu-img-wrap">
@@ -1022,16 +1114,14 @@
             </button>
           </div>
         `;
-
         container.appendChild(card);
       });
     }
 
     function filterCategory(cat) {
       activeCategory = cat;
-      const btns = document.querySelectorAll("#categoriesTabs .tab-btn");
-      btns.forEach(b => {
-        b.classList.toggle("active", b.textContent.includes(cat) || (cat === "ทั้งหมด" && b.textContent === "ทั้งหมด"));
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.textContent.trim().replace("⭐ ", "") === cat || (cat === "เมนูแนะนำ" && btn.textContent.includes("แนะนำ")));
       });
       renderMenuItems();
     }
@@ -1062,6 +1152,7 @@
         if (chk) chk.checked = false;
       });
 
+      // รูปแบบอาหาร (ราดข้าว / กับข้าว)
       const dishGroup = document.getElementById("dishTypeGroup");
       if (item.hasSideDish && item.sideDishNormalPrice) {
         dishGroup.style.display = "block";
@@ -1072,6 +1163,7 @@
         dishGroup.style.display = "none";
       }
 
+      // ขนาด / ปริมาณ
       const sizeGroup = document.getElementById("sizeGroup");
       if (item.hasSpecialPrice) {
         sizeGroup.style.display = "block";
@@ -1079,6 +1171,11 @@
       } else {
         sizeGroup.style.display = "none";
       }
+
+      // ตัวเลือกเสริม & ท็อปปิ้ง (เช็ค hasAddons)
+      const addonsGroup = document.getElementById("addonsGroup");
+      const showAddons = item.hasAddons !== undefined ? (item.hasAddons === true || item.hasAddons === "true") : true;
+      addonsGroup.style.display = showAddons ? "block" : "none";
 
       updateModalPrice();
       openModal("itemModal");
@@ -1220,10 +1317,8 @@
       }
 
       let grandTotal = 0;
-
       cart.forEach((item, index) => {
         grandTotal += item.totalPrice;
-
         const div = document.createElement("div");
         div.className = "cart-item";
 
@@ -1301,11 +1396,9 @@
       const name = document.getElementById("profName").value.trim();
       const phone = document.getElementById("profPhone").value.trim();
       localStorage.setItem("krua_cust_profile", JSON.stringify({ name, phone }));
-
       document.getElementById("orderCustName").value = name;
       document.getElementById("orderCustPhone").value = phone;
       document.getElementById("profileBadge").style.display = name || phone ? "block" : "none";
-
       closeModal("profileModal");
       alert("บันทึกข้อมูลผู้สั่งเรียบร้อยแล้วครับ!");
     }
@@ -1315,7 +1408,6 @@
         alert("ขออภัยครับ ขณะนี้ร้านปิดให้บริการชั่วคราว");
         return;
       }
-
       if (cart.length === 0) {
         alert("กรุณาเลือกรายการอาหารก่อนกดสั่งซื้อครับ");
         return;
@@ -1363,7 +1455,7 @@
       msg += "รบกวนทางร้านกดยืนยันออเดอร์และแจ้งยอดชำระด้วยนะครับ/ค่ะ 🙏";
 
       const encodedMsg = encodeURIComponent(msg);
-      window.location.href = `https://line.me/R/msg/text/?${encodedMsg}`;
+      window.open(`https://line.me/R/oaMessage/@788siyvm/?${encodedMsg}`, '_blank');
     }
 
     function openModal(id) {
