@@ -6,18 +6,61 @@
     <meta name="referrer" content="no-referrer">
     <title>ครัวออนซอน - เมนูอาหารและสั่งออนไลน์</title>
 
-    <!-- ================= PWA & ICON CONFIGURATION ================= -->
+    <!-- ================= PWA & ICON SETUP ================= -->
     <meta name="theme-color" content="#107c41">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ครัวออนซอน">
+
     <link rel="icon" type="image/png" href="Logo.png">
     <link rel="apple-touch-icon" href="Logo.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="Logo.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="Logo.png">
     <link rel="shortcut icon" href="Logo.png">
 
-    <!-- Web App Manifest แบบ Embedded -->
-    <link rel="manifest" href='data:application/manifest+json,{"name":"ครัวออนซอน","short_name":"ครัวออนซอน","start_url":".","display":"standalone","background_color":"#121820","theme_color":"#107c41","icons":[{"src":"Logo.png","sizes":"192x192","type":"image/png"},{"src":"Logo.png","sizes":"512x512","type":"image/png"}]}'>
+    <!-- สร้าง Web App Manifest อัตโนมัติจาก URL ปัจจุบัน เพื่อให้รูป Logo ดึงได้ 100% -->
+    <script>
+        (function() {
+            const origin = window.location.origin;
+            const path = window.location.pathname.replace(/[^\/]+$/, '');
+            const fullBase = origin + path;
+            const logoFull = fullBase + 'Logo.png';
+
+            const pwaManifest = {
+                name: "ครัวออนซอน",
+                short_name: "ครัวออนซอน",
+                start_url: fullBase,
+                display: "standalone",
+                background_color: "#121820",
+                theme_color: "#107c41",
+                icons: [
+                    { src: logoFull, sizes: "192x192", type: "image/png", purpose: "any maskable" },
+                    { src: logoFull, sizes: "512x512", type: "image/png", purpose: "any maskable" },
+                    { src: "Logo.png", sizes: "192x192", type: "image/png" }
+                ]
+            };
+
+            const manifestBlob = new Blob([JSON.stringify(pwaManifest)], {type: 'application/json'});
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = URL.createObjectURL(manifestBlob);
+            document.head.appendChild(manifestLink);
+
+            // Service Worker ในตัว รองรับ PWA ติดตั้งเป็นแอปได้ทันที
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    self.addEventListener('install', e => self.skipWaiting());
+                    self.addEventListener('activate', e => clients.claim());
+                    self.addEventListener('fetch', e => {});
+                `;
+                const swBlob = new Blob([swCode], {type: 'application/javascript'});
+                const swUrl = URL.createObjectURL(swBlob);
+                navigator.serviceWorker.register(swUrl).catch(function(e) {
+                    console.log('SW Note:', e);
+                });
+            }
+        })();
+    </script>
 
     <!-- Preconnect เร่งสปีด -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -277,7 +320,6 @@
             line-height: 1.15;
         }
 
-        /* ป้าย Badge เด่นด้านบน */
         .recommend-tag {
             background: linear-gradient(135deg, #f59e0b, #d97706);
             color: #fff;
@@ -484,7 +526,7 @@
             pointer-events: none;
         }
 
-        /* ป้ายมงกุฎสีทองสวยหรูบนรูปกลม ไม่โดนขอบตัดแน่นอน */
+        /* ป้ายมงกุฎสีทองสวยหรูบนรูปกลม */
         .thumb-rec-badge {
             position: absolute;
             bottom: 2px;
@@ -903,7 +945,7 @@
         <button class="nav-btn nav-prev" onclick="event.stopPropagation(); prevMenu()">❮</button>
         <button class="nav-btn nav-next" onclick="event.stopPropagation(); nextMenu()">❯</button>
 
-        <div class="soldout-hero-banner" id="soldOutBanner">❌ สินค้าหมดชั่วคราว</div>
+        <div class="soldout-hero-banner" id="soldOutBanner"> สินค้าหมดชั่วคราว</div>
         <img id="heroImg" class="hero-img" src="" alt="อาหาร">
     </div>
 
@@ -936,9 +978,8 @@
             <div class="carousel-track" id="menuCarousel"></div>
         </div>
 
-        <!-- แถบล่างสุด: สลับการแสดงผลแบบไม่มีทับซ้อน -->
+        <!-- แถบล่างสุด -->
         <div class="bottom-action-container">
-            <!-- สถานะที่ 1: ปกติ -->
             <div class="default-action-bar" id="defaultActionBar">
                 <button class="btn-add-order" id="btnAddOrder" onclick="openOptionModal()">
                     <span>🛒 เพิ่มลงตะกร้า</span>
@@ -949,7 +990,6 @@
                 <a href="tel:0974624632" class="btn-call-mini" title="โทรสั่งอาหาร">📞</a>
             </div>
 
-            <!-- สถานะที่ 2: สรุปตะกร้า -->
             <div class="cart-bar-active" id="cartBarActive">
                 <button class="btn-add-more" onclick="openOptionModal()">
                     <span>➕ เพิ่มอีก</span>
@@ -998,7 +1038,7 @@
 <div class="modal-overlay" id="cartModal" onclick="closeCartModal()">
     <div class="cart-sheet" onclick="event.stopPropagation()">
         <div class="sheet-header">
-            <div class="sheet-title">🛒 สรุปรายการสั่งอาหาร</div>
+            <div class="sheet-title">🛒 สรุปรายการสั่งอาหาร (Take Away)</div>
             <button class="sheet-close" onclick="closeCartModal()">✕</button>
         </div>
 
@@ -1037,13 +1077,12 @@
     const API_URL = 'https://script.google.com/macros/s/AKfycbwvk1lGTKvUcoNfcrIF42qMdXBsPPyf94uFNg6C8NVoPdyIasqghxTAzmfwKEw2Uv_A/exec';
     const SHOP_PHONE = '0974624632';
     const LINE_ID = '@136nrxrl';
-    const SHOP_LOGO_URL = 'Logo.png';
 
-    const CACHE_KEY = 'kruaonzon_menus_v5';
+    const CACHE_KEY = 'kruaonzon_menus_v9';
     const FALLBACK_IMG = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600';
 
     let rawMenus = [];
-    let displayList = []; // ลิสต์เมนูที่จัดเรียงเอา "เมนูแนะนำ" มารวมกลุ่มหน้าสุด
+    let displayList = [];
     let categories = [];
     let currentIndex = 0;
     let cart = [];
@@ -1095,9 +1134,6 @@
             img.src = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=100';
         }
     }
-    if (SHOP_LOGO_URL) {
-        document.getElementById('shopLogo').src = SHOP_LOGO_URL;
-    }
 
     function parseMenuName(rawName) {
         if (!rawName) return { main: '', sub: '' };
@@ -1136,7 +1172,6 @@
         return url;
     }
 
-    // จัดเรียงข้อมูล: นำเมนูแนะนำทั้งหมดมารวมกลุ่มหน้าสุดเป็นกลุ่มแรก!
     function organizeMenus(data) {
         rawMenus = data;
         const recommendedItems = [];
@@ -1149,7 +1184,6 @@
             otherItems.push({ ...item, displayCategory: item.category });
         });
 
-        // ลิสต์ที่จะแสดงใน Carousel: กลุ่มเมนูแนะนำมาก่อน แล้วตามด้วยหมวดหมู่อื่นๆ
         displayList = [...recommendedItems, ...otherItems];
     }
 
@@ -1203,7 +1237,6 @@
         const rawCats = [...new Set(rawMenus.map(m => m.category).filter(Boolean))];
         const normalCats = rawCats.filter(c => c !== 'ทั้งหมด' && c !== 'แนะนำ' && c !== 'เมนูแนะนำ');
 
-        // มี "⭐ เมนูแนะนำ" เป็นหมวดแรกสุดเสมอ
         categories = ['⭐ เมนูแนะนำ', ...normalCats];
 
         catScroll.innerHTML = '';
@@ -1324,7 +1357,8 @@
             document.getElementById('btnAddOrder').disabled = false;
             document.getElementById('btnDirectLine').style.opacity = '1';
 
-            const lineText = encodeURIComponent(`สวัสดีครับ สนใจสั่ง ${item.name} (฿${item.normalPrice}) จำนวน 1 จานครับ`);
+            // ข้อความสำหรับสั่งด่วนผ่าน LINE (ระบุเป็นสั่งกลับบ้าน Take Away ชัดเจน)
+            const lineText = encodeURIComponent(`สวัสดีครับ สั่งกลับบ้าน (Take Away):\n- ${item.name} (฿${item.normalPrice}) จำนวน 1 ที่ครับ\n⏱️ เวลารับ:\n📞 เบอร์ติดต่อ:`);
             document.getElementById('btnDirectLine').href = `https://line.me/R/oaMessage/${LINE_ID}/?${lineText}`;
         }
 
@@ -1351,7 +1385,6 @@
 
         document.getElementById('heroPrice').innerText = `฿${item.normalPrice || 0}`;
 
-        // แสดงป้าย 👑 เมนูแนะนำ ด้านบน
         const recBadge = document.getElementById('heroRecommendBadge');
         if (isRec) {
             recBadge.style.display = 'inline-flex';
@@ -1544,10 +1577,13 @@
         document.getElementById('cartModal').style.display = 'none';
     }
 
+    // ==========================================
+    // 💬 ฟังก์ชันส่งออเดอร์เข้า LINE: รูปแบบ Take Away โดยเฉพาะ
+    // ==========================================
     function sendOrderToLine() {
         if (cart.length === 0 || !isStoreCurrentlyOpen) return;
 
-        let message = `🍽️ *รายการสั่งอาหาร - ครัวออนซอน*\n`;
+        let message = `🍽️ *สั่งอาหารกลับบ้าน (Take Away) - ครัวออนซอน*\n`;
         message += `-----------------------------\n`;
 
         let total = 0;
@@ -1560,8 +1596,8 @@
 
         message += `-----------------------------\n`;
         message += `💰 *ยอดรวมทั้งสิ้น: ฿${total}*\n\n`;
-        message += `📍 ทานที่ร้าน หรือ สั่งกลับบ้าน:\n`;
         message += `⏱️ เวลาที่ต้องการรับ:\n`;
+        message += `📞 เบอร์โทรติดต่อ:\n`;
 
         const encodedMsg = encodeURIComponent(message);
         window.open(`https://line.me/R/oaMessage/${LINE_ID}/?${encodedMsg}`, '_blank');
