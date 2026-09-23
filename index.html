@@ -11,9 +11,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="ครัวออนซอน">
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="Logo.png">
-  <link rel="shortcut icon" href="Logo.png">
-  <link rel="apple-touch-icon" href="Logo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
   <!-- Google Fonts & Font Awesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,10 +62,9 @@
       font-weight: 500;
       overflow: hidden;
       white-space: nowrap;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 8px rgba(255, 111, 0, 0.25);
+      position: relative;
+      z-index: 80;
+      box-shadow: 0 2px 4px rgba(255, 111, 0, 0.2);
       display: none;
     }
 
@@ -102,9 +103,10 @@
       border-bottom: 1px solid #EDF2F7;
       position: sticky;
       top: 0;
-      z-index: 90;
+      z-index: 95;
       min-height: 64px;
       box-sizing: border-box;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .brand {
@@ -795,7 +797,7 @@
         <div class="choice-grid">
           <div id="choicePlate" class="choice-card selected" onclick="selectDishType('plate')">
             <span>🍛 ราดข้าว / จานเดียว</span>
-            <span id=\"platePriceLabel\" style="color: var(--primary-dark);">฿0</span>
+            <span id="platePriceLabel" style="color: var(--primary-dark);">฿0</span>
           </div>
           <div id="choiceSide" class="choice-card" onclick="selectDishType('side')">
             <span>🥘 กับข้าว</span>
@@ -980,6 +982,11 @@
     window.addEventListener("DOMContentLoaded", () => {
       loadCustomerProfile();
       fetchMenuData();
+
+      // Register simple Service Worker for PWA Add-to-Home-Screen support
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      }
     });
 
     function getDriveId(url) {
@@ -1117,7 +1124,7 @@
                 ${item.hasSpecialPrice && item.specialPrice > item.normalPrice ? `<span class="price-special">พิเศษ ฿${item.specialPrice}</span>` : ''}
               </div>
             </div>
-            <button class="add-btn" onclick="openItemModal(${item.id})" ${!item.isAvailable || !storeData.isStoreOpen ? 'disabled' : ''}>
+            <button class="add-btn" onclick="openItemModal('${item.id}')" ${!item.isAvailable || !storeData.isStoreOpen ? 'disabled' : ''}>
               ${!storeData.isStoreOpen ? 'ร้านปิด' : (item.isAvailable ? '<i class="fa-solid fa-plus"></i> สั่งอาหาร' : 'หมดชั่วคราว')}
             </button>
           </div>
@@ -1141,7 +1148,7 @@
 
     function openItemModal(itemId) {
       if (!storeData.isStoreOpen) return;
-      const item = storeData.items.find(it => it.id === itemId);
+      const item = storeData.items.find(it => String(it.id) === String(itemId));
       if (!item || !item.isAvailable) return;
 
       currentModalItem = item;
@@ -1180,9 +1187,19 @@
         sizeGroup.style.display = "none";
       }
 
-      // ตัวเลือกเสริม & ท็อปปิ้ง (เช็ค hasAddons)
+      // ตัวเลือกเสริม & ท็อปปิ้ง (เช็ค hasAddons อย่างเคร่งครัด)
       const addonsGroup = document.getElementById("addonsGroup");
-      const showAddons = item.hasAddons !== undefined ? (item.hasAddons === true || item.hasAddons === "true") : true;
+      let showAddons = true;
+      if (item.hasAddons !== undefined && item.hasAddons !== null) {
+        if (typeof item.hasAddons === "boolean") {
+          showAddons = item.hasAddons;
+        } else if (typeof item.hasAddons === "string") {
+          const val = item.hasAddons.trim().toLowerCase();
+          showAddons = (val === "true" || val === "1" || val === "yes");
+        } else if (typeof item.hasAddons === "number") {
+          showAddons = (item.hasAddons === 1);
+        }
+      }
       addonsGroup.style.display = showAddons ? "block" : "none";
 
       updateModalPrice();
