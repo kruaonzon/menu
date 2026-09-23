@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="referrer" content="no-referrer">
   <title>ครัวออนซอน - สั่งอาหาร Take Away</title>
   <meta name="theme-color" content="#FF6F00">
   <meta name="mobile-web-app-capable" content="yes">
@@ -11,15 +10,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="ครัวออนซอน">
   
-  <!-- ไอคอนสำหรับเบราว์เซอร์และหน้าจอหลัก (ดึงตรงจาก Logo.png ที่มีบน GitHub) -->
-  <link rel="icon" type="image/png" href="Logo.png">
-  <link rel="shortcut icon" href="Logo.png">
+  <link rel="icon" href="Logo.png">
   <link rel="apple-touch-icon" href="Logo.png">
 
-  <!-- ฝัง Manifest ในตัวอัตโนมัติ (ไม่ต้องสร้างไฟล์ manifest.json แยก) -->
-  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B8%8b%E0%B8%AD%E0%B8%99%22%2C%22short_name%22%3A%22%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B8%8b%E0%B8%AD%E0%B8%99%22%2C%22start_url%22%3A%22.%2Findex.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F8F9FA%22%2C%22theme_color%22%3A%22%23FF6F00%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22Logo.png%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+  <!-- Manifest ฝังในตัวที่ระบุไอคอน Logo.png ครบถ้วน -->
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B8%8b%E0%B8%AD%E0%B8%99%22%2C%22short_name%22%3A%22%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B8%8b%E0%B8%AD%E0%B8%99%22%2C%22start_url%22%3A%22index.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F8F9FA%22%2C%22theme_color%22%3A%22%23FF6F00%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22Logo.png%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%2C%22purpose%22%3A%22any%22%7D%5D%7D">
 
-  <!-- Google Fonts & Font Awesome Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -55,7 +51,6 @@
       padding-bottom: 120px;
     }
 
-    /* Marquee Banner */
     .marquee-container {
       background: linear-gradient(90deg, #FF6F00, #FF8F00);
       color: white;
@@ -81,7 +76,6 @@
       100% { transform: translate(-100%, 0); }
     }
 
-    /* Store Closed Banner */
     .store-closed-banner {
       background-color: #FEE2E2;
       border: 1px solid #FCA5A5;
@@ -95,7 +89,6 @@
       display: none;
     }
 
-    /* Header */
     header {
       background: var(--card-bg);
       padding: 10px 16px;
@@ -178,7 +171,6 @@
       display: none;
     }
 
-    /* Categories Tabs */
     .tabs-wrapper {
       background: var(--card-bg);
       padding: 10px 16px;
@@ -216,7 +208,6 @@
       box-shadow: 0 2px 6px rgba(255, 111, 0, 0.3);
     }
 
-    /* Search Bar */
     .search-container {
       padding: 12px 16px 4px;
     }
@@ -240,7 +231,6 @@
       outline: none;
     }
 
-    /* Menu Grid */
     .menu-container {
       padding: 16px;
       display: grid;
@@ -362,7 +352,6 @@
       cursor: not-allowed;
     }
 
-    /* Modal Styling */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -434,7 +423,6 @@
       cursor: pointer;
     }
 
-    /* Options Sections */
     .option-group {
       margin-bottom: 16px;
     }
@@ -469,11 +457,6 @@
       font-weight: 600;
     }
 
-    .choice-card input {
-      display: none;
-    }
-
-    /* Addon Checkboxes */
     .addon-item {
       display: flex;
       justify-content: space-between;
@@ -555,7 +538,6 @@
       box-shadow: 0 4px 12px rgba(255, 111, 0, 0.35);
     }
 
-    /* Floating Cart Bar */
     .cart-bar {
       position: fixed;
       bottom: 20px;
@@ -626,7 +608,6 @@
       border-color: var(--primary);
     }
 
-    /* Cart Items list */
     .cart-item {
       padding: 12px 0;
       border-bottom: 1px solid #EDF2F7;
@@ -707,17 +688,14 @@
 </head>
 <body>
 
-  <!-- Marquee Announcement -->
   <div id="marqueeBanner" class="marquee-container">
     <div id="marqueeContent" class="marquee-text">ยินดีต้อนรับสู่ ครัวออนซอน! สั่งกลับบ้าน (Take Away) ได้สะดวกรวดเร็ว</div>
   </div>
 
-  <!-- Store Closed Banner -->
   <div id="storeClosedBanner" class="store-closed-banner">
     <i class="fa-solid fa-store-slash"></i> ขณะนี้ร้านปิดให้บริการชั่วคราว ไม่สามารถส่งรายการสั่งอาหารได้
   </div>
 
-  <!-- Header -->
   <header>
     <div class="brand">
       <img src="Logo.png" alt="ครัวออนซอน" onerror="this.src='https://picsum.photos/seed/krua/100'">
@@ -743,7 +721,6 @@
     </div>
   </header>
 
-  <!-- Categories Tabs -->
   <div class="tabs-wrapper" id="categoriesTabs">
     <button class="tab-btn active" onclick="filterCategory('ทั้งหมด')">ทั้งหมด</button>
     <button class="tab-btn" onclick="filterCategory('เมนูแนะนำ')">⭐ เมนูแนะนำ</button>
@@ -754,7 +731,6 @@
     <button class="tab-btn" onclick="filterCategory('อื่นๆ')">อื่นๆ</button>
   </div>
 
-  <!-- Search Bar -->
   <div class="search-container">
     <div class="search-box">
       <i class="fa-solid fa-magnifying-glass" style="color: #A0AEC0;"></i>
@@ -762,7 +738,6 @@
     </div>
   </div>
 
-  <!-- Main Menu Grid -->
   <div id="menuContainer" class="menu-container">
     <div class="loading-wrap" style="grid-column: 1 / -1;">
       <div class="spinner"></div>
@@ -770,7 +745,6 @@
     </div>
   </div>
 
-  <!-- Floating Cart Bar -->
   <div id="cartBar" class="cart-bar" onclick="openCartModal()">
     <div class="cart-info">
       <div id="cartCount" class="cart-badge">0</div>
@@ -785,7 +759,6 @@
     </div>
   </div>
 
-  <!-- Item Options Modal -->
   <div id="itemModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -793,7 +766,6 @@
         <button class="close-btn" onclick="closeModal('itemModal')"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <!-- Dish Type Options -->
       <div id="dishTypeGroup" class="option-group" style="display: none;">
         <div class="option-title">รูปแบบอาหาร</div>
         <div class="choice-grid">
@@ -808,7 +780,6 @@
         </div>
       </div>
 
-      <!-- Size Options -->
       <div id="sizeGroup" class="option-group">
         <div class="option-title">ขนาด / ปริมาณ</div>
         <div class="choice-grid">
@@ -823,7 +794,6 @@
         </div>
       </div>
 
-      <!-- Addons & Toppings -->
       <div id="addonsGroup" class="option-group">
         <div class="option-title">ตัวเลือกเสริม & ท็อปปิ้ง</div>
         
@@ -868,27 +838,23 @@
         </div>
       </div>
 
-      <!-- Special Instructions -->
       <div class="option-group">
         <div class="option-title">รายละเอียดเพิ่มเติม (ไม่บังคับ)</div>
         <textarea id="itemNote" class="note-input" placeholder="เช่น เผ็ดน้อย, ไม่ใส่ผักชี, หวานน้อย..."></textarea>
       </div>
 
-      <!-- Quantity -->
       <div class="qty-selector">
         <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
         <span id="modalQty" class="qty-num">1</span>
         <button class="qty-btn" onclick="changeModalQty(1)">+</button>
       </div>
 
-      <!-- Confirm Button -->
       <button class="confirm-btn" onclick="confirmAddToCart()">
         ใส่ตะกร้า • <span id="modalTotalBtnPrice">฿0</span>
       </button>
     </div>
   </div>
 
-  <!-- Cart Modal -->
   <div id="cartModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -905,7 +871,6 @@
         </div>
       </div>
 
-      <!-- Customer Profile in Checkout -->
       <div style="margin-top: 20px;">
         <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 10px; color: #4A5568;">
           <i class="fa-solid fa-user-check"></i> ข้อมูลผู้สั่ง (Take Away)
@@ -928,7 +893,6 @@
     </div>
   </div>
 
-  <!-- Profile Modal -->
   <div id="profileModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -953,9 +917,6 @@
   </div>
 
   <script>
-    // ==========================================
-    // URL Google Apps Script Web App
-    // ==========================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvt2azeKuFh0bndISEq3fTJdjO3CFd4iUpjiURnErUz3V2W0aoOB9Yl2ZqM6CX9Jwu/exec";
 
     let storeData = {
@@ -1037,14 +998,7 @@
           extraRice: 10,
           riceNoodles: 10
         },
-        items: [
-          { id: 1, name: "ผัดกะเพราหมูกรอบ", normalPrice: 60, specialPrice: 70, sideDishNormalPrice: 80, sideDishSpecialPrice: 100, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "เมนูแนะนำ", imageUrl: "https://picsum.photos/seed/kaprao/300", isAvailable: true, isRecommended: true },
-          { id: 2, name: "ข้าวผัดปู", normalPrice: 80, specialPrice: 100, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: true, category: "เมนูแนะนำ", imageUrl: "https://picsum.photos/seed/crabrice/300", isAvailable: true, isRecommended: true },
-          { id: 3, name: "ต้มยำกุ้งน้ำข้น", normalPrice: 150, specialPrice: 200, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ต้ม/แกง", imageUrl: "https://picsum.photos/seed/tomyum/300", isAvailable: true, isRecommended: true },
-          { id: 4, name: "หมูทอดกระเทียมพริกไทย", normalPrice: 50, specialPrice: 60, sideDishNormalPrice: 70, sideDishSpecialPrice: 80, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/garlicpork/300", isAvailable: true, isRecommended: false },
-          { id: 5, name: "ส้มตำไทย", normalPrice: 40, specialPrice: 50, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ตำ/ยำ", imageUrl: "https://picsum.photos/seed/somtum/300", isAvailable: true, isRecommended: false },
-          { id: 6, name: "สตรอว์เบอร์รีสมูทตี้", normalPrice: 55, specialPrice: 65, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "สมูทตี้", imageUrl: "https://picsum.photos/seed/strawberry/300", isAvailable: true, isRecommended: false }
-        ]
+        items: []
       };
       applyStoreConfig();
       renderMenuItems();
@@ -1164,7 +1118,6 @@
         if (chk) chk.checked = false;
       });
 
-      // รูปแบบอาหาร (ราดข้าว / กับข้าว)
       const dishGroup = document.getElementById("dishTypeGroup");
       if (item.hasSideDish && item.sideDishNormalPrice) {
         dishGroup.style.display = "block";
@@ -1175,7 +1128,6 @@
         dishGroup.style.display = "none";
       }
 
-      // ขนาด / ปริมาณ
       const sizeGroup = document.getElementById("sizeGroup");
       if (item.hasSpecialPrice) {
         sizeGroup.style.display = "block";
@@ -1184,7 +1136,7 @@
         sizeGroup.style.display = "none";
       }
 
-      // ตัวเลือกเสริม & ท็อปปิ้ง (เช็ค hasAddons อย่างเข้มงวด)
+      // ตรวจสอบตัวเลือกเสริม/ท็อปปิ้ง
       const addonsGroup = document.getElementById("addonsGroup");
       let showAddons = true;
       if (item.hasAddons !== undefined && item.hasAddons !== null) {
@@ -1192,7 +1144,7 @@
           showAddons = item.hasAddons;
         } else if (typeof item.hasAddons === "string") {
           const val = item.hasAddons.trim().toLowerCase();
-          showAddons = (val === "true" || val === "1" || val === "yes");
+          showAddons = !(val === "false" || val === "0" || val === "no");
         } else if (typeof item.hasAddons === "number") {
           showAddons = (item.hasAddons === 1);
         }
@@ -1476,13 +1428,11 @@
       msg += "🛵 *รูปแบบ: สั่งกลับบ้าน (Take Away)*\n\n";
       msg += "รบกวนทางร้านกดยืนยันออเดอร์และแจ้งยอดชำระด้วยนะครับ/ค่ะ 🙏";
 
-      // คัดลอกข้อความออเดอร์ลง Clipboard อัตโนมัติ เพื่อให้วางส่งได้แน่นอน 100%
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(msg).catch(() => {});
       }
 
       const encodedMsg = encodeURIComponent(msg);
-      // ส่งผ่าน LINE Share URL มาตรฐาน
       const shareUrl = `https://line.me/R/msg/text/?${encodedMsg}`;
       window.location.href = shareUrl;
     }
