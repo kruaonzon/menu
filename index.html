@@ -1034,29 +1034,62 @@
       if (!url || url.trim() === '') return '';
       const driveId = getDriveId(url);
       if (driveId) {
-        return `https://drive.google.com/thumbnail?id=${driveId}&sz=w600`;
+        return `https://lh3.googleusercontent.com/d/${driveId}=w600`;
       }
       return url;
     }
 
+    const MENU_CACHE_KEY = "krua_menu_cache_v2";
+
     async function fetchMenuData() {
+      // 1. ความเร็วสูงสุด: โหลดเมนูจากแคชเครื่องทันทีภายใน 0.05 วินาที
+      let hasCache = false;
+      try {
+        const cachedRaw = localStorage.getItem(MENU_CACHE_KEY);
+        if (cachedRaw) {
+          const cachedData = JSON.parse(cachedRaw);
+          if (cachedData && Array.isArray(cachedData.items) && cachedData.items.length > 0) {
+            storeData = cachedData;
+            applyStoreConfig();
+            renderContinuousMenu();
+            hasCache = true;
+          }
+        }
+      } catch (err) {
+        console.warn("Cache parsing error:", err);
+      }
+
       if (!SCRIPT_URL) {
-        useSampleData();
+        if (!hasCache) useSampleData();
         return;
       }
+
+      // 2. ดึงข้อมูลอัปเดตล่าสุดจาก Google Sheets เบื้องหลังแบบไร้รอยต่อ
       try {
-        const res = await fetch(SCRIPT_URL);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        const res = await fetch(SCRIPT_URL, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
         const data = await res.json();
-        if (data.status === "success") {
+        if (data && data.status === "success") {
           storeData = data;
+          try {
+            localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(data));
+          } catch (e) {
+            console.warn("Failed to save menu cache:", e);
+          }
           applyStoreConfig();
           renderContinuousMenu();
-        } else {
+        } else if (!hasCache) {
           useSampleData();
         }
       } catch (e) {
         console.error("Error fetching menu:", e);
-        useSampleData();
+        if (!hasCache) {
+          useSampleData();
+        }
       }
     }
 
@@ -1169,7 +1202,7 @@
 
           card.innerHTML = `
             <div class="menu-img-wrap">
-              <img src="${imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${item.id}/200'">
+              <img src="${imgUrl}" alt="${item.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${item.id}/200'">
               ${item.isRecommended ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> แนะนำ</span>' : ''}
             </div>
             <div class="menu-card-body">
