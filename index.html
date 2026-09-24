@@ -334,6 +334,12 @@
       object-fit: cover;
     }
 
+    .menu-img-wrap img.img-fallback {
+      object-fit: contain !important;
+      background: #FFF7ED !important;
+      padding: 16px !important;
+    }
+
     .badge-recommend {
       position: absolute;
       top: 8px;
@@ -755,7 +761,7 @@
 
   <header>
     <div class="brand">
-      <img src="Logo.png" alt="ครัวออนซอน" onerror="this.src='https://picsum.photos/seed/krua/100'">
+      <img src="Logo.png" alt="ครัวออนซอน" onerror="this.onerror=null; this.src='icon-192.png';">
       <div class="brand-text">
         <h1>ครัวออนซอน</h1>
         <span><i class="fa-solid fa-bag-shopping"></i> Take Away</span>
@@ -1106,12 +1112,12 @@
           riceNoodles: 10
         },
         items: [
-          { id: 1, name: "ผัดกะเพราหมูกรอบ", normalPrice: 60, specialPrice: 70, sideDishNormalPrice: 80, sideDishSpecialPrice: 100, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/kaprao/300", isAvailable: true, isRecommended: true },
-          { id: 2, name: "ข้าวผัดปู", normalPrice: 80, specialPrice: 100, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/crabrice/300", isAvailable: true, isRecommended: true },
-          { id: 3, name: "ต้มยำกุ้งน้ำข้น", normalPrice: 150, specialPrice: 200, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ต้ม/แกง", imageUrl: "https://picsum.photos/seed/tomyum/300", isAvailable: true, isRecommended: true },
-          { id: 4, name: "หมูทอดกระเทียมพริกไทย", normalPrice: 50, specialPrice: 60, sideDishNormalPrice: 70, sideDishSpecialPrice: 80, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/garlicpork/300", isAvailable: true, isRecommended: false },
-          { id: 5, name: "ส้มตำไทย", normalPrice: 40, specialPrice: 50, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ตำ/ยำ", imageUrl: "https://picsum.photos/seed/somtum/300", isAvailable: true, isRecommended: false },
-          { id: 6, name: "สตรอว์เบอร์รีสมูทตี้", normalPrice: 55, specialPrice: 65, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "สมูทตี้", imageUrl: "https://picsum.photos/seed/strawberry/300", isAvailable: true, isRecommended: false }
+          { id: 1, name: "ผัดกะเพราหมูกรอบ", normalPrice: 60, specialPrice: 70, sideDishNormalPrice: 80, sideDishSpecialPrice: 100, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "", isAvailable: true, isRecommended: true },
+          { id: 2, name: "ข้าวผัดปู", normalPrice: 80, specialPrice: 100, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "", isAvailable: true, isRecommended: true },
+          { id: 3, name: "ต้มยำกุ้งน้ำข้น", normalPrice: 150, specialPrice: 200, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ต้ม/แกง", imageUrl: "", isAvailable: true, isRecommended: true },
+          { id: 4, name: "หมูทอดกระเทียมพริกไทย", normalPrice: 50, specialPrice: 60, sideDishNormalPrice: 70, sideDishSpecialPrice: 80, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "", isAvailable: true, isRecommended: false },
+          { id: 5, name: "ส้มตำไทย", normalPrice: 40, specialPrice: 50, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ตำ/ยำ", imageUrl: "", isAvailable: true, isRecommended: false },
+          { id: 6, name: "สตรอว์เบอร์รีสมูทตี้", normalPrice: 55, specialPrice: 65, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "สมูทตี้", imageUrl: "", isAvailable: true, isRecommended: false }
         ]
       };
       applyStoreConfig();
@@ -1198,11 +1204,12 @@
           const card = document.createElement("div");
           card.className = `menu-card ${item.isAvailable ? "" : "out-of-stock"}`;
           const rawImg = formatDriveImage(item.imageUrl);
-          const imgUrl = rawImg || `https://picsum.photos/seed/${item.id}/200`;
+          const hasImg = !!rawImg;
+          const imgUrl = rawImg || "Logo.png";
 
           card.innerHTML = `
             <div class="menu-img-wrap">
-              <img src="${imgUrl}" alt="${item.name}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://picsum.photos/seed/${item.id}/200'">
+              <img src="${imgUrl}" alt="${item.name}" loading="lazy" decoding="async" class="${!hasImg ? 'img-fallback' : ''}" onerror="this.onerror=null; this.src='Logo.png'; this.classList.add('img-fallback');">
               ${item.isRecommended ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> แนะนำ</span>' : ''}
             </div>
             <div class="menu-card-body">
