@@ -1586,6 +1586,11 @@
         navigator.clipboard.writeText(msg).catch(() => {});
       }
 
+      // ล้างรายการสินค้าในตะกร้าและปิดหน้าต่างสรุปตะกร้า
+      cart = [];
+      updateCartUI();
+      closeModal("cartModal");
+
       alert("📋 คัดลอกรายการสั่งอาหารให้แล้วครับ!\n\nระบบกำลังเปิด LINE ร้าน ครัวออนซอน กรุณากด 'วาง (Paste)' ในช่องแชทแล้วกดส่งได้เลยครับ");
       
       const lineOfficialUrl = "https://line.me/R/ti/p/@136nrxrl";
