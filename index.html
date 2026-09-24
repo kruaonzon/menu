@@ -13,7 +13,7 @@
   <link rel="icon" href="Logo.png">
   <link rel="apple-touch-icon" href="Logo.png">
 
-  <!-- Manifest ฝังในตัวที่ระบุไอคอน Logo.png ครบถ้วน -->
+  <!-- Manifest ฝังในตัว -->
   <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B8%8b%E0%B8%AD%E0%B8%99%22%2C%22short_name%22%3A%22%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%AD%E0%B8%AD%E0%B8%99%E0%B8%8b%E0%B8%AD%E0%B8%99%22%2C%22start_url%22%3A%22index.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F8F9FA%22%2C%22theme_color%22%3A%22%23FF6F00%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22Logo.png%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fjpeg%22%2C%22purpose%22%3A%22any%22%7D%5D%7D">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,12 +45,17 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       background-color: var(--bg);
       color: var(--text);
       padding-bottom: 120px;
     }
 
+    /* Marquee Banner */
     .marquee-container {
       background: linear-gradient(90deg, #FF6F00, #FF8F00);
       color: white;
@@ -89,6 +94,7 @@
       display: none;
     }
 
+    /* Header */
     header {
       background: var(--card-bg);
       padding: 10px 16px;
@@ -171,6 +177,7 @@
       display: none;
     }
 
+    /* Categories Tabs Sticky Bar */
     .tabs-wrapper {
       background: var(--card-bg);
       padding: 10px 16px;
@@ -182,6 +189,8 @@
       top: 64px;
       z-index: 89;
       box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
     }
 
     .tabs-wrapper::-webkit-scrollbar {
@@ -191,23 +200,26 @@
     .tab-btn {
       background: #F1F5F9;
       border: none;
-      padding: 8px 16px;
+      padding: 8px 18px;
       border-radius: 24px;
       font-size: 0.88rem;
       font-weight: 500;
       color: var(--text-muted);
       cursor: pointer;
       margin-right: 8px;
-      transition: all 0.2s;
+      flex-shrink: 0;
+      transition: all 0.25s ease;
     }
 
     .tab-btn.active {
       background: var(--primary);
       color: white;
       font-weight: 600;
-      box-shadow: 0 2px 6px rgba(255, 111, 0, 0.3);
+      box-shadow: 0 2px 8px rgba(255, 111, 0, 0.35);
+      transform: scale(1.03);
     }
 
+    /* Search Bar */
     .search-container {
       padding: 12px 16px 4px;
     }
@@ -231,8 +243,52 @@
       outline: none;
     }
 
+    /* Category Section Headers */
+    .category-section {
+      padding-top: 12px;
+      scroll-margin-top: 125px; /* เผื่อระยะให้พอดีกับแถบ header + tab ด้านบน */
+    }
+
+    .category-header-wrap {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px 8px;
+      gap: 10px;
+    }
+
+    .category-header-title {
+      font-size: 1.22rem;
+      font-weight: 700;
+      color: #1A202C;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .category-header-title i {
+      color: var(--primary);
+    }
+
+    .category-header-line {
+      flex-grow: 1;
+      height: 2px;
+      background: linear-gradient(90deg, #E2E8F0, transparent);
+      border-radius: 2px;
+    }
+
+    .category-item-count {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: #EDF2F7;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+
+    /* Menu Grid */
     .menu-container {
-      padding: 16px;
+      padding: 8px 16px 16px;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 14px;
@@ -352,6 +408,7 @@
       cursor: not-allowed;
     }
 
+    /* Modal Styling */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -711,7 +768,7 @@
       <a href="tel:0974624632" class="user-profile-btn" style="color:#D97706; background:#FEF3C7; text-decoration:none;" title="โทรสั่งอาหาร">
         <i class="fa-solid fa-phone"></i>
       </a>
-      <a href="https://line.me/R/ti/p/@788siyvm" target="_blank" class="user-profile-btn" style="color:#059669; background:#D1FAE5; text-decoration:none;" title="LINE ร้าน">
+      <a href="https://line.me/R/ti/p/@136nrxrl" target="_blank" class="user-profile-btn" style="color:#059669; background:#D1FAE5; text-decoration:none;" title="LINE ร้าน">
         <i class="fa-brands fa-line"></i>
       </a>
       <button class="user-profile-btn" onclick="openProfileModal()" title="ข้อมูลผู้สั่ง">
@@ -721,14 +778,14 @@
     </div>
   </header>
 
+  <!-- Categories Tabs (ตัด "ทั้งหมด" ออก และเริ่มที่ "เมนูแนะนำ") -->
   <div class="tabs-wrapper" id="categoriesTabs">
-    <button class="tab-btn active" onclick="filterCategory('ทั้งหมด')">ทั้งหมด</button>
-    <button class="tab-btn" onclick="filterCategory('เมนูแนะนำ')">⭐ เมนูแนะนำ</button>
-    <button class="tab-btn" onclick="filterCategory('ราดข้าว/กับข้าว')">ราดข้าว/กับข้าว</button>
-    <button class="tab-btn" onclick="filterCategory('ต้ม/แกง')">ต้ม/แกง</button>
-    <button class="tab-btn" onclick="filterCategory('ตำ/ยำ')">ตำ/ยำ</button>
-    <button class="tab-btn" onclick="filterCategory('สมูทตี้')">สมูทตี้</button>
-    <button class="tab-btn" onclick="filterCategory('อื่นๆ')">อื่นๆ</button>
+    <button class="tab-btn active" data-category="recommend" onclick="scrollToCategory('recommend')">⭐ เมนูแนะนำ</button>
+    <button class="tab-btn" data-category="cat-rice" onclick="scrollToCategory('cat-rice')">ราดข้าว/กับข้าว</button>
+    <button class="tab-btn" data-category="cat-soup" onclick="scrollToCategory('cat-soup')">ต้ม/แกง</button>
+    <button class="tab-btn" data-category="cat-salad" onclick="scrollToCategory('cat-salad')">ตำ/ยำ</button>
+    <button class="tab-btn" data-category="cat-drink" onclick="scrollToCategory('cat-drink')">สมูทตี้</button>
+    <button class="tab-btn" data-category="cat-other" onclick="scrollToCategory('cat-other')">อื่นๆ</button>
   </div>
 
   <div class="search-container">
@@ -738,13 +795,15 @@
     </div>
   </div>
 
-  <div id="menuContainer" class="menu-container">
-    <div class="loading-wrap" style="grid-column: 1 / -1;">
+  <!-- กล่องบรรจุรายการอาหารทั้งหมด แยกหมวดหมู่ต่อเนื่อง -->
+  <div id="menuSectionsContainer">
+    <div class="loading-wrap">
       <div class="spinner"></div>
       <p style="color: var(--text-muted);">กำลังโหลดเมนูอาหารสดใหม่...</p>
     </div>
   </div>
 
+  <!-- Floating Cart Bar -->
   <div id="cartBar" class="cart-bar" onclick="openCartModal()">
     <div class="cart-info">
       <div id="cartCount" class="cart-badge">0</div>
@@ -759,6 +818,7 @@
     </div>
   </div>
 
+  <!-- Item Options Modal -->
   <div id="itemModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -855,6 +915,7 @@
     </div>
   </div>
 
+  <!-- Cart Modal -->
   <div id="cartModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -893,6 +954,7 @@
     </div>
   </div>
 
+  <!-- Profile Modal -->
   <div id="profileModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -919,6 +981,16 @@
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvt2azeKuFh0bndISEq3fTJdjO3CFd4iUpjiURnErUz3V2W0aoOB9Yl2ZqM6CX9Jwu/exec";
 
+    // โครงสร้างหมวดหมู่อาหารและไอคอน
+    const CATEGORIES_CONFIG = [
+      { id: "recommend", name: "เมนูแนะนำ", icon: "fa-solid fa-star", isSpecial: true },
+      { id: "cat-rice", name: "ราดข้าว/กับข้าว", icon: "fa-solid fa-bowl-rice" },
+      { id: "cat-soup", name: "ต้ม/แกง", icon: "fa-solid fa-bowl-hot" },
+      { id: "cat-salad", name: "ตำ/ยำ", icon: "fa-solid fa-pepper-hot" },
+      { id: "cat-drink", name: "สมูทตี้", icon: "fa-solid fa-blender" },
+      { id: "cat-other", name: "อื่นๆ", icon: "fa-solid fa-utensils" }
+    ];
+
     let storeData = {
       isStoreOpen: true,
       announcement: "ยินดีต้อนรับสู่ ครัวออนซอน! สั่งกลับบ้าน (Take Away) ได้สะดวกรวดเร็ว | โทร 097-462-4632",
@@ -934,8 +1006,9 @@
     };
 
     let cart = [];
-    let activeCategory = "ทั้งหมด";
     let activeSearch = "";
+    let isUserClickingTab = false; // ป้องกัน scroll conflict ขณะคลิกแท็บ
+
     let currentModalItem = null;
     let modalDishType = "plate";
     let modalSize = "normal";
@@ -945,6 +1018,7 @@
     window.addEventListener("DOMContentLoaded", () => {
       loadCustomerProfile();
       fetchMenuData();
+      setupScrollSpy();
     });
 
     function getDriveId(url) {
@@ -976,7 +1050,7 @@
         if (data.status === "success") {
           storeData = data;
           applyStoreConfig();
-          renderMenuItems();
+          renderContinuousMenu();
         } else {
           useSampleData();
         }
@@ -998,10 +1072,17 @@
           extraRice: 10,
           riceNoodles: 10
         },
-        items: []
+        items: [
+          { id: 1, name: "ผัดกะเพราหมูกรอบ", normalPrice: 60, specialPrice: 70, sideDishNormalPrice: 80, sideDishSpecialPrice: 100, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/kaprao/300", isAvailable: true, isRecommended: true },
+          { id: 2, name: "ข้าวผัดปู", normalPrice: 80, specialPrice: 100, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/crabrice/300", isAvailable: true, isRecommended: true },
+          { id: 3, name: "ต้มยำกุ้งน้ำข้น", normalPrice: 150, specialPrice: 200, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ต้ม/แกง", imageUrl: "https://picsum.photos/seed/tomyum/300", isAvailable: true, isRecommended: true },
+          { id: 4, name: "หมูทอดกระเทียมพริกไทย", normalPrice: 50, specialPrice: 60, sideDishNormalPrice: 70, sideDishSpecialPrice: 80, hasSpecialPrice: true, hasSideDish: true, hasAddons: true, category: "ราดข้าว/กับข้าว", imageUrl: "https://picsum.photos/seed/garlicpork/300", isAvailable: true, isRecommended: false },
+          { id: 5, name: "ส้มตำไทย", normalPrice: 40, specialPrice: 50, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "ตำ/ยำ", imageUrl: "https://picsum.photos/seed/somtum/300", isAvailable: true, isRecommended: false },
+          { id: 6, name: "สตรอว์เบอร์รีสมูทตี้", normalPrice: 55, specialPrice: 65, sideDishNormalPrice: null, sideDishSpecialPrice: null, hasSpecialPrice: true, hasSideDish: false, hasAddons: false, category: "สมูทตี้", imageUrl: "https://picsum.photos/seed/strawberry/300", isAvailable: true, isRecommended: false }
+        ]
       };
       applyStoreConfig();
-      renderMenuItems();
+      renderContinuousMenu();
     }
 
     function applyStoreConfig() {
@@ -1029,72 +1110,146 @@
       document.getElementById("addonPrice_riceNoodles").textContent = `+฿${p.riceNoodles || 10}`;
     }
 
-    function renderMenuItems() {
-      const container = document.getElementById("menuContainer");
+    // แสดงผลเมนูต่อเนื่องทุกหมวด พร้อมตัวคั่นขนาดใหญ่
+    function renderContinuousMenu() {
+      const container = document.getElementById("menuSectionsContainer");
       container.innerHTML = "";
 
-      let list = storeData.items || [];
+      const allItems = storeData.items || [];
+      const searchQuery = activeSearch.trim().toLowerCase();
 
-      if (activeCategory === "เมนูแนะนำ") {
-        list = list.filter(it => it.isRecommended || it.category === "เมนูแนะนำ");
-      } else if (activeCategory !== "ทั้งหมด") {
-        list = list.filter(it => it.category === activeCategory);
-      }
+      let totalRendered = 0;
 
-      if (activeSearch.trim() !== "") {
-        const q = activeSearch.toLowerCase();
-        list = list.filter(it => it.name.toLowerCase().includes(q));
-      }
+      CATEGORIES_CONFIG.forEach(cat => {
+        let catItems = [];
 
-      if (list.length === 0) {
-        container.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
-            <i class="fa-regular fa-folder-open" style="font-size: 2.5rem; margin-bottom: 10px;"></i>
-            <p>ไม่พบรายการอาหารที่ค้นหา</p>
+        if (cat.id === "recommend") {
+          catItems = allItems.filter(it => it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูแนะนำ");
+        } else {
+          catItems = allItems.filter(it => it.category === cat.name);
+        }
+
+        // กรองการค้นหา
+        if (searchQuery !== "") {
+          catItems = catItems.filter(it => it.name.toLowerCase().includes(searchQuery));
+        }
+
+        // ถ้าไม่มีรายการในหมวดนี้ และกำลังค้นหา ให้ข้ามไป
+        if (catItems.length === 0) return;
+
+        totalRendered += catItems.length;
+
+        // สร้าง Section ประจำหมวด
+        const sectionEl = document.createElement("section");
+        sectionEl.className = "category-section";
+        sectionEl.id = `section-${cat.id}`;
+        sectionEl.dataset.categoryId = cat.id;
+
+        // หัวข้อคั่นหมวดหมู่ขนาดใหญ่
+        sectionEl.innerHTML = `
+          <div class="category-header-wrap">
+            <h2 class="category-header-title">
+              <i class="${cat.icon}"></i> ${cat.name}
+            </h2>
+            <div class="category-header-line"></div>
+            <span class="category-item-count">${catItems.length} รายการ</span>
           </div>
+          <div class="menu-container" id="grid-${cat.id}"></div>
         `;
-        return;
-      }
 
-      list.forEach(item => {
-        const card = document.createElement("div");
-        card.className = `menu-card ${item.isAvailable ? "" : "out-of-stock"}`;
-        const rawImg = formatDriveImage(item.imageUrl);
-        const imgUrl = rawImg || `https://picsum.photos/seed/${item.id}/200`;
+        container.appendChild(sectionEl);
 
-        card.innerHTML = `
-          <div class="menu-img-wrap">
-            <img src="${imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${item.id}/200'">
-            ${item.isRecommended ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> เมนูแนะนำ</span>' : ''}
-          </div>
-          <div class="menu-card-body">
-            <div>
-              <div class="menu-name">${item.name}</div>
-              <div class="menu-prices">
-                <span class="price-normal">฿${item.normalPrice}</span>
-                ${item.hasSpecialPrice && item.specialPrice > item.normalPrice ? `<span class="price-special">พิเศษ ฿${item.specialPrice}</span>` : ''}
-              </div>
+        // ใส่การ์ดเมนูอาหารลงใน Grid ของหมวดนั้น
+        const gridEl = sectionEl.querySelector(`#grid-${cat.id}`);
+        catItems.forEach(item => {
+          const card = document.createElement("div");
+          card.className = `menu-card ${item.isAvailable ? "" : "out-of-stock"}`;
+          const rawImg = formatDriveImage(item.imageUrl);
+          const imgUrl = rawImg || `https://picsum.photos/seed/${item.id}/200`;
+
+          card.innerHTML = `
+            <div class="menu-img-wrap">
+              <img src="${imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${item.id}/200'">
+              ${item.isRecommended ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> แนะนำ</span>' : ''}
             </div>
-            <button class="add-btn" onclick="openItemModal('${item.id}')" ${!item.isAvailable || !storeData.isStoreOpen ? 'disabled' : ''}>
-              ${!storeData.isStoreOpen ? 'ร้านปิด' : (item.isAvailable ? '<i class="fa-solid fa-plus"></i> สั่งอาหาร' : 'หมดชั่วคราว')}
-            </button>
+            <div class="menu-card-body">
+              <div>
+                <div class="menu-name">${item.name}</div>
+                <div class="menu-prices">
+                  <span class="price-normal">฿${item.normalPrice}</span>
+                  ${item.hasSpecialPrice && item.specialPrice > item.normalPrice ? `<span class="price-special">พิเศษ ฿${item.specialPrice}</span>` : ''}
+                </div>
+              </div>
+              <button class="add-btn" onclick="openItemModal('${item.id}')" ${!item.isAvailable || !storeData.isStoreOpen ? 'disabled' : ''}>
+                ${!storeData.isStoreOpen ? 'ร้านปิด' : (item.isAvailable ? '<i class="fa-solid fa-plus"></i> สั่งอาหาร' : 'หมดชั่วคราว')}
+              </button>
+            </div>
+          `;
+          gridEl.appendChild(card);
+        });
+      });
+
+      if (totalRendered === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+            <i class="fa-regular fa-folder-open" style="font-size: 3rem; margin-bottom: 12px; color: #CBD5E0;"></i>
+            <h3 style="font-size: 1.1rem; color: #4A5568;">ไม่พบรายการอาหารที่ค้นหา</h3>
+            <p style="font-size: 0.9rem; margin-top: 4px;">ลองค้นหาด้วยคำอื่น หรือเลือกหมวดหมู่อาหารดูนะครับ</p>
           </div>
         `;
-        container.appendChild(card);
+      }
+    }
+
+    // เลื่อนหน้าจอไปยังหมวดหมู่ที่คลิก
+    function scrollToCategory(catId) {
+      isUserClickingTab = true;
+      highlightTab(catId);
+
+      const section = document.getElementById(`section-${catId}`);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      setTimeout(() => {
+        isUserClickingTab = false;
+      }, 600);
+    }
+
+    // ปรับแท็บแคปซูลให้ Active และเลื่อนให้มองเห็นชัดเจน
+    function highlightTab(catId) {
+      const tabs = document.querySelectorAll(".tab-btn");
+      tabs.forEach(tab => {
+        const isActive = (tab.dataset.category === catId);
+        tab.classList.toggle("active", isActive);
+        if (isActive) {
+          tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
       });
     }
 
-    function filterCategory(cat) {
-      activeCategory = cat;
-      document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.textContent.trim().replace("⭐ ", "") === cat || (cat === "เมนูแนะนำ" && btn.textContent.includes("แนะนำ")));
-      });
-      renderMenuItems();
+    // ScrollSpy: ตรวจจับการเลื่อนจอแล้วเปลี่ยนแท็บแคปซูลตามตำแหน่งจริงอัตโนมัติ
+    function setupScrollSpy() {
+      window.addEventListener("scroll", () => {
+        if (isUserClickingTab) return; // ไม่กวนใจขณะผู้ใช้กดแท็บเอง
+
+        const sections = document.querySelectorAll(".category-section");
+        const scrollPosition = window.scrollY + 140; // ชดเชยความสูง sticky bars
+
+        sections.forEach(section => {
+          const top = section.offsetTop;
+          const height = section.offsetHeight;
+          const catId = section.dataset.categoryId;
+
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            highlightTab(catId);
+          }
+        });
+      }, { passive: true });
     }
 
     function onSearch(val) {
       activeSearch = val;
-      renderMenuItems();
+      renderContinuousMenu();
     }
 
     function openItemModal(itemId) {
@@ -1136,7 +1291,7 @@
         sizeGroup.style.display = "none";
       }
 
-      // ตรวจสอบตัวเลือกเสริม/ท็อปปิ้ง
+      // เช็คการแสดงตัวเลือกเสริม / ท็อปปิ้ง
       const addonsGroup = document.getElementById("addonsGroup");
       let showAddons = true;
       if (item.hasAddons !== undefined && item.hasAddons !== null) {
@@ -1425,18 +1580,14 @@
 
       msg += "--------------------------\n";
       msg += `💰 *ยอดรวมสุทธิ: ฿${grandTotal}*\n`;
-      
       msg += "รบกวนทางร้านกดยืนยันออเดอร์และแจ้งยอดชำระด้วยนะครับ/ค่ะ 🙏";
 
-      // 1. คัดลอกข้อความออเดอร์ลงคลิปบอร์ดทันทีอัตโนมัติ
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(msg).catch(() => {});
       }
 
-      // 2. แจ้งเตือนลูกค้าพร้อมเปิดห้องแชทของร้าน ครัวออนซอน โดยตรง
       alert("📋 คัดลอกรายการสั่งอาหารให้แล้วครับ!\n\nระบบกำลังเปิด LINE ร้าน ครัวออนซอน กรุณากด 'วาง (Paste)' ในช่องแชทแล้วกดส่งได้เลยครับ");
       
-      // 3. วิ่งตรงเข้าสู่ LINE Official Account ครัวออนซอน ของร้านโดยตรง
       const lineOfficialUrl = "https://line.me/R/ti/p/@136nrxrl";
       window.location.href = lineOfficialUrl;
     }
