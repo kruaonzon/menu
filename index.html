@@ -3,7 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ครัวออนซอน - สั่งอาหาร Take Away</title>
+  <title>ครัวออนซอน - สั่งอาหารออนไลน์ Take Away | อาหารตามสั่ง ต้มยำ ส้มตำ สมูทตี้</title>
+  <meta name="description" id="metaDescription" content="ครัวออนซอน สั่งอาหารกลับบ้าน (Take Away) สะดวกรวดเร็ว อาหารตามสั่ง ราดข้าว กับข้าว ต้ม/แกง ตำ/ยำ สมูทตี้ โทร 097-462-4632 พิกัด Google Maps">
+  <meta name="keywords" id="metaKeywords" content="ครัวออนซอน, สั่งอาหารออนไลน์, อาหารตามสั่ง, สั่งกลับบ้าน, Take Away, ราดข้าว, กับข้าว, ต้มยำ, แกง, ส้มตำ, ยำ, สมูทตี้, ร้านอาหารใกล้ฉัน">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="ครัวออนซอน">
+  <meta name="geo.region" content="TH">
+  <meta name="geo.placename" content="ครัวออนซอน">
+
+  <!-- Open Graph / Social & Google Discover SEO -->
+  <meta property="og:type" content="restaurant.restaurant">
+  <meta property="og:locale" content="th_TH">
+  <meta property="og:site_name" content="ครัวออนซอน">
+  <meta property="og:title" id="ogTitle" content="ครัวออนซอน - สั่งอาหารออนไลน์ Take Away">
+  <meta property="og:description" id="ogDescription" content="สั่งอาหารกลับบ้าน (Take Away) สะดวกรวดเร็ว เมนูราดข้าว กับข้าว ต้ม/แกง ตำ/ยำ และสมูทตี้ โทร 097-462-4632">
+  <meta property="og:image" id="ogImage" content="Logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Structured Data (JSON-LD) สำหรับ Google Search & Google Maps Local SEO (อัปเดตเมนูอัตโนมัติ) -->
+  <script id="seoJsonLd" type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "ครัวออนซอน",
+    "description": "ร้านอาหารครัวออนซอน บริการสั่งอาหารกลับบ้าน (Take Away) อาหารตามสั่ง ราดข้าว กับข้าว ต้ม/แกง ตำ/ยำ และสมูทตี้",
+    "image": ["Logo.png"],
+    "telephone": "+66974624632",
+    "priceRange": "฿",
+    "servesCuisine": ["อาหารไทย", "อาหารตามสั่ง", "อาหารอีสาน", "ต้มยำ", "ส้มตำ", "สมูทตี้"],
+    "hasMap": "https://maps.app.goo.gl/cYZDF2CQcA5xSJ4E9?g_st=ac",
+    "sameAs": [
+      "https://maps.app.goo.gl/cYZDF2CQcA5xSJ4E9?g_st=ac",
+      "https://line.me/R/ti/p/@136nrxrl"
+    ]
+  }
+  </script>
+
   <meta name="theme-color" content="#FF6F00">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -809,6 +844,27 @@
     </div>
   </div>
 
+  <!-- Local SEO Footer เชื่อมโยงข้อมูลร้านกับ Google Search & Google Maps -->
+  <footer style="max-width: 900px; margin: 28px auto 0; padding: 20px 16px; text-align: center; color: var(--text-muted); font-size: 0.82rem; border-top: 1px solid #E2E8F0;">
+    <div style="font-weight: 600; color: var(--text); font-size: 0.92rem; margin-bottom: 6px;">
+      ครัวออนซอน (Krua Onson) - สั่งอาหารกลับบ้าน Take Away
+    </div>
+    <p id="seoFooterSummary" style="margin-bottom: 10px; line-height: 1.5;">
+      บริการอาหารตามสั่ง ราดข้าว/กับข้าว ต้ม/แกง ตำ/ยำ สมูทตี้ และเครื่องดื่ม สดใหม่ทุกจาน
+    </p>
+    <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; font-weight: 500;">
+      <a href="https://maps.app.goo.gl/cYZDF2CQcA5xSJ4E9?g_st=ac" target="_blank" rel="noopener" style="color: #DC2626; text-decoration: none;">
+        <i class="fa-solid fa-location-dot"></i> พิกัดร้าน Google Maps
+      </a>
+      <a href="tel:0974624632" style="color: #D97706; text-decoration: none;">
+        <i class="fa-solid fa-phone"></i> โทร 097-462-4632
+      </a>
+      <a href="https://line.me/R/ti/p/@136nrxrl" target="_blank" rel="noopener" style="color: #059669; text-decoration: none;">
+        <i class="fa-brands fa-line"></i> LINE @136nrxrl
+      </a>
+    </div>
+  </footer>
+
   <!-- Floating Cart Bar -->
   <div id="cartBar" class="cart-bar" onclick="openCartModal()">
     <div class="cart-info">
@@ -862,45 +918,46 @@
 
       <div id="addonsGroup" class="option-group">
         <div class="option-title">ตัวเลือกเสริม & ท็อปปิ้ง</div>
-        
-        <div class="addon-item" onclick="toggleAddon('friedEgg', this)">
-          <div class="addon-left">
-            <input type="checkbox" id="addon_friedEgg">
-            <span>🍳 ไข่ดาว</span>
+        <div id="addonsListContainer">
+          <div class="addon-item" onclick="toggleAddon('friedEgg', this)">
+            <div class="addon-left">
+              <input type="checkbox" id="addon_friedEgg">
+              <span>🍳 ไข่ดาว</span>
+            </div>
+            <span class="addon-price" id="addonPrice_friedEgg">+฿10</span>
           </div>
-          <span class="addon-price" id="addonPrice_friedEgg">+฿10</span>
-        </div>
 
-        <div class="addon-item" onclick="toggleAddon('omelet', this)">
-          <div class="addon-left">
-            <input type="checkbox" id="addon_omelet">
-            <span>🍳 ไข่เจียว</span>
+          <div class="addon-item" onclick="toggleAddon('omelet', this)">
+            <div class="addon-left">
+              <input type="checkbox" id="addon_omelet">
+              <span>🍳 ไข่เจียว</span>
+            </div>
+            <span class="addon-price" id="addonPrice_omelet">+฿10</span>
           </div>
-          <span class="addon-price" id="addonPrice_omelet">+฿10</span>
-        </div>
 
-        <div class="addon-item" onclick="toggleAddon('creamyOmelet', this)">
-          <div class="addon-left">
-            <input type="checkbox" id="addon_creamyOmelet">
-            <span>🍳 ไข่ข้น</span>
+          <div class="addon-item" onclick="toggleAddon('creamyOmelet', this)">
+            <div class="addon-left">
+              <input type="checkbox" id="addon_creamyOmelet">
+              <span>🍳 ไข่ข้น</span>
+            </div>
+            <span class="addon-price" id="addonPrice_creamyOmelet">+฿10</span>
           </div>
-          <span class="addon-price" id="addonPrice_creamyOmelet">+฿10</span>
-        </div>
 
-        <div class="addon-item" onclick="toggleAddon('extraRice', this)">
-          <div class="addon-left">
-            <input type="checkbox" id="addon_extraRice">
-            <span>🍚 ข้าวสวยเปล่า / เพิ่มข้าว</span>
+          <div class="addon-item" onclick="toggleAddon('extraRice', this)">
+            <div class="addon-left">
+              <input type="checkbox" id="addon_extraRice">
+              <span>🍚 ข้าวสวยเปล่า / เพิ่มข้าว</span>
+            </div>
+            <span class="addon-price" id="addonPrice_extraRice">+฿10</span>
           </div>
-          <span class="addon-price" id="addonPrice_extraRice">+฿10</span>
-        </div>
 
-        <div class="addon-item" onclick="toggleAddon('riceNoodles', this)">
-          <div class="addon-left">
-            <input type="checkbox" id="addon_riceNoodles">
-            <span>🍜 เส้นขนมจีน</span>
+          <div class="addon-item" onclick="toggleAddon('riceNoodles', this)">
+            <div class="addon-left">
+              <input type="checkbox" id="addon_riceNoodles">
+              <span>🍜 เส้นขนมจีน</span>
+            </div>
+            <span class="addon-price" id="addonPrice_riceNoodles">+฿10</span>
           </div>
-          <span class="addon-price" id="addonPrice_riceNoodles">+฿10</span>
         </div>
       </div>
 
@@ -985,7 +1042,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwl3_OHhRnLQynqKot3LldqaEksUHFtAnYg78QJDsg_U2JYvNVkwrs18wBqTu8ifB26/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgAotoJYHNY4-dDcKnM15xLhdAdr6vNeaNON78Gz2mRRzbawz-iwbxARcVs802w4Wx/exec";
 
     // โครงสร้างหมวดหมู่อาหารและไอคอน
     const CATEGORIES_CONFIG = [
@@ -1141,12 +1198,144 @@
         closedBanner.style.display = "none";
       }
 
+      const activeAddons = getActiveAddonItems();
+      const addonsContainer = document.getElementById("addonsListContainer");
+      if (addonsContainer) {
+        addonsContainer.innerHTML = "";
+        activeAddons.forEach(addon => {
+          const itemDiv = document.createElement("div");
+          itemDiv.className = "addon-item";
+          itemDiv.onclick = function() { toggleAddon(addon.id, this); };
+          itemDiv.innerHTML = `
+            <div class="addon-left">
+              <input type="checkbox" id="addon_${addon.id}">
+              <span>${addon.name}</span>
+            </div>
+            <span class="addon-price" id="addonPrice_${addon.id}">+฿${addon.price}</span>
+          `;
+          addonsContainer.appendChild(itemDiv);
+        });
+      }
+
+      updateDynamicSEO();
+    }
+
+    // ฟังก์ชันอัปเดต Google Search SEO & Google Maps Local SEO (JSON-LD + Meta Tags) อัตโนมัติจากรายการเมนูจริง
+    function updateDynamicSEO() {
+      try {
+        const allItems = (storeData && Array.isArray(storeData.items)) ? storeData.items : [];
+        const availableItems = allItems.filter(it => it.isAvailable !== false);
+        if (availableItems.length === 0) return;
+
+        const recItems = availableItems.filter(it => it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูแนะนำ");
+        const topNames = (recItems.length > 0 ? recItems : availableItems).slice(0, 8).map(it => it.name);
+        const allNames = availableItems.slice(0, 25).map(it => it.name);
+
+        const prices = availableItems.map(it => Number(it.normalPrice) || 0).filter(p => p > 0);
+        const minPrice = prices.length > 0 ? Math.min(...prices) : 40;
+        const maxPrice = prices.length > 0 ? Math.max(...prices) : 200;
+
+        const descText = `ครัวออนซอน สั่งอาหารออนไลน์ Take Away สะดวกรวดเร็ว เมนูแนะนำ: ${topNames.join(", ")} ราคาเริ่มต้น ฿${minPrice}-${maxPrice} โทร 097-462-4632 พร้อมพิกัด Google Maps`;
+        const keywordsText = ["ครัวออนซอน", "สั่งอาหารออนไลน์", "Take Away", "อาหารตามสั่ง", "ร้านอาหารใกล้ฉัน", ...allNames].join(", ");
+
+        const metaDesc = document.getElementById("metaDescription");
+        if (metaDesc) metaDesc.setAttribute("content", descText);
+        const ogDesc = document.getElementById("ogDescription");
+        if (ogDesc) ogDesc.setAttribute("content", descText);
+        const metaKw = document.getElementById("metaKeywords");
+        if (metaKw) metaKw.setAttribute("content", keywordsText);
+
+        const footerSummary = document.getElementById("seoFooterSummary");
+        if (footerSummary && topNames.length > 0) {
+          footerSummary.textContent = `เมนูยอดนิยม: ${topNames.join(" • ")} | ราคาเริ่มต้น ฿${minPrice} - ฿${maxPrice}`;
+        }
+
+        // สร้างโครงสร้างหมวดหมู่และรายการอาหาร Schema.org Menu สำหรับ Google Search & Maps
+        const menuSections = CATEGORIES_CONFIG.map(cat => {
+          const catItems = availableItems.filter(it =>
+            cat.id === "recommend"
+              ? (it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูแนะนำ")
+              : (it.category === cat.name)
+          );
+          if (catItems.length === 0) return null;
+          return {
+            "@type": "MenuSection",
+            "name": cat.name,
+            "hasMenuItem": catItems.map(it => {
+              const imgUrl = formatDriveImage(it.imageUrl);
+              const menuItemObj = {
+                "@type": "MenuItem",
+                "name": it.name,
+                "description": `${it.name} (${cat.name}) - ครัวออนซอน`,
+                "offers": {
+                  "@type": "Offer",
+                  "price": String(it.normalPrice || 0),
+                  "priceCurrency": "THB",
+                  "availability": "https://schema.org/InStock"
+                }
+              };
+              if (imgUrl) menuItemObj.image = imgUrl;
+              return menuItemObj;
+            })
+          };
+        }).filter(Boolean);
+
+        const jsonLdObj = {
+          "@context": "https://schema.org",
+          "@type": "Restaurant",
+          "name": "ครัวออนซอน",
+          "description": descText,
+          "url": window.location.origin + window.location.pathname,
+          "image": [window.location.origin + "/Logo.png"],
+          "telephone": "+66974624632",
+          "priceRange": `฿${minPrice}-฿${maxPrice}`,
+          "servesCuisine": ["อาหารไทย", "อาหารตามสั่ง", "อาหารอีสาน", "ต้มยำ", "ส้มตำ", "สมูทตี้"],
+          "hasMap": "https://maps.app.goo.gl/cYZDF2CQcA5xSJ4E9?g_st=ac",
+          "sameAs": [
+            "https://maps.app.goo.gl/cYZDF2CQcA5xSJ4E9?g_st=ac",
+            "https://line.me/R/ti/p/@136nrxrl"
+          ],
+          "potentialAction": {
+            "@type": "OrderAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": window.location.origin + window.location.pathname,
+              "inLanguage": "th-TH",
+              "actionPlatform": [
+                "http://schema.org/DesktopWebPlatform",
+                "http://schema.org/MobileWebPlatform"
+              ]
+            },
+            "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModePickUp"
+          },
+          "hasMenu": {
+            "@type": "Menu",
+            "name": "เมนูอาหาร ครัวออนซอน",
+            "hasMenuSection": menuSections
+          }
+        };
+
+        const scriptEl = document.getElementById("seoJsonLd");
+        if (scriptEl) {
+          scriptEl.textContent = JSON.stringify(jsonLdObj);
+        }
+      } catch (e) {
+        console.warn("SEO auto-update warning:", e);
+      }
+    }
+
+    function getActiveAddonItems() {
+      if (Array.isArray(storeData.addonItems) && storeData.addonItems.length > 0) {
+        return storeData.addonItems;
+      }
       const p = storeData.addonPrices || {};
-      document.getElementById("addonPrice_friedEgg").textContent = `+฿${p.friedEgg || 10}`;
-      document.getElementById("addonPrice_omelet").textContent = `+฿${p.omelet || 10}`;
-      document.getElementById("addonPrice_creamyOmelet").textContent = `+฿${p.creamyOmelet || 10}`;
-      document.getElementById("addonPrice_extraRice").textContent = `+฿${p.extraRice || 10}`;
-      document.getElementById("addonPrice_riceNoodles").textContent = `+฿${p.riceNoodles || 10}`;
+      return [
+        { id: "friedEgg", name: "🍳 ไข่ดาว", price: p.friedEgg !== undefined ? p.friedEgg : 10 },
+        { id: "omelet", name: "🍳 ไข่เจียว", price: p.omelet !== undefined ? p.omelet : 10 },
+        { id: "creamyOmelet", name: "🍳 ไข่ข้น", price: p.creamyOmelet !== undefined ? p.creamyOmelet : 10 },
+        { id: "extraRice", name: "🍚 ข้าวสวย/เพิ่มข้าว", price: p.extraRice !== undefined ? p.extraRice : 10 },
+        { id: "riceNoodles", name: "🍜 เส้นขนมจีน", price: p.riceNoodles !== undefined ? p.riceNoodles : 10 }
+      ];
     }
 
     // แสดงผลเมนูต่อเนื่องทุกหมวด พร้อมตัวคั่นขนาดใหญ่
@@ -1203,19 +1392,23 @@
         catItems.forEach(item => {
           const card = document.createElement("div");
           card.className = `menu-card ${item.isAvailable ? "" : "out-of-stock"}`;
+          card.setAttribute("itemscope", "");
+          card.setAttribute("itemtype", "https://schema.org/MenuItem");
           const rawImg = formatDriveImage(item.imageUrl);
           const hasImg = !!rawImg;
           const imgUrl = rawImg || "Logo.png";
 
           card.innerHTML = `
             <div class="menu-img-wrap">
-              <img src="${imgUrl}" alt="${item.name}" loading="lazy" decoding="async" class="${!hasImg ? 'img-fallback' : ''}" onerror="this.onerror=null; this.src='Logo.png'; this.classList.add('img-fallback');">
+              <img src="${imgUrl}" itemprop="image" alt="${item.name} - ครัวออนซอน ราคา ${item.normalPrice} บาท" loading="lazy" decoding="async" class="${!hasImg ? 'img-fallback' : ''}" onerror="this.onerror=null; this.src='Logo.png'; this.classList.add('img-fallback');">
               ${item.isRecommended ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> แนะนำ</span>' : ''}
             </div>
             <div class="menu-card-body">
               <div>
-                <div class="menu-name">${item.name}</div>
-                <div class="menu-prices">
+                <div class="menu-name" itemprop="name">${item.name}</div>
+                <div class="menu-prices" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                  <meta itemprop="priceCurrency" content="THB">
+                  <meta itemprop="price" content="${item.normalPrice}">
                   <span class="price-normal">฿${item.normalPrice}</span>
                   ${item.hasSpecialPrice && item.specialPrice > item.normalPrice ? `<span class="price-special">พิเศษ ฿${item.specialPrice}</span>` : ''}
                 </div>
@@ -1304,7 +1497,14 @@
       modalSelectedAddons.clear();
 
       document.getElementById("modalItemName").textContent = item.name;
-      document.getElementById("itemNote").value = "";
+      const itemNoteEl = document.getElementById("itemNote");
+      itemNoteEl.value = "";
+      const itemCategory = (item.category || "").trim();
+      if (itemCategory === "สมูทตี้" || itemCategory === "อื่นๆ") {
+        itemNoteEl.placeholder = "";
+      } else {
+        itemNoteEl.placeholder = "เช่น เผ็ดน้อย, ไม่ใส่ผักชี, หวานน้อย...";
+      }
       document.getElementById("modalQty").textContent = "1";
 
       document.querySelectorAll(".addon-item").forEach(el => {
@@ -1397,10 +1597,17 @@
           : currentModalItem.normalPrice;
       }
 
-      const prices = storeData.addonPrices || {};
+      const activeAddons = getActiveAddonItems();
+      const addonGroup = document.getElementById("addonsGroup");
+      if (activeAddons.length === 0) {
+        addonGroup.style.display = "none";
+      }
       let addonSum = 0;
       modalSelectedAddons.forEach(key => {
-        addonSum += (prices[key] !== undefined ? prices[key] : 10);
+        const found = activeAddons.find(a => String(a.id) === String(key));
+        if (found) {
+          addonSum += Number(found.price) || 0;
+        }
       });
 
       return base + addonSum;
@@ -1428,15 +1635,11 @@
       const singlePrice = calculateSingleItemPrice();
       const note = document.getElementById("itemNote").value.trim();
 
-      const addonNames = {
-        friedEgg: "ไข่ดาว",
-        omelet: "ไข่เจียว",
-        creamyOmelet: "ไข่ข้น",
-        extraRice: "ข้าวสวย/เพิ่มข้าว",
-        riceNoodles: "เส้นขนมจีน"
-      };
-
-      const selectedAddonList = Array.from(modalSelectedAddons).map(k => addonNames[k]);
+      const activeAddons = getActiveAddonItems();
+      const selectedAddonList = Array.from(modalSelectedAddons).map(k => {
+        const found = activeAddons.find(a => String(a.id) === String(k));
+        return found ? found.name.replace(/^[^\u0E00-\u0E7Fa-zA-Z0-9]+\s*/, "") : k;
+      });
 
       cart.push({
         id: currentModalItem.id,
