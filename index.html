@@ -132,76 +132,133 @@
       display: none;
     }
 
-    /* Header */
-    header {
-      background: var(--card-bg);
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #EDF2F7;
+    /* Sticky Header & Tabs Container */
+    .sticky-top-bar {
       position: sticky;
       top: 0;
       z-index: 95;
-      min-height: 64px;
+      background: var(--card-bg);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    /* Header */
+    header {
+      background: var(--card-bg);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #F1F5F9;
+      min-height: 56px;
       box-sizing: border-box;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      gap: 8px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
     }
 
-    .brand img {
-      height: 48px;
-      width: auto;
-      max-width: 90px;
-      border-radius: 8px;
-      object-fit: contain;
+    .brand:hover .brand-logo-img {
+      transform: scale(1.05);
+    }
+
+    .brand-logo-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo-img {
+      height: 42px;
+      width: 42px;
+      border-radius: 10px;
+      object-fit: cover;
       background: white;
-      padding: 2px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 1px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+
+    .brand-refresh-badge {
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+      background: #2563EB;
+      color: white;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.58rem;
+      border: 1.5px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
     }
 
     .brand-text h1 {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: #1A202C;
-      line-height: 1.2;
+      line-height: 1.15;
+      white-space: nowrap;
+      margin: 0;
     }
 
     .brand-text span {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       background-color: var(--primary-light);
       color: var(--primary-dark);
-      padding: 2px 8px;
-      border-radius: 20px;
+      padding: 1px 6px;
+      border-radius: 12px;
       font-weight: 600;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
       margin-top: 2px;
+      white-space: nowrap;
+      width: fit-content;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 0;
     }
 
     .user-profile-btn {
       background: #F1F5F9;
       border: none;
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       color: var(--text);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       position: relative;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+
+    .user-profile-btn:active {
+      transform: scale(0.92);
     }
 
     .profile-badge {
@@ -218,15 +275,11 @@
     /* Categories Tabs Sticky Bar */
     .tabs-wrapper {
       background: var(--card-bg);
-      padding: 10px 16px;
+      padding: 8px 12px;
       overflow-x: auto;
       white-space: nowrap;
       border-bottom: 1px solid #EDF2F7;
       scrollbar-width: none;
-      position: sticky;
-      top: 64px;
-      z-index: 89;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
       display: flex;
       align-items: center;
     }
@@ -238,15 +291,17 @@
     .tab-btn {
       background: #F1F5F9;
       border: none;
-      padding: 8px 18px;
-      border-radius: 24px;
-      font-size: 0.88rem;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
       font-weight: 500;
       color: var(--text-muted);
       cursor: pointer;
       margin-right: 8px;
       flex-shrink: 0;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .tab-btn.active {
@@ -254,7 +309,7 @@
       color: white;
       font-weight: 600;
       box-shadow: 0 2px 8px rgba(255, 111, 0, 0.35);
-      transform: scale(1.03);
+      transform: scale(1.02);
     }
 
     /* Search Bar */
@@ -283,8 +338,8 @@
 
     /* Category Section Headers */
     .category-section {
-      padding-top: 12px;
-      scroll-margin-top: 125px; /* เผื่อระยะให้พอดีกับแถบ header + tab ด้านบน */
+      padding-top: 8px;
+      scroll-margin-top: 110px; /* ชดเชยความสูงรวมของ sticky header + tab ด้านบนอย่างแม่นยำ */
     }
 
     .category-header-wrap {
@@ -830,42 +885,47 @@
     <i class="fa-solid fa-store-slash"></i> ขณะนี้ร้านปิดให้บริการชั่วคราว ไม่สามารถส่งรายการสั่งอาหารได้
   </div>
 
-  <header>
-    <div class="brand">
-      <img src="Logo.png" alt="ครัวออนซอน" onerror="this.onerror=null; this.src='icon-192.png';">
-      <div class="brand-text">
-        <h1>ครัวออนซอน</h1>
-        <span><i class="fa-solid fa-bag-shopping"></i> Take Away</span>
+  <!-- แถบด้านบนแบบเกาะติดขอบจอ (Header + แคปซูลหมวดหมู่อาหาร) ไม่โดนเมนูบัง 100% -->
+  <div class="sticky-top-bar">
+    <header>
+      <div class="brand" onclick="manualRefreshMenu()" title="แตะเพื่อรีเฟรชข้อมูลเมนูล่าสุด">
+        <div class="brand-logo-wrap">
+          <img src="Logo.png" alt="ครัวออนซอน" id="brandLogo" class="brand-logo-img" onerror="this.onerror=null; this.src='icon-192.png';">
+          <div class="brand-refresh-badge" title="แตะเพื่อรีเฟรช">
+            <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i>
+          </div>
+        </div>
+        <div class="brand-text">
+          <h1>ครัวออนซอน</h1>
+          <span><i class="fa-solid fa-bag-shopping"></i> Take Away</span>
+        </div>
       </div>
-    </div>
-    <div class="header-actions">
-      <button class="user-profile-btn" id="refreshBtn" onclick="manualRefreshMenu()" style="color:#2563EB; background:#EFF6FF;" title="รีเฟรชข้อมูลเมนูล่าสุด">
-        <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i>
-      </button>
-      <a href="https://maps.app.goo.gl/cYZDF2CQcA5xSJ4E9?g_st=ac" target="_blank" class="user-profile-btn" style="color:#DC2626; background:#FEE2E2; text-decoration:none;" title="แผนที่ร้าน Google Maps">
-        <i class="fa-solid fa-location-dot"></i>
-      </a>
-      <a href="tel:0974624632" class="user-profile-btn" style="color:#D97706; background:#FEF3C7; text-decoration:none;" title="โทรสั่งอาหาร">
-        <i class="fa-solid fa-phone"></i>
-      </a>
-      <a href="https://line.me/R/ti/p/@136nrxrl" target="_blank" class="user-profile-btn" style="color:#059669; background:#D1FAE5; text-decoration:none;" title="LINE ร้าน">
-        <i class="fa-brands fa-line"></i>
-      </a>
-      <button class="user-profile-btn" onclick="openProfileModal()" title="ข้อมูลผู้สั่ง">
-        <i class="fa-regular fa-user"></i>
-        <div id="profileBadge" class="profile-badge"></div>
-      </button>
-    </div>
-  </header>
+      <div class="header-actions">
+        <a href="https://maps.app.goo.gl/cYZDF2CQcA5xSJ4E9?g_st=ac" target="_blank" class="user-profile-btn" style="color:#DC2626; background:#FEE2E2; text-decoration:none;" title="แผนที่ร้าน Google Maps">
+          <i class="fa-solid fa-location-dot"></i>
+        </a>
+        <a href="tel:0974624632" class="user-profile-btn" style="color:#D97706; background:#FEF3C7; text-decoration:none;" title="โทรสั่งอาหาร">
+          <i class="fa-solid fa-phone"></i>
+        </a>
+        <a href="https://line.me/R/ti/p/@136nrxrl" target="_blank" class="user-profile-btn" style="color:#059669; background:#D1FAE5; text-decoration:none;" title="LINE ร้าน">
+          <i class="fa-brands fa-line"></i>
+        </a>
+        <button class="user-profile-btn" onclick="openProfileModal()" title="ข้อมูลผู้สั่ง">
+          <i class="fa-regular fa-user"></i>
+          <div id="profileBadge" class="profile-badge"></div>
+        </button>
+      </div>
+    </header>
 
-  <!-- Categories Tabs (ตัด "ทั้งหมด" ออก และเริ่มที่ "เมนูแนะนำ") -->
-  <div class="tabs-wrapper" id="categoriesTabs">
-    <button class="tab-btn active" data-category="recommend" onclick="scrollToCategory('recommend')">⭐ เมนูแนะนำ</button>
-    <button class="tab-btn" data-category="cat-rice" onclick="scrollToCategory('cat-rice')">ราดข้าว/กับข้าว</button>
-    <button class="tab-btn" data-category="cat-soup" onclick="scrollToCategory('cat-soup')">ต้ม/แกง</button>
-    <button class="tab-btn" data-category="cat-salad" onclick="scrollToCategory('cat-salad')">ตำ/ยำ</button>
-    <button class="tab-btn" data-category="cat-drink" onclick="scrollToCategory('cat-drink')">สมูทตี้</button>
-    <button class="tab-btn" data-category="cat-other" onclick="scrollToCategory('cat-other')">อื่นๆ</button>
+    <!-- Categories Tabs (ไม่ถูกเมนูบังเวลาเลื่อนดูอาหาร) -->
+    <div class="tabs-wrapper" id="categoriesTabs">
+      <button class="tab-btn active" data-category="recommend" onclick="scrollToCategory('recommend')">⭐ เมนูแนะนำ</button>
+      <button class="tab-btn" data-category="cat-rice" onclick="scrollToCategory('cat-rice')">ราดข้าว/กับข้าว</button>
+      <button class="tab-btn" data-category="cat-soup" onclick="scrollToCategory('cat-soup')">ต้ม/แกง</button>
+      <button class="tab-btn" data-category="cat-salad" onclick="scrollToCategory('cat-salad')">ตำ/ยำ</button>
+      <button class="tab-btn" data-category="cat-drink" onclick="scrollToCategory('cat-drink')">สมูทตี้</button>
+      <button class="tab-btn" data-category="cat-other" onclick="scrollToCategory('cat-other')">อื่นๆ</button>
+    </div>
   </div>
 
   <div class="search-container">
@@ -1162,9 +1222,12 @@
 
     async function manualRefreshMenu() {
       const icon = document.getElementById("refreshIcon");
+      const logo = document.getElementById("brandLogo");
       if (icon) icon.classList.add("spin-fast");
+      if (logo) logo.classList.add("spin-fast");
       await fetchMenuData(true);
       if (icon) icon.classList.remove("spin-fast");
+      if (logo) logo.classList.remove("spin-fast");
       showToast("อัปเดตเมนูล่าสุดแล้ว");
     }
 
@@ -1549,7 +1612,7 @@
         if (isUserClickingTab) return; // ไม่กวนใจขณะผู้ใช้กดแท็บเอง
 
         const sections = document.querySelectorAll(".category-section");
-        const scrollPosition = window.scrollY + 140; // ชดเชยความสูง sticky bars
+        const scrollPosition = window.scrollY + 120; // ชดเชยความสูง sticky top bar (header + tabs) ได้อย่างแม่นยำ
 
         sections.forEach(section => {
           const top = section.offsetTop;
