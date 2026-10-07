@@ -785,6 +785,39 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    @keyframes spinFast {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .spin-fast {
+      animation: spinFast 0.7s linear infinite;
+    }
+
+    .toast-notice {
+      position: fixed;
+      top: 76px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(30, 41, 59, 0.95);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.25s ease;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast-notice.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -806,6 +839,9 @@
       </div>
     </div>
     <div class="header-actions">
+      <button class="user-profile-btn" id="refreshBtn" onclick="manualRefreshMenu()" style="color:#2563EB; background:#EFF6FF;" title="รีเฟรชข้อมูลเมนูล่าสุด">
+        <i class="fa-solid fa-arrows-rotate" id="refreshIcon"></i>
+      </button>
       <a href="https://maps.app.goo.gl/cYZDF2CQcA5xSJ4E9?g_st=ac" target="_blank" class="user-profile-btn" style="color:#DC2626; background:#FEE2E2; text-decoration:none;" title="แผนที่ร้าน Google Maps">
         <i class="fa-solid fa-location-dot"></i>
       </a>
@@ -1106,40 +1142,82 @@
     }
 
     const MENU_CACHE_KEY = "krua_menu_cache_v2";
+    let lastFetchTime = 0;
+    let isFetching = false;
 
-    async function fetchMenuData() {
+    function showToast(msg) {
+      let toast = document.getElementById("toastNotice");
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toastNotice";
+        toast.className = "toast-notice";
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<i class="fa-solid fa-check-circle" style="color: #4ADE80;"></i> ${msg}`;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    async function manualRefreshMenu() {
+      const icon = document.getElementById("refreshIcon");
+      if (icon) icon.classList.add("spin-fast");
+      await fetchMenuData(true);
+      if (icon) icon.classList.remove("spin-fast");
+      showToast("อัปเดตเมนูล่าสุดแล้ว");
+    }
+
+    async function fetchMenuData(force = false) {
+      if (isFetching && !force) return;
+      isFetching = true;
+
       // 1. ความเร็วสูงสุด: โหลดเมนูจากแคชเครื่องทันทีภายใน 0.05 วินาที
-      let hasCache = false;
-      try {
-        const cachedRaw = localStorage.getItem(MENU_CACHE_KEY);
-        if (cachedRaw) {
-          const cachedData = JSON.parse(cachedRaw);
-          if (cachedData && Array.isArray(cachedData.items) && cachedData.items.length > 0) {
-            storeData = cachedData;
-            applyStoreConfig();
-            renderContinuousMenu();
-            hasCache = true;
+      if (!force) {
+        try {
+          const cachedRaw = localStorage.getItem(MENU_CACHE_KEY);
+          if (cachedRaw) {
+            const cachedData = JSON.parse(cachedRaw);
+            if (cachedData && Array.isArray(cachedData.items) && cachedData.items.length > 0) {
+              storeData = cachedData;
+              applyStoreConfig();
+              renderContinuousMenu();
+            }
           }
+        } catch (err) {
+          console.warn("Cache parsing error:", err);
         }
-      } catch (err) {
-        console.warn("Cache parsing error:", err);
       }
 
       if (!SCRIPT_URL) {
-        if (!hasCache) useSampleData();
+        if (!storeData || !storeData.items || storeData.items.length === 0) useSampleData();
+        isFetching = false;
         return;
       }
 
-      // 2. ดึงข้อมูลอัปเดตล่าสุดจาก Google Sheets เบื้องหลังแบบไร้รอยต่อ
+      // 2. ดึงข้อมูลอัปเดตล่าสุดจาก Google Apps Script แบบ No-Cache ทะลุแคชบราวเซอร์ 100%
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-        const res = await fetch(SCRIPT_URL, { signal: controller.signal });
+        const sep = SCRIPT_URL.includes("?") ? "&" : "?";
+        // ใส่ _t=timestamp เสมอ เพื่อไม่ให้ Chrome/Safari/WebView ใช้แคช HTTP เดิม
+        const fetchUrl = `${SCRIPT_URL}${sep}_t=${Date.now()}${force ? '&refresh=1' : ''}`;
+
+        const res = await fetch(fetchUrl, {
+          method: "GET",
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache"
+          },
+          signal: controller.signal
+        });
         clearTimeout(timeoutId);
 
         const data = await res.json();
         if (data && data.status === "success") {
+          lastFetchTime = Date.now();
           storeData = data;
           try {
             localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(data));
@@ -1148,14 +1226,16 @@
           }
           applyStoreConfig();
           renderContinuousMenu();
-        } else if (!hasCache) {
+        } else if (!storeData || !storeData.items || storeData.items.length === 0) {
           useSampleData();
         }
       } catch (e) {
         console.error("Error fetching menu:", e);
-        if (!hasCache) {
+        if (!storeData || !storeData.items || storeData.items.length === 0) {
           useSampleData();
         }
+      } finally {
+        isFetching = false;
       }
     }
 
@@ -1481,6 +1561,31 @@
           }
         });
       }, { passive: true });
+
+      // ⚡ ระบบตรวจจับการสลับหน้าจอ (Auto Sync): เมื่อผู้ใช้กดอัปโหลดจากแอปแล้วสลับกลับมาดูเว็บ
+      // หน้าเว็บจะดึงข้อมูลเมนูล่าสุดมารีเฟรชให้ทันทีใน 0.2 วินาที ไม่ต้องกดรีเฟรชเอง!
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          const now = Date.now();
+          if (now - lastFetchTime > 2500) {
+            fetchMenuData(true);
+          }
+        }
+      });
+
+      window.addEventListener("focus", () => {
+        const now = Date.now();
+        if (now - lastFetchTime > 2500) {
+          fetchMenuData(true);
+        }
+      });
+
+      // ตรวจเช็คข้อมูลใหม่เบื้องหลังทุก 60 วินาทีขณะเปิดหน้าจอทิ้งไว้
+      setInterval(() => {
+        if (document.visibilityState === "visible") {
+          fetchMenuData(true);
+        }
+      }, 60000);
     }
 
     function onSearch(val) {
