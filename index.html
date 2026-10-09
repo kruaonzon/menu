@@ -23,6 +23,9 @@
   <meta property="og:image" id="ogImage" content="https://kruaonzon.github.io/menu/Logo.png">
   <meta name="twitter:card" content="summary_large_image">
 
+  <!-- LINE Front-end Framework (LIFF) SDK -->
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
   <!-- Structured Data (JSON-LD) สำหรับ Google Search & Google Maps Local SEO (อัปเดตเมนูอัตโนมัติ) -->
   <script id="seoJsonLd" type="application/ld+json">
   {
@@ -1120,7 +1123,7 @@
         <span>ส่งออเดอร์ทาง LINE</span>
       </button>
       <div style="text-align: center; font-size: 0.8rem; color: #64748B; margin-top: 8px;">
-        ✨ ระบบจะเปิด LINE และวางรายการอาหารให้อัตโนมัติ เพียงกดปุ่มส่งได้ทันที
+        ✨ เมื่อเปิดจาก LINE ระบบจะส่งออเดอร์เข้าแชทร้านให้อัตโนมัติทันที
       </div>
     </div>
   </div>
@@ -1151,6 +1154,32 @@
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgAotoJYHNY4-dDcKnM15xLhdAdr6vNeaNON78Gz2mRRzbawz-iwbxARcVs802w4Wx/exec";
+    const LIFF_ID = "2011953087-39rxv295";
+    let isLiffReady = false;
+
+    // เริ่มต้นระบบ LINE LIFF
+    async function initLiff() {
+      if (typeof liff === "undefined") return;
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        isLiffReady = true;
+        console.log("LIFF initialized successfully! isInClient:", liff.isInClient());
+        // หากเปิดผ่าน LINE และล็อกอินแล้ว ช่วยดึงชื่อลูกค้าจาก LINE มาใส่ให้อัตโนมัติถ้ายังไม่ได้กรอก
+        if (liff.isLoggedIn()) {
+          try {
+            const profile = await liff.getProfile();
+            const nameInput = document.getElementById("orderCustName");
+            if (nameInput && !nameInput.value && profile && profile.displayName) {
+              nameInput.value = profile.displayName;
+            }
+          } catch (pe) {
+            console.warn("Could not get LIFF profile:", pe);
+          }
+        }
+      } catch (err) {
+        console.warn("LIFF Init error:", err);
+      }
+    }
 
     // โครงสร้างหมวดหมู่อาหารและไอคอน
     const CATEGORIES_CONFIG = [
@@ -1176,6 +1205,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
     let modalSelectedAddons = new Set();
 
     window.addEventListener("DOMContentLoaded", () => {
+      initLiff();
       loadCustomerProfile();
       // ดึงจาก Local Storage ถ้ามี เพื่อความสดใหม่สูงสุด
       try {
@@ -1992,11 +2022,30 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
       updateCartUI();
       closeModal("cartModal");
 
+      // กรณีเปิดผ่าน LINE LIFF ภายในแอป LINE: ส่งข้อความแทนลูกค้าเข้าห้องแชทอัตโนมัติ 100%
+      if (typeof liff !== "undefined" && liff.isLoggedIn && liff.isLoggedIn() && liff.isInClient && liff.isInClient()) {
+        liff.sendMessages([
+          {
+            type: "text",
+            text: msg
+          }
+        ]).then(() => {
+          alert("🎉 ส่งรายการสั่งอาหารเข้า LINE ร้านเรียบร้อยแล้วครับ!\n\nรอทางร้านยืนยันออเดอร์สักครู่นะครับ 🙏");
+          liff.closeWindow();
+        }).catch((err) => {
+          console.warn("LIFF sendMessages failed, fallback to URL scheme:", err);
+          fallbackToLineUrl(msg);
+        });
+      } else {
+        // กรณีเปิดผ่าน Web Browser ภายนอก (Chrome/Safari) หรือยังไม่ได้ล็อกอิน
+        fallbackToLineUrl(msg);
+      }
+    }
+
+    function fallbackToLineUrl(msg) {
       // ส่งตรงเข้าห้องแชท LINE Official Account พร้อมวางข้อความในกล่องแชทให้อัตโนมัติ (LINE URL Scheme: oaMessage)
       const lineTargetUrl = "https://line.me/R/oaMessage/%40136nrxrl/?" + encodeURIComponent(msg);
-
       alert("✅ บันทึกรายการสั่งอาหารเรียบร้อยแล้วครับ!\n\nระบบกำลังเปิด LINE ร้านครัวออนซอน โดยวางรายการอาหารในช่องแชทให้อัตโนมัติ\n👉 ลูกค้าเพียงกดปุ่ม \"ส่ง (Send)\" ใน LINE ได้เลยครับ 🚀");
-      
       window.location.href = lineTargetUrl;
     }
 
