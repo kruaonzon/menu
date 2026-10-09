@@ -1119,6 +1119,9 @@
         <i class="fa-brands fa-line" style="font-size: 1.4rem;"></i>
         <span>ส่งออเดอร์ทาง LINE</span>
       </button>
+      <div style="text-align: center; font-size: 0.8rem; color: #64748B; margin-top: 8px;">
+        ✨ ระบบจะเปิด LINE และวางรายการอาหารให้อัตโนมัติ เพียงกดปุ่มส่งได้ทันที
+      </div>
     </div>
   </div>
 
@@ -1989,10 +1992,12 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
       updateCartUI();
       closeModal("cartModal");
 
-      alert("📋 คัดลอกรายการสั่งอาหารให้แล้วครับ!\n\nระบบกำลังเปิด LINE ร้าน ครัวออนซอน กรุณากด 'วาง (Paste)' ในช่องแชทแล้วกดส่งได้เลยครับ");
+      // ส่งตรงเข้าห้องแชท LINE Official Account พร้อมวางข้อความในกล่องแชทให้อัตโนมัติ (LINE URL Scheme: oaMessage)
+      const lineTargetUrl = "https://line.me/R/oaMessage/%40136nrxrl/?" + encodeURIComponent(msg);
+
+      alert("✅ บันทึกรายการสั่งอาหารเรียบร้อยแล้วครับ!\n\nระบบกำลังเปิด LINE ร้านครัวออนซอน โดยวางรายการอาหารในช่องแชทให้อัตโนมัติ\n👉 ลูกค้าเพียงกดปุ่ม \"ส่ง (Send)\" ใน LINE ได้เลยครับ 🚀");
       
-      const lineOfficialUrl = "https://line.me/R/ti/p/@136nrxrl";
-      window.location.href = lineOfficialUrl;
+      window.location.href = lineTargetUrl;
     }
 
     function openModal(id) {
