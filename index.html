@@ -453,6 +453,87 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
+    /* ========================================================
+       ตกแต่งพิเศษเฉพาะรูปภาพและการ์ดในหมวดแนะนำ (Recommend Section)
+       สร้างความโดดเด่น ไม่กลืนกับเมนูปกติเวลาเลื่อนหน้าจอ
+       ======================================================== */
+    #section-recommend {
+      background: linear-gradient(180deg, rgba(255, 248, 238, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
+      border-radius: 20px;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+
+    #section-recommend .category-header-title {
+      color: #C2410C;
+    }
+
+    #section-recommend .category-header-title i {
+      color: #F59E0B;
+      filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.35));
+    }
+
+    #section-recommend .category-item-count {
+      background: #FFEDD5;
+      color: #C2410C;
+      font-weight: 600;
+    }
+
+    .menu-card.recommend-card {
+      background: linear-gradient(180deg, #FFFDF8 0%, #FFFFFF 100%);
+      border: 1.5px solid #FBD38D;
+      box-shadow: 0 4px 14px rgba(234, 88, 12, 0.12);
+    }
+
+    /* พื้นหลังและกรอบรูปภาพเฉพาะหมวดแนะนำ ให้แยกชัดเจน ไม่กลืนกับเมนูปกติ */
+    .menu-card.recommend-card .menu-img-wrap {
+      background: linear-gradient(135deg, #FFE8CC 0%, #FFD8A8 100%);
+      padding: 6px;
+      box-sizing: border-box;
+      border-bottom: 2px solid #FBD38D;
+    }
+
+    .menu-card.recommend-card .menu-img-wrap img {
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .menu-card.recommend-card .menu-img-wrap img.img-fallback {
+      background: #FFF8E7 !important;
+      padding: 12px !important;
+    }
+
+    .menu-card.recommend-card .badge-recommend {
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(135deg, #EA580C, #F59E0B);
+      color: #FFFFFF;
+      padding: 3px 9px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(234, 88, 12, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .menu-card.recommend-card .menu-name {
+      color: #9A3412;
+      font-weight: 700;
+    }
+
+    .menu-card.recommend-card .price-normal {
+      color: #C2410C;
+    }
+
+    .menu-card.recommend-card .add-btn {
+      background: linear-gradient(135deg, #FF6F00, #EA580C);
+      box-shadow: 0 2px 6px rgba(234, 88, 12, 0.25);
+    }
+
     .menu-card-body {
       padding: 10px 12px 12px;
       display: flex;
@@ -1587,9 +1668,11 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
 
         // ใส่การ์ดเมนูอาหารลงใน Grid ของหมวดนั้น
         const gridEl = sectionEl.querySelector(`#grid-${cat.id}`);
+        const isRecommendSection = (cat.id === "recommend");
         catItems.forEach(item => {
+          const isItemRec = isRecommendSection || item.isRecommended === true || String(item.isRecommended).toLowerCase() === "true";
           const card = document.createElement("div");
-          card.className = `menu-card ${item.isAvailable ? "" : "out-of-stock"}`;
+          card.className = `menu-card ${isRecommendSection ? "recommend-card" : ""} ${item.isAvailable ? "" : "out-of-stock"}`;
           card.setAttribute("itemscope", "");
           card.setAttribute("itemtype", "https://schema.org/MenuItem");
           const rawImg = formatDriveImage(item.imageUrl);
@@ -1599,7 +1682,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
           card.innerHTML = `
             <div class="menu-img-wrap">
               <img src="${imgUrl}" itemprop="image" alt="${item.name} - ครัวออนซอน ราคา ${item.normalPrice} บาท" loading="lazy" decoding="async" class="${!hasImg ? 'img-fallback' : ''}" onerror="this.onerror=null; this.src='Logo.png'; this.classList.add('img-fallback');">
-              ${item.isRecommended ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> แนะนำ</span>' : ''}
+              ${isItemRec ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> แนะนำ</span>' : ''}
             </div>
             <div class="menu-card-body">
               <div>
