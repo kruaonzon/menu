@@ -1501,6 +1501,41 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
       ];
     }
 
+    // ดึงรายการตัวเลือกเสริม & ท็อปปิ้ง เฉพาะที่เมนูนี้เลือกไว้
+    function getItemAddons(item) {
+      if (!item) return [];
+      const allAddons = getActiveAddonItems();
+
+      // 1. ตรวจสอบว่าเมนูนี้ระบุรายการตัวเลือกเสริมเฉพาะเจาะจง (selectedAddonIds) หรือไม่
+      if (item.selectedAddonIds !== undefined && item.selectedAddonIds !== null && String(item.selectedAddonIds).trim() !== "") {
+        const selectedIds = String(item.selectedAddonIds).split(",").map(s => s.trim()).filter(Boolean);
+        if (selectedIds.length === 0) return [];
+        return allAddons.filter(a => selectedIds.includes(String(a.id)));
+      }
+
+      // 2. ตรวจสอบสถานะ hasAddons
+      let hasAddons = true;
+      if (item.hasAddons !== undefined && item.hasAddons !== null) {
+        if (typeof item.hasAddons === "boolean") {
+          hasAddons = item.hasAddons;
+        } else if (typeof item.hasAddons === "string") {
+          const val = item.hasAddons.trim().toLowerCase();
+          hasAddons = !(val === "false" || val === "0" || val === "no" || val === "");
+        } else if (typeof item.hasAddons === "number") {
+          hasAddons = (item.hasAddons === 1);
+        }
+      }
+      if (!hasAddons) return [];
+
+      // 3. กรณีข้อมูลเดิมที่ยังไม่ได้บันทึก selectedAddonIds แยก:
+      // หมวดสมูทตี้ หรือเครื่องดื่ม จะยังไม่แสดงไข่/ข้าว จนกว่าจะมีการติ๊กเลือก
+      const cat = (item.category || "").trim();
+      if (cat === "สมูทตี้") {
+        return [];
+      }
+      return allAddons;
+    }
+
     // แสดงผลเมนูต่อเนื่องทุกหมวด พร้อมตัวคั่นขนาดใหญ่
     function renderContinuousMenu() {
       const container = document.getElementById("menuSectionsContainer");
@@ -1719,20 +1754,31 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
         sizeGroup.style.display = "none";
       }
 
-      // เช็คการแสดงตัวเลือกเสริม / ท็อปปิ้ง
+      // แสดงตัวเลือกเสริม & ท็อปปิ้ง เฉพาะที่เลือกไว้สำหรับเมนูนี้อย่างอิสระ (รวมถึงหมวดสมูทตี้)
+      const itemAddons = getItemAddons(item);
       const addonsGroup = document.getElementById("addonsGroup");
-      let showAddons = true;
-      if (item.hasAddons !== undefined && item.hasAddons !== null) {
-        if (typeof item.hasAddons === "boolean") {
-          showAddons = item.hasAddons;
-        } else if (typeof item.hasAddons === "string") {
-          const val = item.hasAddons.trim().toLowerCase();
-          showAddons = !(val === "false" || val === "0" || val === "no");
-        } else if (typeof item.hasAddons === "number") {
-          showAddons = (item.hasAddons === 1);
+      const addonsContainer = document.getElementById("addonsListContainer");
+      if (addonsContainer) {
+        addonsContainer.innerHTML = "";
+        if (itemAddons.length > 0) {
+          addonsGroup.style.display = "block";
+          itemAddons.forEach(addon => {
+            const itemDiv = document.createElement("div");
+            itemDiv.className = "addon-item";
+            itemDiv.onclick = function() { toggleAddon(addon.id, this); };
+            itemDiv.innerHTML = `
+              <div class="addon-left">
+                <input type="checkbox" id="addon_${addon.id}">
+                <span>${addon.name}</span>
+              </div>
+              <span class="addon-price" id="addonPrice_${addon.id}">+฿${addon.price}</span>
+            `;
+            addonsContainer.appendChild(itemDiv);
+          });
+        } else {
+          addonsGroup.style.display = "none";
         }
       }
-      addonsGroup.style.display = showAddons ? "block" : "none";
 
       updateModalPrice();
       openModal("itemModal");
@@ -1785,14 +1831,14 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
           : currentModalItem.normalPrice;
       }
 
-      const activeAddons = getActiveAddonItems();
+      const itemAddons = getItemAddons(currentModalItem);
       const addonGroup = document.getElementById("addonsGroup");
-      if (activeAddons.length === 0) {
+      if (itemAddons.length === 0) {
         addonGroup.style.display = "none";
       }
       let addonSum = 0;
       modalSelectedAddons.forEach(key => {
-        const found = activeAddons.find(a => String(a.id) === String(key));
+        const found = itemAddons.find(a => String(a.id) === String(key));
         if (found) {
           addonSum += Number(found.price) || 0;
         }
@@ -1823,9 +1869,9 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"announcement":"ยินดี�
       const singlePrice = calculateSingleItemPrice();
       const note = document.getElementById("itemNote").value.trim();
 
-      const activeAddons = getActiveAddonItems();
+      const itemAddons = getItemAddons(currentModalItem);
       const selectedAddonList = Array.from(modalSelectedAddons).map(k => {
-        const found = activeAddons.find(a => String(a.id) === String(k));
+        const found = itemAddons.find(a => String(a.id) === String(k));
         return found ? found.name.replace(/^[^\u0E00-\u0E7Fa-zA-Z0-9]+\s*/, "") : k;
       });
 
