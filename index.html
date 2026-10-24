@@ -1472,9 +1472,22 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
               storeData.noticePopupTitle = DEFAULT_STORE_DATA.noticePopupTitle;
               storeData.noticePopupMessage = DEFAULT_STORE_DATA.noticePopupMessage;
             }
-            if (cachedData.storeScheduleMode === undefined) {
+            if (cachedData.isStoreOpen !== undefined) {
+              storeData.isStoreOpen = (cachedData.isStoreOpen === true || String(cachedData.isStoreOpen).toLowerCase() === "true" || cachedData.isStoreOpen === 1 || cachedData.isStoreOpen === "1");
+            }
+            if (cachedData.storeScheduleMode !== undefined && String(cachedData.storeScheduleMode).trim() !== "") {
+              storeData.storeScheduleMode = String(cachedData.storeScheduleMode).trim();
+            } else {
               storeData.storeScheduleMode = DEFAULT_STORE_DATA.storeScheduleMode;
+            }
+            if (cachedData.storeOpenTime) {
+              storeData.storeOpenTime = parseTimeStr(cachedData.storeOpenTime, 9, 30).str;
+            } else {
               storeData.storeOpenTime = DEFAULT_STORE_DATA.storeOpenTime;
+            }
+            if (cachedData.storeCloseTime) {
+              storeData.storeCloseTime = parseTimeStr(cachedData.storeCloseTime, 19, 0).str;
+            } else {
               storeData.storeCloseTime = DEFAULT_STORE_DATA.storeCloseTime;
             }
           }
@@ -1574,8 +1587,8 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
         const timeoutId = setTimeout(() => controller.abort(), 12000);
 
         const sep = SCRIPT_URL.includes("?") ? "&" : "?";
-        // ใส่ _t=timestamp เสมอ เพื่อไม่ให้ Chrome/Safari/WebView ใช้แคช HTTP เดิม
-        const fetchUrl = `${SCRIPT_URL}${sep}_t=${Date.now()}${force ? '&refresh=1' : ''}`;
+        // ใส่ _t=timestamp และ &refresh=1 เสมอ เพื่อบังคับให้ดึงข้อมูลสดใหม่ล่าสุด ไม่ค้างแคช
+        const fetchUrl = `${SCRIPT_URL}${sep}_t=${Date.now()}&refresh=1`;
 
         // เรียก fetch แบบ Simple Request ไม่ใส่ Custom Headers เพื่อไม่ให้ติดบล็อก CORS Preflight ในบราวเซอร์ของลูกค้า
         const res = await fetch(fetchUrl, {
@@ -1602,6 +1615,30 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
 
           storeData = Object.assign({}, DEFAULT_STORE_DATA, data);
 
+          // แปลงและทำความสะอาดสถานะร้าน
+          if (data.isStoreOpen !== undefined) {
+            storeData.isStoreOpen = (data.isStoreOpen === true || String(data.isStoreOpen).toLowerCase() === "true" || data.isStoreOpen === 1 || data.isStoreOpen === "1");
+          }
+
+          // จัดการค่าตารางเวลาเปิด-ปิดร้าน (แปลงเวลาเป็น HH:mm มาตรฐาน ป้องกันรูปแบบ Date ของ Google Sheets)
+          if (data.storeScheduleMode !== undefined && String(data.storeScheduleMode).trim() !== "") {
+            storeData.storeScheduleMode = String(data.storeScheduleMode).trim();
+          } else {
+            storeData.storeScheduleMode = prevScheduleMode;
+          }
+
+          if (data.storeOpenTime !== undefined) {
+            storeData.storeOpenTime = parseTimeStr(data.storeOpenTime, 9, 30).str;
+          } else {
+            storeData.storeOpenTime = parseTimeStr(prevOpenTime, 9, 30).str;
+          }
+
+          if (data.storeCloseTime !== undefined) {
+            storeData.storeCloseTime = parseTimeStr(data.storeCloseTime, 19, 0).str;
+          } else {
+            storeData.storeCloseTime = parseTimeStr(prevCloseTime, 19, 0).str;
+          }
+
           // หาก API ส่ง field showNoticePopup มาให้ใช้ค่าจาก API แต่ถ้ายังไม่ส่งมา ให้คงค่าเดิมไว้ ไม่ให้ถูกลบ
           if (data.showNoticePopup !== undefined) {
             storeData.showNoticePopup = data.showNoticePopup;
@@ -1611,17 +1648,6 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
             storeData.showNoticePopup = prevNoticePopup;
             storeData.noticePopupTitle = prevNoticeTitle;
             storeData.noticePopupMessage = prevNoticeMessage;
-          }
-
-          // จัดการค่าตารางเวลาเปิด-ปิดร้าน
-          if (data.storeScheduleMode !== undefined) {
-            storeData.storeScheduleMode = data.storeScheduleMode;
-            storeData.storeOpenTime = data.storeOpenTime || "09:30";
-            storeData.storeCloseTime = data.storeCloseTime || "19:00";
-          } else {
-            storeData.storeScheduleMode = prevScheduleMode;
-            storeData.storeOpenTime = prevOpenTime;
-            storeData.storeCloseTime = prevCloseTime;
           }
 
           try {
@@ -1650,66 +1676,105 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       renderContinuousMenu();
     }
 
+    // ฟังก์ชันแปลงและสกัดเวลา HH:mm ที่ปลอดภัย 100% จากทุกรูปแบบ (เช่น "09:30" หรือ Date string "Sat Dec 30 1899 09:30:00...")
+    function parseTimeStr(val, defaultH = 9, defaultM = 30) {
+      if (!val) {
+        return {
+          h: defaultH,
+          m: defaultM,
+          str: `${String(defaultH).padStart(2, "0")}:${String(defaultM).padStart(2, "0")}`
+        };
+      }
+      const s = String(val).trim();
+      const match = s.match(/(\d{1,2}):(\d{2})/);
+      if (match) {
+        const h = parseInt(match[1], 10);
+        const m = parseInt(match[2], 10);
+        return {
+          h: h,
+          m: m,
+          str: `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`
+        };
+      }
+      return {
+        h: defaultH,
+        m: defaultM,
+        str: `${String(defaultH).padStart(2, "0")}:${String(defaultM).padStart(2, "0")}`
+      };
+    }
+
     // ฟังก์ชันคำนวณและตรวจสอบสถานะเปิด-ปิดร้าน (รองรับทั้งโหมดอัตโนมัติตามเวลา และโหมดแมนนวลกำหนดเอง)
     function checkStoreStatus() {
-      const mode = (storeData.storeScheduleMode || "auto").toLowerCase();
-      const openTime = (storeData.storeOpenTime || "09:30").trim();
-      const closeTime = (storeData.storeCloseTime || "19:00").trim();
+      // 1. ตรวจสอบสถานะการปิดร้านโดยตรงก่อน (isStoreOpen: false หรือ "false" หรือ 0)
+      const rawStoreOpen = storeData.isStoreOpen;
+      const isManualClosed = rawStoreOpen === false || 
+                             String(rawStoreOpen).trim().toLowerCase() === "false" || 
+                             rawStoreOpen === 0 || 
+                             rawStoreOpen === "0";
 
-      if (mode === "auto") {
-        try {
-          // คำนวณเวลาตาม Timezone ประเทศไทย (Asia/Bangkok / UTC+7)
-          const now = new Date();
-          const thaiFormatter = new Intl.DateTimeFormat("en-US", {
-            timeZone: "Asia/Bangkok",
-            hour: "numeric",
-            minute: "numeric",
-            hour12: false
-          });
-          const parts = thaiFormatter.formatToParts(now);
-          const hour = parseInt(parts.find(p => p.type === "hour")?.value || "0", 10);
-          const minute = parseInt(parts.find(p => p.type === "minute")?.value || "0", 10);
-          const currentMinutes = hour * 60 + minute;
+      const mode = String(storeData.storeScheduleMode || "auto").trim().toLowerCase();
+      const openTimeObj = parseTimeStr(storeData.storeOpenTime, 9, 30);
+      const closeTimeObj = parseTimeStr(storeData.storeCloseTime, 19, 0);
+      const openTime = openTimeObj.str;
+      const closeTime = closeTimeObj.str;
 
-          const openParts = openTime.split(":").map(Number);
-          const closeParts = closeTime.split(":").map(Number);
-          const openH = !isNaN(openParts[0]) ? openParts[0] : 9;
-          const openM = !isNaN(openParts[1]) ? openParts[1] : 30;
-          const closeH = !isNaN(closeParts[0]) ? closeParts[0] : 19;
-          const closeM = !isNaN(closeParts[1]) ? closeParts[1] : 0;
-
-          const openMinutes = openH * 60 + openM;
-          const closeMinutes = closeH * 60 + closeM;
-
-          let isOpen = false;
-          if (openMinutes <= closeMinutes) {
-            isOpen = (currentMinutes >= openMinutes && currentMinutes < closeMinutes);
-          } else {
-            // กรณีเปิดข้ามเที่ยงคืน เช่น 17:00 ถึง 02:00
-            isOpen = (currentMinutes >= openMinutes || currentMinutes < closeMinutes);
-          }
-
-          return {
-            isOpen: isOpen,
-            mode: "auto",
-            openTime: openTime,
-            closeTime: closeTime
-          };
-        } catch (err) {
-          console.warn("Error calculating store hours:", err);
-          return {
-            isOpen: storeData.isStoreOpen !== false,
-            mode: "auto",
-            openTime: openTime,
-            closeTime: closeTime
-          };
-        }
-      } else {
-        // โหมดแมนนวล: ยึดตาม isStoreOpen ที่เจ้าของร้านตั้งค่าไว้
-        const isManualOpen = storeData.isStoreOpen === true || String(storeData.isStoreOpen).toLowerCase() === "true";
+      // 🔴 หากเจ้าของร้านสั่งปิดร้าน -> ร้านต้องปิดทันที 100% ทุกโหมด
+      if (isManualClosed) {
         return {
-          isOpen: isManualOpen,
+          isOpen: false,
           mode: "manual",
+          openTime: openTime,
+          closeTime: closeTime
+        };
+      }
+
+      // 🟢 หากเป็นโหมดแมนนวล (Manual) และสถานะเปิดอยู่ -> ร้านเปิดให้บริการตลอดเวลา
+      if (mode === "manual") {
+        return {
+          isOpen: true,
+          mode: "manual",
+          openTime: openTime,
+          closeTime: closeTime
+        };
+      }
+
+      // ⏰ โหมดอัตโนมัติตามเวลา (Auto): คำนวณตามเวลาปัจจุบันของประเทศไทย (Asia/Bangkok / UTC+7)
+      try {
+        const now = new Date();
+        const thaiFormatter = new Intl.DateTimeFormat("en-US", {
+          timeZone: "Asia/Bangkok",
+          hour: "numeric",
+          minute: "numeric",
+          hour12: false
+        });
+        const parts = thaiFormatter.formatToParts(now);
+        const hour = parseInt(parts.find(p => p.type === "hour")?.value || "0", 10);
+        const minute = parseInt(parts.find(p => p.type === "minute")?.value || "0", 10);
+        const currentMinutes = hour * 60 + minute;
+
+        const openMinutes = openTimeObj.h * 60 + openTimeObj.m;
+        const closeMinutes = closeTimeObj.h * 60 + closeTimeObj.m;
+
+        let isOpen = false;
+        if (openMinutes <= closeMinutes) {
+          // ช่วงเวลาปกติในวันเดียวกัน เช่น 09:30 ถึง 19:00
+          isOpen = (currentMinutes >= openMinutes && currentMinutes < closeMinutes);
+        } else {
+          // ช่วงเวลาข้ามเที่ยงคืน เช่น 17:00 ถึง 02:00
+          isOpen = (currentMinutes >= openMinutes || currentMinutes < closeMinutes);
+        }
+
+        return {
+          isOpen: isOpen,
+          mode: "auto",
+          openTime: openTime,
+          closeTime: closeTime
+        };
+      } catch (err) {
+        console.warn("Error calculating store hours:", err);
+        return {
+          isOpen: !isManualClosed,
+          mode: "auto",
           openTime: openTime,
           closeTime: closeTime
         };
