@@ -1159,7 +1159,7 @@
 
     <!-- Categories Tabs (ไม่ถูกเมนูบังเวลาเลื่อนดูอาหาร) -->
     <div class="tabs-wrapper" id="categoriesTabs">
-      <button class="tab-btn active" data-category="recommend" onclick="scrollToCategory('recommend')">⭐ เมนูแนะนำ</button>
+      <button class="tab-btn active" data-category="recommend" onclick="scrollToCategory('recommend')">⭐ เมนูขายดี</button>
       <button class="tab-btn" data-category="cat-rice" onclick="scrollToCategory('cat-rice')">ราดข้าว/กับข้าว</button>
       <button class="tab-btn" data-category="cat-soup" onclick="scrollToCategory('cat-soup')">ต้ม/แกง</button>
       <button class="tab-btn" data-category="cat-salad" onclick="scrollToCategory('cat-salad')">ตำ/ยำ</button>
@@ -1406,7 +1406,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxgAotoJYHNY4-dDcKnM15xLhdAdr6vNeaNON78Gz2mRRzbawz-iwbxARcVs802w4Wx/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmFf8lGe2tj1LO8w1s7_WM35BYSv5le0zAn8hV4QNuANymBQVh9DYQtaMw_lbLQYjy/exec";
     const LIFF_ID = "2011953087-39rxv295";
     let isLiffReady = false;
 
@@ -1436,7 +1436,7 @@
 
     // โครงสร้างหมวดหมู่อาหารและไอคอน
     const CATEGORIES_CONFIG = [
-      { id: "recommend", name: "เมนูแนะนำ", icon: "fa-solid fa-star", isSpecial: true },
+      { id: "recommend", name: "เมนูขายดี", icon: "fa-solid fa-star", isSpecial: true },
       { id: "cat-rice", name: "ราดข้าว/กับข้าว", icon: "fa-solid fa-bowl-rice" },
       { id: "cat-soup", name: "ต้ม/แกง", icon: "fa-solid fa-bowl-hot" },
       { id: "cat-salad", name: "ตำ/ยำ", icon: "fa-solid fa-pepper-hot" },
@@ -1934,7 +1934,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
         const availableItems = allItems.filter(it => it.isAvailable !== false);
         if (availableItems.length === 0) return;
 
-        const recItems = availableItems.filter(it => it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูแนะนำ");
+        const recItems = availableItems.filter(it => it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูขายดี" || it.category === "เมนูแนะนำ");
         const topNames = (recItems.length > 0 ? recItems : availableItems).slice(0, 8).map(it => it.name);
         const allNames = availableItems.slice(0, 25).map(it => it.name);
 
@@ -1942,7 +1942,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
         const minPrice = prices.length > 0 ? Math.min(...prices) : 40;
         const maxPrice = prices.length > 0 ? Math.max(...prices) : 200;
 
-        const descText = `ครัวออนซอน สั่งอาหารออนไลน์ Take Away สะดวกรวดเร็ว เมนูแนะนำ: ${topNames.join(", ")} ราคาเริ่มต้น ฿${minPrice}-${maxPrice} โทร 097-462-4632 พร้อมพิกัด Google Maps`;
+        const descText = `ครัวออนซอน สั่งอาหารออนไลน์ Take Away สะดวกรวดเร็ว เมนูขายดี: ${topNames.join(", ")} ราคาเริ่มต้น ฿${minPrice}-${maxPrice} โทร 097-462-4632 พร้อมพิกัด Google Maps`;
         const keywordsText = ["ครัวออนซอน", "สั่งอาหารออนไลน์", "Take Away", "อาหารตามสั่ง", "ร้านอาหารใกล้ฉัน", ...allNames].join(", ");
 
         const metaDesc = document.getElementById("metaDescription");
@@ -1961,7 +1961,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
         const menuSections = CATEGORIES_CONFIG.map(cat => {
           const catItems = availableItems.filter(it =>
             cat.id === "recommend"
-              ? (it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูแนะนำ")
+              ? (it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูขายดี" || it.category === "เมนูแนะนำ")
               : (it.category === cat.name)
           );
           if (catItems.length === 0) return null;
@@ -2094,7 +2094,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
         let catItems = [];
 
         if (cat.id === "recommend") {
-          catItems = allItems.filter(it => it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูแนะนำ");
+          catItems = allItems.filter(it => it.isRecommended === true || String(it.isRecommended).toLowerCase() === "true" || it.category === "เมนูขายดี" || it.category === "เมนูแนะนำ");
         } else {
           catItems = allItems.filter(it => it.category === cat.name);
         }
@@ -2145,7 +2145,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
           card.innerHTML = `
             <div class="menu-img-wrap">
               <img src="${imgUrl}" itemprop="image" alt="${item.name} - ครัวออนซอน ราคา ${item.normalPrice} บาท" loading="lazy" decoding="async" class="${!hasImg ? 'img-fallback' : ''}" onerror="this.onerror=null; this.src='Logo.png'; this.classList.add('img-fallback');">
-              ${isItemRec ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> แนะนำ</span>' : ''}
+              ${isItemRec ? '<span class="badge-recommend"><i class="fa-solid fa-star"></i> ขายดี</span>' : ''}
             </div>
             <div class="menu-card-body">
               <div>
