@@ -1780,11 +1780,12 @@
         <div class="form-group" style="margin-bottom:14px;">
           <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">รูปภาพเมนู</label>
           <div style="display:flex; gap:8px; margin-bottom:6px;">
-            <button type="button" onclick="document.getElementById('adminImagePicker').click()" style="flex:1; padding:8px; background:#1E293B; color:#fff; border:1px solid #334155; border-radius:8px; cursor:pointer; font-size:12px;">
+            <button type="button" id="adminPickImgBtn" onclick="document.getElementById('adminImagePicker').click()" style="flex:1; padding:8px; background:#1E293B; color:#fff; border:1px solid #334155; border-radius:8px; cursor:pointer; font-size:12px;">
               <i class="fa-solid fa-camera"></i> เลือกรูปจากมือถือ
             </button>
             <input type="file" id="adminImagePicker" accept="image/*" style="display:none;" onchange="adminHandleImagePick(this)">
           </div>
+          <div id="adminImgUploadStatus" style="font-size:11px; margin-bottom:6px; display:none;"></div>
           <input type="text" id="adminEditImageUrl" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff; font-size:12px;" placeholder="หรือวางลิงก์รูปภาพ (URL)" oninput="adminPreviewImg(this.value)">
           <div id="adminImgPreviewWrap" style="margin-top:6px; width:70px; height:70px; border-radius:6px; overflow:hidden; display:none; background:#000;">
             <img id="adminImgPreviewTag" src="" style="width:100%; height:100%; object-fit:cover;">
@@ -1800,7 +1801,7 @@
             <span>🟢 พร้อมขาย</span>
           </label>
         </div>
-        <button class="confirm-btn" onclick="adminSaveItemData()" style="width:100%; padding:12px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer;">บันทึกเมนู</button>
+        <button id="adminSaveItemBtn" class="confirm-btn" onclick="adminSaveItemData()" style="width:100%; padding:12px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer;">บันทึกเมนู</button>
       </div>
     </div>
   </div>
@@ -3559,6 +3560,11 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
 
       document.getElementById("adminEditImageUrl").value = "";
       document.getElementById("adminImgPreviewWrap").style.display = "none";
+      const statusEl = document.getElementById("adminImgUploadStatus");
+      if (statusEl) { statusEl.style.display = "none"; statusEl.innerHTML = ""; }
+      const saveBtn = document.getElementById("adminSaveItemBtn");
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = "1"; saveBtn.innerText = "บันทึกเมนู"; }
+
       document.getElementById("adminEditIsRec").checked = (adminCurrentCategory === "เมนูขายดี");
       document.getElementById("adminEditIsAvail").checked = true;
 
@@ -3601,6 +3607,10 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
 
       document.getElementById("adminEditImageUrl").value = item.imageUrl || "";
       adminPreviewImg(item.imageUrl);
+      const statusEl = document.getElementById("adminImgUploadStatus");
+      if (statusEl) { statusEl.style.display = "none"; statusEl.innerHTML = ""; }
+      const saveBtn = document.getElementById("adminSaveItemBtn");
+      if (saveBtn) { saveBtn.disabled = false; saveBtn.style.opacity = "1"; saveBtn.innerText = "บันทึกเมนู"; }
 
       document.getElementById("adminEditIsRec").checked = !!(item.isRecommended || item.category === "เมนูขายดี");
       document.getElementById("adminEditIsAvail").checked = (item.isAvailable !== false);
@@ -3623,10 +3633,15 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
     function adminHandleImagePick(input) {
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
+      const statusEl = document.getElementById("adminImgUploadStatus");
+      const saveBtn = document.getElementById("adminSaveItemBtn");
+      const urlInput = document.getElementById("adminEditImageUrl");
+      const itemId = document.getElementById("adminEditId").value || ("new_" + Date.now());
+
       const reader = new FileReader();
       reader.onload = function(e) {
         const img = new Image();
-        img.onload = function() {
+        img.onload = async function() {
           const canvas = document.createElement("canvas");
           const MAX = 800;
           let w = img.width, h = img.height;
@@ -3639,9 +3654,60 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, w, h);
           const compressed = canvas.toDataURL("image/jpeg", 0.75);
+
+          // แสดงรูปพรีวิวให้เห็นทันที
           adminPreviewImg(compressed);
-          document.getElementById("adminEditImageUrl").value = compressed;
-          alert("เลือกรูปภาพเรียบร้อยแล้วครับ");
+          urlInput.value = compressed;
+
+          // แสดงสถานะกำลังอัปโหลดขึ้น Google Drive
+          if (statusEl) {
+            statusEl.style.display = "block";
+            statusEl.innerHTML = `<span style="color:#F59E0B;"><i class="fa-solid fa-spinner fa-spin"></i> กำลังอัปโหลดรูปลง Google Drive... กรุณารอสักครู่</span>`;
+          }
+          if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.style.opacity = "0.6";
+            saveBtn.innerText = "⏳ กำลังอัปโหลดรูปภาพ...";
+          }
+
+          try {
+            const pureBase64 = compressed.replace(/^data:image\/\w+;base64,/, "");
+            const cleanToken = sanitizeSecurityToken(adminSecurityToken || DEFAULT_SECURITY_TOKEN);
+            const res = await fetch(SCRIPT_URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "upload_image",
+                token: cleanToken,
+                id: itemId,
+                imageBase64: pureBase64
+              })
+            });
+            const data = await res.json();
+            if (data && data.status === "success" && (data.driveUrl || data.url)) {
+              const cloudUrl = data.driveUrl || data.url;
+              urlInput.value = cloudUrl;
+              adminPreviewImg(cloudUrl);
+              if (statusEl) {
+                statusEl.innerHTML = `<span style="color:#10B981; font-weight:600;"><i class="fa-solid fa-circle-check"></i> อัปโหลดรูปภาพขึ้นระบบคลาวด์สำเร็จแล้ว!</span>`;
+              }
+            } else {
+              if (statusEl) {
+                statusEl.innerHTML = `<span style="color:#F59E0B;"><i class="fa-solid fa-circle-info"></i> บันทึกรูปลงเครื่องแล้ว ระบบจะอัปโหลดอัตโนมัติเมื่อกดปุ่มก้อนเมฆ ☁️</span>`;
+              }
+            }
+          } catch (uploadErr) {
+            console.warn("Upload image error:", uploadErr);
+            if (statusEl) {
+              statusEl.innerHTML = `<span style="color:#F59E0B;"><i class="fa-solid fa-circle-info"></i> บันทึกรูปลงเครื่องแล้ว ระบบจะอัปโหลดอัตโนมัติเมื่อกดปุ่มก้อนเมฆ ☁️</span>`;
+            }
+          } finally {
+            if (saveBtn) {
+              saveBtn.disabled = false;
+              saveBtn.style.opacity = "1";
+              saveBtn.innerText = "บันทึกเมนู";
+            }
+            input.value = "";
+          }
         };
         img.src = e.target.result;
       };
@@ -3771,6 +3837,33 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       }
 
       const cleanToken = sanitizeSecurityToken(adminSecurityToken);
+
+      // 🖼️ ตรวจสอบว่ามีรูปภาพแบบ Base64 (ที่อัปโหลดค้างอยู่) หรือไม่ ถ้ามีให้อัปโหลดขึ้น Google Drive ก่อน
+      const pendingBase64Items = (storeData.items || []).filter(it => it.imageUrl && (String(it.imageUrl).indexOf("data:image/") === 0 || String(it.imageUrl).indexOf("base64,") !== -1));
+      if (pendingBase64Items.length > 0) {
+        syncBtn.title = "กำลังอัปโหลดรูปภาพขึ้น Google Drive...";
+        for (const it of pendingBase64Items) {
+          try {
+            const pureBase64 = String(it.imageUrl).replace(/^data:image\/\w+;base64,/, "");
+            const uploadRes = await fetch(SCRIPT_URL, {
+              method: "POST",
+              body: JSON.stringify({
+                action: "upload_image",
+                token: cleanToken,
+                id: it.id || Date.now(),
+                imageBase64: pureBase64
+              })
+            });
+            const uploadData = await uploadRes.json();
+            if (uploadData && uploadData.status === "success" && (uploadData.driveUrl || uploadData.url)) {
+              it.imageUrl = uploadData.driveUrl || uploadData.url;
+            }
+          } catch (uploadErr) {
+            console.warn("Pre-sync image upload error for " + it.name, uploadErr);
+          }
+        }
+        try { localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(storeData)); } catch(e){}
+      }
 
       const payload = {
         action: "sync",
