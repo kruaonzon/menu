@@ -1781,6 +1781,13 @@
             <span>เปิดแสดงป็อปอัปแจ้งวันหยุด</span>
           </label>
         </div>
+        <div class="form-group" style="margin-bottom:14px; background:#1E293B; padding:10px; border-radius:8px;">
+          <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">
+            <i class="fa-solid fa-key" style="color:#F59E0B;"></i> Security Token สำหรับเชื่อมต่อ Google Sheets
+          </label>
+          <input type="text" id="adminSetSecurityToken" class="form-input" style="background:#0F172A; border:1px solid #334155; color:#fff;" placeholder="KRUA_ONSON_SECRET_2026">
+          <span style="font-size:11px; color:#64748B; display:block; margin-top:4px;">ค่ามาตรฐานของร้าน: <strong>KRUA_ONSON_SECRET_2026</strong></span>
+        </div>
         <button class="confirm-btn" onclick="adminSaveStoreSettings()" style="width:100%; padding:12px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer;">บันทึกการตั้งค่า</button>
       </div>
     </div>
@@ -1993,6 +2000,13 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
           const prevScheduleMode = (storeData && storeData.storeScheduleMode) || DEFAULT_STORE_DATA.storeScheduleMode;
           const prevOpenTime = (storeData && storeData.storeOpenTime) || DEFAULT_STORE_DATA.storeOpenTime;
           const prevCloseTime = (storeData && storeData.storeCloseTime) || DEFAULT_STORE_DATA.storeCloseTime;
+
+          // ป้องกันเมนูหาย หาก API ส่งรายการว่างมา ให้คงรายการอาหารเดิมไว้ 100%
+          if (!Array.isArray(data.items) || data.items.length === 0) {
+            data.items = (storeData && storeData.items && storeData.items.length > 0)
+              ? storeData.items
+              : DEFAULT_STORE_DATA.items;
+          }
 
           storeData = Object.assign({}, DEFAULT_STORE_DATA, data);
 
@@ -3041,7 +3055,20 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
     // 🔒 ระบบจัดการร้านค้าฝังในตัว (Admin Portal Logic)
     // ==========================================
     const DEFAULT_SECURITY_TOKEN = "KRUA_ONSON_SECRET_2026";
-    let adminSecurityToken = localStorage.getItem("admin_security_token") || DEFAULT_SECURITY_TOKEN;
+
+    // 🔒 ฟังก์ชันทำความสะอาด Security Token ตัดคำนำหน้า เช่น 'Security Token:' หรือเครื่องหมายคำพูดออกให้อัตโนมัติ
+    function sanitizeSecurityToken(raw) {
+      if (!raw) return DEFAULT_SECURITY_TOKEN;
+      let t = String(raw).trim();
+      t = t.replace(/^(security\s*token\s*[:=]\s*|token\s*[:=]\s*)/i, "").trim();
+      t = t.replace(/^["']|["']$/g, "").trim();
+      return t || DEFAULT_SECURITY_TOKEN;
+    }
+
+    // อ่านค่า Token และทำความสะอาดทันที เพื่อแก้ไขกรณีบันทึกคำว่า 'Security Token:' ค้างไว้
+    let adminSecurityToken = sanitizeSecurityToken(localStorage.getItem("admin_security_token") || DEFAULT_SECURITY_TOKEN);
+    localStorage.setItem("admin_security_token", adminSecurityToken);
+
     let adminCurrentCategory = "all";
     let adminSearchQuery = "";
     let adminOnlyOutOfStock = false;
@@ -3085,25 +3112,26 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
         setTimeout(() => {
           const inp = document.getElementById("adminTokenInput");
           if (inp) {
+            inp.value = DEFAULT_SECURITY_TOKEN;
             inp.focus();
             inp.select();
           }
         }, 150);
       } else {
-        adminSecurityToken = saved;
+        adminSecurityToken = sanitizeSecurityToken(saved);
         launchAdminView();
       }
     }
 
     function verifyAdminToken() {
       const inp = document.getElementById("adminTokenInput");
-      const val = inp ? inp.value.trim() : "";
-      if (!val) {
+      const rawVal = inp ? inp.value.trim() : "";
+      if (!rawVal) {
         alert("กรุณากรอก Security Token ครับ");
         return;
       }
-      adminSecurityToken = val;
-      localStorage.setItem("admin_security_token", val);
+      adminSecurityToken = sanitizeSecurityToken(rawVal);
+      localStorage.setItem("admin_security_token", adminSecurityToken);
       closeModal("adminAuthModal");
       launchAdminView();
     }
@@ -3453,6 +3481,9 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       document.getElementById("adminSetNoticeMsg").value = storeData.noticePopupMessage || "";
       document.getElementById("adminSetShowNotice").checked = !!storeData.showNoticePopup;
 
+      const tokInput = document.getElementById("adminSetSecurityToken");
+      if (tokInput) tokInput.value = adminSecurityToken || DEFAULT_SECURITY_TOKEN;
+
       openModal("adminStoreSettingsModal");
     }
 
@@ -3465,6 +3496,12 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       storeData.noticePopupTitle = document.getElementById("adminSetNoticeTitle").value.trim();
       storeData.noticePopupMessage = document.getElementById("adminSetNoticeMsg").value.trim();
       storeData.showNoticePopup = document.getElementById("adminSetShowNotice").checked;
+
+      const tokInput = document.getElementById("adminSetSecurityToken");
+      if (tokInput && tokInput.value.trim()) {
+        adminSecurityToken = sanitizeSecurityToken(tokInput.value);
+        localStorage.setItem("admin_security_token", adminSecurityToken);
+      }
 
       closeModal("adminStoreSettingsModal");
       adminMarkDirty();
@@ -3485,9 +3522,18 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       syncBtn.disabled = true;
       syncBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
 
+      if (!storeData.items || storeData.items.length === 0) {
+        alert("⚠️ คำเตือน: ไม่พบรายการอาหารในระบบ กรุณารีเฟรชหน้าร้านเพื่อโหลดเมนูให้ครบก่อนกดบันทึกครับ");
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i>`;
+        return;
+      }
+
+      const cleanToken = sanitizeSecurityToken(adminSecurityToken);
+
       const payload = {
         action: "sync",
-        token: adminSecurityToken,
+        token: cleanToken,
         isStoreOpen: storeData.isStoreOpen,
         storeScheduleMode: storeData.storeScheduleMode,
         storeOpenTime: storeData.storeOpenTime,
@@ -3514,7 +3560,13 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
           document.getElementById("adminDirtyWarning").style.display = "none";
           alert("🎉 อัปเดตข้อมูลขึ้น Google Sheets และหน้าเว็บสำเร็จเรียบร้อยแล้วครับ!");
         } else if (data && data.code === 401) {
-          alert("❌ 401 Unauthorized: Security Token ไม่ถูกต้อง กรุณาตรวจสอบรหัส Token ครับ");
+          const reentered = prompt("❌ 401 Unauthorized: Security Token ไม่ถูกต้อง\n\n(รหัสมาตรฐานของร้านคือ: KRUA_ONSON_SECRET_2026)\n\nกรุณาใส่รหัส Security Token เพื่อซิงค์ข้อมูลใหม่อีกครั้ง:", DEFAULT_SECURITY_TOKEN);
+          if (reentered) {
+            adminSecurityToken = sanitizeSecurityToken(reentered);
+            localStorage.setItem("admin_security_token", adminSecurityToken);
+            adminSyncToCloud();
+            return;
+          }
         } else {
           alert("แจ้งเตือน: " + (data.message || "ส่งข้อมูลเรียบร้อยแล้ว"));
           adminHasUnsavedChanges = false;
