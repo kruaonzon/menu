@@ -1103,6 +1103,12 @@
 
     @keyframes noticePulse {
       0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4); }
+      50% { transform: scale(1.08); box-shadow: 0 0 0 7px rgba(234, 88, 12, 0); }
+    }
+    .pulse-glow {
+      animation: noticePulse 2.2s infinite ease-in-out;
+    }
+
     /* =========================================
        ADMIN PORTAL STYLES (ระบบจัดการร้านฝังในตัว)
        ========================================= */
@@ -1118,7 +1124,7 @@
       font-family: 'Sarabun', sans-serif;
     }
     .admin-portal-modal.active {
-      display: flex;
+      display: flex !important;
     }
     .admin-top-bar {
       position: sticky;
@@ -1265,7 +1271,7 @@
   <!-- แถบด้านบนแบบเกาะติดขอบจอ (Header + แคปซูลหมวดหมู่อาหาร) ไม่โดนเมนูบัง 100% -->
   <div class="sticky-top-bar">
     <header>
-      <div class="brand" onclick="manualRefreshMenu()" title="แตะเพื่อรีเฟรชข้อมูลเมนูล่าสุด">
+      <div class="brand" onclick="handleSecretAdminTap()" title="ครัวออนซอน (แตะ 3 ครั้งเพื่อเข้าสู่ระบบจัดการร้าน)">
         <div class="brand-logo-wrap">
           <img src="Logo.png" alt="ครัวออนซอน" id="brandLogo" class="brand-logo-img" onerror="this.onerror=null; this.src='icon-192.png';">
           <div class="brand-refresh-badge" title="แตะเพื่อรีเฟรช">
@@ -1290,9 +1296,6 @@
         <a href="https://line.me/R/ti/p/@136nrxrl" target="_blank" class="user-profile-btn" style="color:#059669; background:#D1FAE5; text-decoration:none;" title="LINE ร้าน">
           <i class="fa-brands fa-line"></i>
         </a>
-        <button class="user-profile-btn" onclick="openAdminPortal()" style="color:#7C3AED; background:#EDE9FE; border:none; cursor:pointer;" title="ระบบจัดการร้าน (สำหรับเจ้าของร้าน)">
-          <i class="fa-solid fa-gear"></i>
-        </button>
         <button class="user-profile-btn" onclick="openProfileModal()" title="ข้อมูลผู้สั่ง">
           <i class="fa-regular fa-user"></i>
           <div id="profileBadge" class="profile-badge"></div>
@@ -1345,9 +1348,10 @@
         <i class="fa-brands fa-line"></i> LINE @136nrxrl
       </a>
     </div>
-    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #E2E8F0;">
-      <a href="javascript:void(0)" onclick="openAdminPortal()" style="color: #94A3B8; font-size: 0.78rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
-        <i class="fa-solid fa-lock"></i> จัดการร้านค้า (Admin Portal)
+    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #E2E8F0; font-size: 0.76rem; color: #94A3B8;">
+      © 2026 ครัวออนซอน สงวนลิขสิทธิ์
+      <a href="javascript:void(0)" onclick="openAdminPortal()" style="color: #CBD5E1; text-decoration: none; margin-left: 6px;" title="Admin" aria-label="Admin">
+        <i class="fa-solid fa-lock" style="font-size: 10px; opacity: 0.5;"></i>
       </a>
     </div>
   </footer>
@@ -1573,6 +1577,10 @@
         <button id="adminSyncBtn" class="admin-btn-icon admin-btn-sync" onclick="adminSyncToCloud()" title="บันทึกขึ้นเว็บและชีต (Sync)">
           <i class="fa-solid fa-cloud-arrow-up"></i>
         </button>
+        <!-- ออกจากระบบ Admin / ล้าง Token -->
+        <button class="admin-btn-icon" onclick="adminLogout()" title="ออกจากระบบ / ล้าง Token">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
         <!-- ปุ่มปิดกลับหน้าลูกค้า -->
         <button class="admin-btn-icon" onclick="closeAdminPortal()" title="กลับสู่หน้าเว็บลูกค้า">
           <i class="fa-solid fa-xmark"></i>
@@ -1635,8 +1643,13 @@
     <div class="modal-content" style="background:#111827; border:1px solid #1E2D4A; color:#fff; max-width:380px; text-align:center;">
       <div style="margin-bottom:12px;"><i class="fa-solid fa-shield-halved" style="font-size:36px; color:#F59E0B;"></i></div>
       <h3 style="color:#fff; margin-bottom:6px;">เข้าสู่ระบบจัดการร้าน</h3>
-      <p style="font-size:12px; color:#94A3B8; margin-bottom:16px;">กรุณากรอก Security Token เพื่อความปลอดภัยของร้าน</p>
-      <input type="password" id="adminTokenInput" class="form-input" placeholder="KRUA_ONSON_SECRET_2026" value="KRUA_ONSON_SECRET_2026" style="background:#1E293B; border:1px solid #334155; color:#fff; text-align:center; font-size:15px; margin-bottom:14px;">
+      <p style="font-size:12px; color:#94A3B8; margin-bottom:16px;">กรุณากรอก Security Token เพื่อยืนยันว่าเป็นเจ้าของร้าน</p>
+      <div style="position:relative; margin-bottom:14px;">
+        <input type="password" id="adminTokenInput" class="form-input" placeholder="ใส่รหัส Security Token" value="KRUA_ONSON_SECRET_2026" onkeydown="if(event.key==='Enter') verifyAdminToken();" style="background:#1E293B; border:1px solid #334155; color:#fff; text-align:center; font-size:14px; padding-right:40px;">
+        <button type="button" onclick="toggleTokenVisibility()" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:#94A3B8; cursor:pointer;" title="แสดง/ซ่อนรหัส">
+          <i id="tokenEyeIcon" class="fa-solid fa-eye"></i>
+        </button>
+      </div>
       <div style="display:flex; gap:10px;">
         <button class="btn-secondary" onclick="closeModal('adminAuthModal')" style="flex:1; padding:10px; background:#1E293B; color:#94A3B8; border:1px solid #334155; border-radius:10px; cursor:pointer;">ยกเลิก</button>
         <button class="confirm-btn" onclick="verifyAdminToken()" style="flex:1; padding:10px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer;">เข้าสู่ระบบ</button>
@@ -3034,10 +3047,48 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
     let adminOnlyOutOfStock = false;
     let adminHasUnsavedChanges = false;
 
+    // 🔒 ฟังก์ชันแตะโลโก้ร้าน 3 ครั้งเพื่อเปิดระบบจัดการร้าน (Secret Gesture สำหรับเจ้าของร้าน)
+    let secretTapCount = 0;
+    let secretTapTimer = null;
+
+    function handleSecretAdminTap() {
+      secretTapCount++;
+      if (secretTapCount === 1) {
+        secretTapTimer = setTimeout(() => {
+          secretTapCount = 0;
+          manualRefreshMenu();
+        }, 400);
+      } else if (secretTapCount >= 3) {
+        clearTimeout(secretTapTimer);
+        secretTapCount = 0;
+        openAdminPortal();
+      }
+    }
+
+    function toggleTokenVisibility() {
+      const inp = document.getElementById("adminTokenInput");
+      const icon = document.getElementById("tokenEyeIcon");
+      if (!inp || !icon) return;
+      if (inp.type === "password") {
+        inp.type = "text";
+        icon.className = "fa-solid fa-eye-slash";
+      } else {
+        inp.type = "password";
+        icon.className = "fa-solid fa-eye";
+      }
+    }
+
     function openAdminPortal() {
       const saved = localStorage.getItem("admin_security_token");
       if (!saved) {
         openModal("adminAuthModal");
+        setTimeout(() => {
+          const inp = document.getElementById("adminTokenInput");
+          if (inp) {
+            inp.focus();
+            inp.select();
+          }
+        }, 150);
       } else {
         adminSecurityToken = saved;
         launchAdminView();
@@ -3045,7 +3096,8 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
     }
 
     function verifyAdminToken() {
-      const val = document.getElementById("adminTokenInput").value.trim();
+      const inp = document.getElementById("adminTokenInput");
+      const val = inp ? inp.value.trim() : "";
       if (!val) {
         alert("กรุณากรอก Security Token ครับ");
         return;
@@ -3057,19 +3109,35 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
     }
 
     function launchAdminView() {
-      document.getElementById("adminPortalModal").classList.add("active");
+      const portal = document.getElementById("adminPortalModal");
+      if (!portal) return;
+      portal.style.display = "flex";
+      portal.classList.add("active");
       document.body.style.overflow = "hidden";
       renderAdminStatusBar();
       renderAdminMenuList();
     }
 
     function closeAdminPortal() {
-      document.getElementById("adminPortalModal").classList.remove("active");
+      const portal = document.getElementById("adminPortalModal");
+      if (portal) {
+        portal.classList.remove("active");
+        portal.style.display = "none";
+      }
       document.body.style.overflow = "auto";
       // รีเฟรชหน้าร้านลูกค้าให้แสดงข้อมูลล่าสุดทันที
       renderMenu();
       renderStoreStatus();
       updateDynamicSEO();
+    }
+
+    function adminLogout() {
+      if (confirm("ต้องการออกจากระบบจัดการร้าน และล้างรหัส Token ใช่หรือไม่?")) {
+        localStorage.removeItem("admin_security_token");
+        adminSecurityToken = DEFAULT_SECURITY_TOKEN;
+        closeAdminPortal();
+        alert("ออกจากระบบจัดการร้านเรียบร้อยแล้วครับ");
+      }
     }
 
     function renderAdminStatusBar() {
