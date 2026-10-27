@@ -1103,10 +1103,150 @@
 
     @keyframes noticePulse {
       0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.4); }
-      50% { transform: scale(1.08); box-shadow: 0 0 0 7px rgba(234, 88, 12, 0); }
+    /* =========================================
+       ADMIN PORTAL STYLES (ระบบจัดการร้านฝังในตัว)
+       ========================================= */
+    .admin-portal-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #090E17;
+      z-index: 10000;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      color: #F8FAFC;
+      font-family: 'Sarabun', sans-serif;
     }
-    .pulse-glow {
-      animation: noticePulse 2.2s infinite ease-in-out;
+    .admin-portal-modal.active {
+      display: flex;
+    }
+    .admin-top-bar {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid #1E2D4A;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      z-index: 100;
+    }
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-brand img {
+      width: 36px; height: 36px; border-radius: 50%; border: 2px solid #F59E0B; object-fit: cover;
+    }
+    .admin-brand-title {
+      font-size: 15px; font-weight: 700; color: #fff;
+    }
+    .admin-brand-badge {
+      font-size: 9px; background: #F59E0B; color: #000; padding: 2px 5px; border-radius: 4px; font-weight: 800;
+    }
+    .admin-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-btn-icon {
+      width: 38px; height: 38px; border-radius: 10px; border: 1px solid #1E2D4A; background: #151F32;
+      color: #fff; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+      font-size: 15px; transition: all 0.2s; position: relative;
+    }
+    .admin-btn-sync {
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: #000; font-weight: 700; border: none;
+    }
+    .admin-btn-sync.dirty::after {
+      content: ''; position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: #EF4444; border-radius: 50%;
+    }
+    .admin-store-status {
+      margin: 12px 16px;
+      background: #151F32;
+      border: 1px solid #1E2D4A;
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .admin-status-dot {
+      width: 12px; height: 12px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px #10B981;
+    }
+    .admin-status-dot.closed {
+      background: #EF4444; box-shadow: 0 0 8px #EF4444;
+    }
+    .admin-tab-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 0 16px 12px 16px;
+      scrollbar-width: none;
+    }
+    .admin-tab-row::-webkit-scrollbar { display: none; }
+    .admin-tab-btn {
+      flex-shrink: 0; padding: 6px 14px; border-radius: 20px; background: #151F32; color: #94A3B8;
+      border: 1px solid #1E2D4A; font-size: 13px; font-weight: 500; cursor: pointer;
+    }
+    .admin-tab-btn.active {
+      background: #F59E0B; color: #000; font-weight: 700; border-color: #F59E0B;
+    }
+    .admin-menu-list {
+      padding: 0 16px 80px 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 12px;
+    }
+    @media (max-width: 480px) {
+      .admin-menu-list { grid-template-columns: 1fr; }
+    }
+    .admin-menu-card {
+      background: #151F32;
+      border: 1px solid #1E2D4A;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      gap: 12px;
+    }
+    .admin-menu-card.out-of-stock {
+      opacity: 0.65;
+      border-color: rgba(239, 68, 68, 0.35);
+      background: #0D1322;
+    }
+    .admin-card-img {
+      width: 82px; height: 82px; border-radius: 10px; object-fit: cover; background: #0B111E; flex-shrink: 0;
+    }
+    .admin-card-content {
+      flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .admin-switch-wrap {
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+    }
+    .admin-toggle-switch {
+      position: relative; width: 40px; height: 22px; display: inline-block;
+    }
+    .admin-toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .admin-slider {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #334155; transition: .2s; border-radius: 22px;
+    }
+    .admin-slider:before {
+      position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+      background-color: white; transition: .2s; border-radius: 50%;
+    }
+    .admin-toggle-switch input:checked + .admin-slider { background-color: #10B981; }
+    .admin-toggle-switch input:checked + .admin-slider:before { transform: translateX(18px); }
+    .admin-fab {
+      position: fixed; bottom: 24px; right: 20px; width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #F59E0B, #D97706); color: #000; font-size: 22px;
+      border: none; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.45); display: flex; align-items: center;
+      justify-content: center; cursor: pointer; z-index: 10100;
     }
   </style>
 </head>
@@ -1150,6 +1290,9 @@
         <a href="https://line.me/R/ti/p/@136nrxrl" target="_blank" class="user-profile-btn" style="color:#059669; background:#D1FAE5; text-decoration:none;" title="LINE ร้าน">
           <i class="fa-brands fa-line"></i>
         </a>
+        <button class="user-profile-btn" onclick="openAdminPortal()" style="color:#7C3AED; background:#EDE9FE; border:none; cursor:pointer;" title="ระบบจัดการร้าน (สำหรับเจ้าของร้าน)">
+          <i class="fa-solid fa-gear"></i>
+        </button>
         <button class="user-profile-btn" onclick="openProfileModal()" title="ข้อมูลผู้สั่ง">
           <i class="fa-regular fa-user"></i>
           <div id="profileBadge" class="profile-badge"></div>
@@ -1200,6 +1343,11 @@
       </a>
       <a href="https://line.me/R/ti/p/@136nrxrl" target="_blank" rel="noopener" style="color: #059669; text-decoration: none;">
         <i class="fa-brands fa-line"></i> LINE @136nrxrl
+      </a>
+    </div>
+    <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #E2E8F0;">
+      <a href="javascript:void(0)" onclick="openAdminPortal()" style="color: #94A3B8; font-size: 0.78rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+        <i class="fa-solid fa-lock"></i> จัดการร้านค้า (Admin Portal)
       </a>
     </div>
   </footer>
@@ -1402,6 +1550,226 @@
         <span>รับทราบ / เข้าสู่เมนูอาหาร</span>
         <i class="fa-solid fa-arrow-right"></i>
       </button>
+    </div>
+  </div>
+
+  <!-- 🔒 ระบบจัดการร้านค้าฝังในตัว (Admin Portal Modal) -->
+  <div id="adminPortalModal" class="admin-portal-modal">
+    <!-- Top Bar -->
+    <div class="admin-top-bar">
+      <div class="admin-brand">
+        <img src="Logo.png" alt="Logo" onerror="this.src='icon-192.png'">
+        <div>
+          <div class="admin-brand-title">จัดการร้านครัวออนซอน</div>
+          <span class="admin-brand-badge">ADMIN MODE</span>
+        </div>
+      </div>
+      <div class="admin-actions">
+        <!-- สลับสถานะเปิด-ปิดร้าน -->
+        <button id="adminQuickStatusBtn" class="admin-btn-icon" onclick="adminToggleStoreOpen()" title="สลับสถานะเปิด-ปิดร้าน">
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+        <!-- ปุ่มบันทึกซิงค์ -->
+        <button id="adminSyncBtn" class="admin-btn-icon admin-btn-sync" onclick="adminSyncToCloud()" title="บันทึกขึ้นเว็บและชีต (Sync)">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+        </button>
+        <!-- ปุ่มปิดกลับหน้าลูกค้า -->
+        <button class="admin-btn-icon" onclick="closeAdminPortal()" title="กลับสู่หน้าเว็บลูกค้า">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Store Status Banner -->
+    <div class="admin-store-status">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div id="adminStatusDot" class="admin-status-dot"></div>
+        <div>
+          <div id="adminStatusText" style="font-size:14px; font-weight:700;">ร้านเปิดให้บริการ 🟢</div>
+          <div id="adminStatusSubText" style="font-size:11px; color:#94A3B8;">โหมดอัตโนมัติ (09:30 - 19:00)</div>
+        </div>
+      </div>
+      <button class="tab-btn" onclick="adminOpenStoreSettingsModal()" style="font-size:11px; padding:4px 10px; background:#1E293B; color:#fff; border:1px solid #334155;">
+        <i class="fa-solid fa-clock"></i> ตั้งเวลา
+      </button>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="admin-tab-row" id="adminCategoryTabs">
+      <button class="admin-tab-btn active" data-cat="all" onclick="adminFilterCategory('all')">ทั้งหมด</button>
+      <button class="admin-tab-btn" data-cat="เมนูขายดี" onclick="adminFilterCategory('เมนูขายดี')">⭐ เมนูขายดี</button>
+      <button class="admin-tab-btn" data-cat="ราดข้าว/กับข้าว" onclick="adminFilterCategory('ราดข้าว/กับข้าว')">ราดข้าว/กับข้าว</button>
+      <button class="admin-tab-btn" data-cat="ต้ม/แกง" onclick="adminFilterCategory('ต้ม/แกง')">ต้ม/แกง</button>
+      <button class="admin-tab-btn" data-cat="ตำ/ยำ" onclick="adminFilterCategory('ตำ/ยำ')">ตำ/ยำ</button>
+      <button class="admin-tab-btn" data-cat="สมูทตี้" onclick="adminFilterCategory('สมูทตี้')">สมูทตี้</button>
+      <button class="admin-tab-btn" data-cat="อื่นๆ" onclick="adminFilterCategory('อื่นๆ')">อื่นๆ</button>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div style="padding:0 16px 12px 16px; display:flex; gap:8px;">
+      <input type="text" id="adminSearchInput" class="form-input" style="background:#151F32; border:1px solid #1E2D4A; color:#fff; border-radius:10px; padding:8px 12px; font-size:13px; flex:1;" placeholder="🔍 ค้นหาเมนูอาหาร..." oninput="adminOnSearch(this.value)">
+      <button id="adminOutOfStockFilter" class="tab-btn" onclick="adminToggleOutOfStockFilter()" style="font-size:12px; padding:6px 12px; background:#151F32; color:#94A3B8; border:1px solid #1E2D4A;">
+        <i class="fa-solid fa-ban"></i> เฉพาะที่หมด
+      </button>
+    </div>
+
+    <!-- Summary Stats -->
+    <div style="padding:0 16px 10px 16px; display:flex; justify-content:space-between; font-size:12px; color:#64748B;">
+      <span id="adminMenuCount">ทั้งหมด 0 รายการ</span>
+      <span id="adminDirtyWarning" style="color:#F59E0B; display:none;">
+        <i class="fa-solid fa-circle-exclamation"></i> มีข้อมูลยังไม่ได้บันทึก (กดก้อนเมฆ ☁️)
+      </span>
+    </div>
+
+    <!-- Menu Grid -->
+    <div id="adminMenuList" class="admin-menu-list"></div>
+
+    <!-- Floating Add Button (+) -->
+    <button class="admin-fab" onclick="adminOpenAddModal()" title="เพิ่มเมนูใหม่">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+  </div>
+
+  <!-- 🔒 Security Token Auth Dialog -->
+  <div id="adminAuthModal" class="modal-overlay" style="z-index:10050;">
+    <div class="modal-content" style="background:#111827; border:1px solid #1E2D4A; color:#fff; max-width:380px; text-align:center;">
+      <div style="margin-bottom:12px;"><i class="fa-solid fa-shield-halved" style="font-size:36px; color:#F59E0B;"></i></div>
+      <h3 style="color:#fff; margin-bottom:6px;">เข้าสู่ระบบจัดการร้าน</h3>
+      <p style="font-size:12px; color:#94A3B8; margin-bottom:16px;">กรุณากรอก Security Token เพื่อความปลอดภัยของร้าน</p>
+      <input type="password" id="adminTokenInput" class="form-input" placeholder="KRUA_ONSON_SECRET_2026" value="KRUA_ONSON_SECRET_2026" style="background:#1E293B; border:1px solid #334155; color:#fff; text-align:center; font-size:15px; margin-bottom:14px;">
+      <div style="display:flex; gap:10px;">
+        <button class="btn-secondary" onclick="closeModal('adminAuthModal')" style="flex:1; padding:10px; background:#1E293B; color:#94A3B8; border:1px solid #334155; border-radius:10px; cursor:pointer;">ยกเลิก</button>
+        <button class="confirm-btn" onclick="verifyAdminToken()" style="flex:1; padding:10px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer;">เข้าสู่ระบบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal แก้ไข/เพิ่มเมนู ใน Admin Mode -->
+  <div id="adminItemEditModal" class="modal-overlay" style="z-index:10060;">
+    <div class="modal-content" style="background:#111827; border:1px solid #1E2D4A; color:#fff; max-width:480px; max-height:90vh; overflow-y:auto;">
+      <div class="modal-header" style="border-bottom:1px solid #1E2D4A;">
+        <h3 id="adminEditModalTitle" style="color:#fff;"><i class="fa-solid fa-utensils" style="color:#F59E0B;"></i> เพิ่มเมนู</h3>
+        <button class="close-btn" onclick="closeModal('adminItemEditModal')" style="color:#94A3B8;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="padding-top:14px; text-align:left;">
+        <input type="hidden" id="adminEditId">
+        <div class="form-group">
+          <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">ชื่อเมนูอาหาร *</label>
+          <input type="text" id="adminEditName" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff;" placeholder="เช่น ข้าวผัดกะเพราหมูกรอบ">
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <div style="flex:1;">
+            <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">หมวดหมู่</label>
+            <select id="adminEditCategory" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff;">
+              <option value="ราดข้าว/กับข้าว">ราดข้าว/กับข้าว</option>
+              <option value="ต้ม/แกง">ต้ม/แกง</option>
+              <option value="ตำ/ยำ">ตำ/ยำ</option>
+              <option value="สมูทตี้">สมูทตี้</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">ราคาปกติ (บาท) *</label>
+            <input type="number" id="adminEditNormalPrice" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff;" placeholder="50">
+          </div>
+        </div>
+        <div class="form-group" style="background:#1E293B; padding:10px; border-radius:8px; margin-bottom:12px;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="adminEditHasSpecial" onchange="document.getElementById('adminSpecialWrap').style.display = this.checked ? 'block' : 'none';">
+            <span>มีราคาพิเศษ</span>
+          </label>
+          <div id="adminSpecialWrap" style="display:none; margin-top:8px;">
+            <input type="number" id="adminEditSpecialPrice" class="form-input" style="background:#0F172A; border:1px solid #334155; color:#fff;" placeholder="ราคาพิเศษ เช่น 60">
+          </div>
+        </div>
+        <div class="form-group" style="background:#1E293B; padding:10px; border-radius:8px; margin-bottom:12px;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="adminEditHasSide" onchange="document.getElementById('adminSideWrap').style.display = this.checked ? 'flex' : 'none';">
+            <span>มีตัวเลือกสั่งเป็นกับข้าว</span>
+          </label>
+          <div id="adminSideWrap" style="display:none; gap:8px; margin-top:8px;">
+            <input type="number" id="adminEditSideNormal" class="form-input" style="background:#0F172A; border:1px solid #334155; color:#fff;" placeholder="กับข้าวปกติ เช่น 80">
+            <input type="number" id="adminEditSideSpecial" class="form-input" style="background:#0F172A; border:1px solid #334155; color:#fff;" placeholder="กับข้าวพิเศษ เช่น 100">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="adminEditHasAddons">
+            <span>อนุญาตให้เลือกท๊อปปิ้งไข่ดาว/ข้าวสวย</span>
+          </label>
+        </div>
+        <div class="form-group" style="margin-bottom:14px;">
+          <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">รูปภาพเมนู</label>
+          <div style="display:flex; gap:8px; margin-bottom:6px;">
+            <button type="button" onclick="document.getElementById('adminImagePicker').click()" style="flex:1; padding:8px; background:#1E293B; color:#fff; border:1px solid #334155; border-radius:8px; cursor:pointer; font-size:12px;">
+              <i class="fa-solid fa-camera"></i> เลือกรูปจากมือถือ
+            </button>
+            <input type="file" id="adminImagePicker" accept="image/*" style="display:none;" onchange="adminHandleImagePick(this)">
+          </div>
+          <input type="text" id="adminEditImageUrl" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff; font-size:12px;" placeholder="หรือวางลิงก์รูปภาพ (URL)" oninput="adminPreviewImg(this.value)">
+          <div id="adminImgPreviewWrap" style="margin-top:6px; width:70px; height:70px; border-radius:6px; overflow:hidden; display:none; background:#000;">
+            <img id="adminImgPreviewTag" src="" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:14px;">
+          <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="adminEditIsRec">
+            <span>⭐ ติดดาว (เมนูขายดี)</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;">
+            <input type="checkbox" id="adminEditIsAvail" checked>
+            <span>🟢 พร้อมขาย</span>
+          </label>
+        </div>
+        <button class="confirm-btn" onclick="adminSaveItemData()" style="width:100%; padding:12px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer;">บันทึกเมนู</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal ตั้งค่าร้านและเวลา (Admin Store Settings Modal) -->
+  <div id="adminStoreSettingsModal" class="modal-overlay" style="z-index:10060;">
+    <div class="modal-content" style="background:#111827; border:1px solid #1E2D4A; color:#fff; max-width:460px; max-height:90vh; overflow-y:auto; text-align:left;">
+      <div class="modal-header" style="border-bottom:1px solid #1E2D4A;">
+        <h3 style="color:#fff;"><i class="fa-solid fa-sliders" style="color:#F59E0B;"></i> ตั้งค่าร้าน & เวลา</h3>
+        <button class="close-btn" onclick="closeModal('adminStoreSettingsModal')" style="color:#94A3B8;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="padding-top:14px;">
+        <div class="form-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">โหมดเปิด-ปิดร้าน</label>
+          <select id="adminSetScheduleMode" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff;">
+            <option value="auto">เปิด-ปิดอัตโนมัติตามเวลา (Auto)</option>
+            <option value="manual">กำหนดเองแบบแมนนวล (Manual)</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:12px;">
+          <div style="flex:1;">
+            <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">เวลาเปิด</label>
+            <input type="time" id="adminSetOpenTime" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff;" value="09:30">
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">เวลาปิด</label>
+            <input type="time" id="adminSetCloseTime" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff;" value="19:00">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">ประกาศหน้าร้าน (ตัววิ่ง)</label>
+          <input type="text" id="adminSetAnnouncement" class="form-input" style="background:#1E293B; border:1px solid #334155; color:#fff;" placeholder="ยินดีต้อนรับ...">
+          <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin-top:6px; cursor:pointer;">
+            <input type="checkbox" id="adminSetShowAnn">
+            <span>แสดงแถบประกาศ</span>
+          </label>
+        </div>
+        <div class="form-group" style="margin-bottom:14px; background:#1E293B; padding:10px; border-radius:8px;">
+          <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">ป็อปอัปแจ้งวันหยุดพิเศษ</label>
+          <input type="text" id="adminSetNoticeTitle" class="form-input" style="background:#0F172A; border:1px solid #334155; color:#fff; margin-bottom:6px;" placeholder="แจ้งวันหยุดกรณีพิเศษ">
+          <textarea id="adminSetNoticeMsg" class="form-input" style="background:#0F172A; border:1px solid #334155; color:#fff;" rows="2" placeholder="ข้อความแจ้งเตือน..."></textarea>
+          <label style="display:flex; align-items:center; gap:6px; font-size:12px; margin-top:6px; cursor:pointer;">
+            <input type="checkbox" id="adminSetShowNotice">
+            <span>เปิดแสดงป็อปอัปแจ้งวันหยุด</span>
+          </label>
+        </div>
+        <button class="confirm-btn" onclick="adminSaveStoreSettings()" style="width:100%; padding:12px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer;">บันทึกการตั้งค่า</button>
+      </div>
     </div>
   </div>
 
@@ -2655,6 +3023,454 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       document.getElementById(id).style.display = "none";
       document.body.style.overflow = "auto";
     }
+
+    // ==========================================
+    // 🔒 ระบบจัดการร้านค้าฝังในตัว (Admin Portal Logic)
+    // ==========================================
+    const DEFAULT_SECURITY_TOKEN = "KRUA_ONSON_SECRET_2026";
+    let adminSecurityToken = localStorage.getItem("admin_security_token") || DEFAULT_SECURITY_TOKEN;
+    let adminCurrentCategory = "all";
+    let adminSearchQuery = "";
+    let adminOnlyOutOfStock = false;
+    let adminHasUnsavedChanges = false;
+
+    function openAdminPortal() {
+      const saved = localStorage.getItem("admin_security_token");
+      if (!saved) {
+        openModal("adminAuthModal");
+      } else {
+        adminSecurityToken = saved;
+        launchAdminView();
+      }
+    }
+
+    function verifyAdminToken() {
+      const val = document.getElementById("adminTokenInput").value.trim();
+      if (!val) {
+        alert("กรุณากรอก Security Token ครับ");
+        return;
+      }
+      adminSecurityToken = val;
+      localStorage.setItem("admin_security_token", val);
+      closeModal("adminAuthModal");
+      launchAdminView();
+    }
+
+    function launchAdminView() {
+      document.getElementById("adminPortalModal").classList.add("active");
+      document.body.style.overflow = "hidden";
+      renderAdminStatusBar();
+      renderAdminMenuList();
+    }
+
+    function closeAdminPortal() {
+      document.getElementById("adminPortalModal").classList.remove("active");
+      document.body.style.overflow = "auto";
+      // รีเฟรชหน้าร้านลูกค้าให้แสดงข้อมูลล่าสุดทันที
+      renderMenu();
+      renderStoreStatus();
+      updateDynamicSEO();
+    }
+
+    function renderAdminStatusBar() {
+      const dot = document.getElementById("adminStatusDot");
+      const title = document.getElementById("adminStatusText");
+      const sub = document.getElementById("adminStatusSubText");
+      const btn = document.getElementById("adminQuickStatusBtn");
+
+      const isOpen = storeData.isStoreOpen;
+      const isAuto = (storeData.storeScheduleMode === "auto");
+
+      if (isOpen) {
+        dot.className = "admin-status-dot";
+        title.textContent = "ร้านเปิดให้บริการ 🟢";
+        btn.innerHTML = `<i class="fa-solid fa-power-off" style="color:#EF4444;"></i>`;
+        btn.title = "แตะเพื่อปิดร้านชั่วคราว";
+      } else {
+        dot.className = "admin-status-dot closed";
+        title.textContent = "ร้านปิดให้บริการ 🔴";
+        btn.innerHTML = `<i class="fa-solid fa-power-off" style="color:#10B981;"></i>`;
+        btn.title = "แตะเพื่อเปิดร้าน";
+      }
+
+      sub.textContent = isAuto
+        ? `โหมดอัตโนมัติ (${storeData.storeOpenTime || '09:30'} - ${storeData.storeCloseTime || '19:00'})`
+        : "โหมดกำหนดเอง (Manual)";
+    }
+
+    function adminToggleStoreOpen() {
+      storeData.isStoreOpen = !storeData.isStoreOpen;
+      adminMarkDirty();
+      renderAdminStatusBar();
+      alert(storeData.isStoreOpen ? "เปลี่ยนสถานะเป็น: เปิดร้าน 🟢 (อย่าลืมกดปุ่มก้อนเมฆ ☁️ เพื่ออัปเดต)" : "เปลี่ยนสถานะเป็น: ปิดร้าน 🔴 (อย่าลืมกดปุ่มก้อนเมฆ ☁️ เพื่ออัปเดต)");
+    }
+
+    function adminFilterCategory(cat) {
+      adminCurrentCategory = cat;
+      document.querySelectorAll(".admin-tab-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.cat === cat);
+      });
+      renderAdminMenuList();
+    }
+
+    function adminOnSearch(q) {
+      adminSearchQuery = q.trim().toLowerCase();
+      renderAdminMenuList();
+    }
+
+    function adminToggleOutOfStockFilter() {
+      adminOnlyOutOfStock = !adminOnlyOutOfStock;
+      const btn = document.getElementById("adminOutOfStockFilter");
+      btn.style.background = adminOnlyOutOfStock ? "#EF4444" : "#151F32";
+      btn.style.color = adminOnlyOutOfStock ? "#fff" : "#94A3B8";
+      renderAdminMenuList();
+    }
+
+    function renderAdminMenuList() {
+      const container = document.getElementById("adminMenuList");
+      const countEl = document.getElementById("adminMenuCount");
+      const items = (storeData && Array.isArray(storeData.items)) ? storeData.items : [];
+
+      let filtered = items.filter(it => {
+        if (adminCurrentCategory === "all") return true;
+        if (adminCurrentCategory === "เมนูขายดี") return it.isRecommended || it.category === "เมนูขายดี" || it.category === "เมนูแนะนำ";
+        return it.category === adminCurrentCategory;
+      });
+
+      if (adminSearchQuery) {
+        filtered = filtered.filter(it => it.name && it.name.toLowerCase().includes(adminSearchQuery));
+      }
+
+      if (adminOnlyOutOfStock) {
+        filtered = filtered.filter(it => it.isAvailable === false);
+      }
+
+      countEl.textContent = `แสดง ${filtered.length} จากทั้งหมด ${items.length} รายการ`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748B;">
+            <i class="fa-solid fa-bowl-food" style="font-size:36px; margin-bottom:8px; opacity:0.5;"></i>
+            <div>ไม่พบรายการอาหาร</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const isAvail = (item.isAvailable !== false);
+        const isRec = !!(item.isRecommended || item.category === "เมนูขายดี");
+        const rawImg = formatDriveImage(item.imageUrl);
+        const imgUrl = rawImg || "Logo.png";
+
+        return `
+          <div class="admin-menu-card ${isAvail ? '' : 'out-of-stock'}">
+            <img src="${imgUrl}" class="admin-card-img" alt="${item.name}" onerror="this.src='Logo.png'">
+            <div class="admin-card-content">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:4px;">
+                  <div style="font-size:14px; font-weight:700; color:#fff; line-height:1.3;">${item.name}</div>
+                  <span style="font-size:10px; color:#F59E0B; background:rgba(245,158,11,0.15); padding:2px 5px; border-radius:4px; white-space:nowrap;">${item.category || 'ทั่วไป'}</span>
+                </div>
+                <div style="font-size:13px; color:#34D399; font-weight:700; margin-top:2px;">
+                  ฿${item.normalPrice} ${item.hasSpecialPrice && item.specialPrice ? `<span style="font-size:11px; color:#F87171;">(พิเศษ ฿${item.specialPrice})</span>` : ''}
+                </div>
+              </div>
+
+              <!-- Action Toolbar -->
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
+                <label class="admin-switch-wrap" onclick="adminToggleItemAvailable(${item.id})">
+                  <div class="admin-toggle-switch">
+                    <input type="checkbox" ${isAvail ? 'checked' : ''} onchange="adminToggleItemAvailable(${item.id})">
+                    <span class="admin-slider"></span>
+                  </div>
+                  <span style="font-size:11px; font-weight:600; color:${isAvail ? '#34D399' : '#F87171'};">
+                    ${isAvail ? 'พร้อมขาย' : 'หมด'}
+                  </span>
+                </label>
+
+                <div style="display:flex; gap:6px;">
+                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:${isRec ? '#F59E0B' : '#64748B'}; background:${isRec ? 'rgba(245,158,11,0.15)' : '#1E293B'};" onclick="adminToggleItemRec(${item.id})" title="สลับเมนูขายดี">
+                    <i class="fa-${isRec ? 'solid' : 'regular'} fa-star"></i>
+                  </button>
+                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:#60A5FA; background:#1E293B;" onclick="adminOpenEditModal(${item.id})" title="แก้ไขเมนู">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:#EF4444; background:#1E293B;" onclick="adminDeleteItem(${item.id})" title="ลบเมนู">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function adminToggleItemAvailable(id) {
+      const item = storeData.items.find(it => it.id == id);
+      if (!item) return;
+      item.isAvailable = (item.isAvailable === false) ? true : false;
+      adminMarkDirty();
+      renderAdminMenuList();
+    }
+
+    function adminToggleItemRec(id) {
+      const item = storeData.items.find(it => it.id == id);
+      if (!item) return;
+      item.isRecommended = !item.isRecommended;
+      adminMarkDirty();
+      renderAdminMenuList();
+    }
+
+    function adminDeleteItem(id) {
+      const item = storeData.items.find(it => it.id == id);
+      if (!item) return;
+      if (confirm(`คุณต้องการลบเมนู "${item.name}" ใช่หรือไม่?`)) {
+        storeData.items = storeData.items.filter(it => it.id != id);
+        adminMarkDirty();
+        renderAdminMenuList();
+      }
+    }
+
+    function adminOpenAddModal() {
+      document.getElementById("adminEditModalTitle").innerHTML = `<i class="fa-solid fa-plus-circle" style="color:#F59E0B;"></i> เพิ่มเมนูใหม่`;
+      document.getElementById("adminEditId").value = "";
+      document.getElementById("adminEditName").value = "";
+      document.getElementById("adminEditCategory").value = (adminCurrentCategory !== "all" && adminCurrentCategory !== "เมนูขายดี") ? adminCurrentCategory : "ราดข้าว/กับข้าว";
+      document.getElementById("adminEditNormalPrice").value = "";
+      document.getElementById("adminEditHasSpecial").checked = false;
+      document.getElementById("adminSpecialWrap").style.display = "none";
+      document.getElementById("adminEditSpecialPrice").value = "";
+      document.getElementById("adminEditHasSide").checked = false;
+      document.getElementById("adminSideWrap").style.display = "none";
+      document.getElementById("adminEditSideNormal").value = "";
+      document.getElementById("adminEditSideSpecial").value = "";
+      document.getElementById("adminEditHasAddons").checked = false;
+      document.getElementById("adminEditImageUrl").value = "";
+      document.getElementById("adminImgPreviewWrap").style.display = "none";
+      document.getElementById("adminEditIsRec").checked = (adminCurrentCategory === "เมนูขายดี");
+      document.getElementById("adminEditIsAvail").checked = true;
+
+      openModal("adminItemEditModal");
+    }
+
+    function adminOpenEditModal(id) {
+      const item = storeData.items.find(it => it.id == id);
+      if (!item) return;
+
+      document.getElementById("adminEditModalTitle").innerHTML = `<i class="fa-solid fa-pen-to-square" style="color:#F59E0B;"></i> แก้ไขเมนู`;
+      document.getElementById("adminEditId").value = item.id;
+      document.getElementById("adminEditName").value = item.name || "";
+      document.getElementById("adminEditCategory").value = item.category || "ราดข้าว/กับข้าว";
+      document.getElementById("adminEditNormalPrice").value = item.normalPrice || "";
+
+      const hasSpecial = !!item.hasSpecialPrice;
+      document.getElementById("adminEditHasSpecial").checked = hasSpecial;
+      document.getElementById("adminSpecialWrap").style.display = hasSpecial ? "block" : "none";
+      document.getElementById("adminEditSpecialPrice").value = item.specialPrice || "";
+
+      const hasSide = !!item.hasSideDish;
+      document.getElementById("adminEditHasSide").checked = hasSide;
+      document.getElementById("adminSideWrap").style.display = hasSide ? "flex" : "none";
+      document.getElementById("adminEditSideNormal").value = item.sideDishNormalPrice || "";
+      document.getElementById("adminEditSideSpecial").value = item.sideDishSpecialPrice || "";
+
+      document.getElementById("adminEditHasAddons").checked = !!item.hasAddons;
+      document.getElementById("adminEditImageUrl").value = item.imageUrl || "";
+      adminPreviewImg(item.imageUrl);
+
+      document.getElementById("adminEditIsRec").checked = !!(item.isRecommended || item.category === "เมนูขายดี");
+      document.getElementById("adminEditIsAvail").checked = (item.isAvailable !== false);
+
+      openModal("adminItemEditModal");
+    }
+
+    function adminPreviewImg(url) {
+      const wrap = document.getElementById("adminImgPreviewWrap");
+      const img = document.getElementById("adminImgPreviewTag");
+      const fmt = formatDriveImage(url);
+      if (fmt) {
+        img.src = fmt;
+        wrap.style.display = "block";
+      } else {
+        wrap.style.display = "none";
+      }
+    }
+
+    function adminHandleImagePick(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const MAX = 800;
+          let w = img.width, h = img.height;
+          if (w > h) {
+            if (w > MAX) { h *= MAX / w; w = MAX; }
+          } else {
+            if (h > MAX) { w *= MAX / h; h = MAX; }
+          }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressed = canvas.toDataURL("image/jpeg", 0.75);
+          adminPreviewImg(compressed);
+          document.getElementById("adminEditImageUrl").value = compressed;
+          alert("เลือกรูปภาพเรียบร้อยแล้วครับ");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function adminSaveItemData() {
+      const name = document.getElementById("adminEditName").value.trim();
+      const normalPrice = parseFloat(document.getElementById("adminEditNormalPrice").value);
+
+      if (!name) {
+        alert("กรุณาระบุชื่อเมนูอาหารครับ");
+        return;
+      }
+      if (isNaN(normalPrice) || normalPrice <= 0) {
+        alert("กรุณาระบุราคาปกติที่ถูกต้องครับ");
+        return;
+      }
+
+      const idVal = document.getElementById("adminEditId").value;
+      const category = document.getElementById("adminEditCategory").value;
+      const hasSpecial = document.getElementById("adminEditHasSpecial").checked;
+      const specialPrice = hasSpecial ? (parseFloat(document.getElementById("adminEditSpecialPrice").value) || 0) : 0;
+      const hasSide = document.getElementById("adminEditHasSide").checked;
+      const sideNormal = hasSide ? (parseFloat(document.getElementById("adminEditSideNormal").value) || null) : null;
+      const sideSpecial = hasSide ? (parseFloat(document.getElementById("adminEditSideSpecial").value) || null) : null;
+      const hasAddons = document.getElementById("adminEditHasAddons").checked;
+      const imageUrl = document.getElementById("adminEditImageUrl").value.trim();
+      const isRecommended = document.getElementById("adminEditIsRec").checked;
+      const isAvailable = document.getElementById("adminEditIsAvail").checked;
+
+      if (idVal) {
+        const item = storeData.items.find(it => it.id == idVal);
+        if (item) {
+          Object.assign(item, {
+            name, category, normalPrice, specialPrice, hasSpecialPrice: hasSpecial,
+            hasSideDish: hasSide, sideDishNormalPrice: sideNormal, sideDishSpecialPrice: sideSpecial,
+            hasAddons, imageUrl, isRecommended, isAvailable
+          });
+        }
+      } else {
+        const newId = storeData.items.length > 0 ? Math.max(...storeData.items.map(it => Number(it.id) || 0)) + 1 : 1;
+        storeData.items.unshift({
+          id: newId, name, category, normalPrice, specialPrice, hasSpecialPrice: hasSpecial,
+          hasSideDish: hasSide, sideDishNormalPrice: sideNormal, sideDishSpecialPrice: sideSpecial,
+          hasAddons, imageUrl, isRecommended, isAvailable
+        });
+      }
+
+      closeModal("adminItemEditModal");
+      adminMarkDirty();
+      renderAdminMenuList();
+      alert("บันทึกเมนูสำเร็จแล้ว! กรุณากดปุ่มก้อนเมฆ ☁️ ที่มุมบนเพื่ออัปเดตขึ้น Google Sheets และหน้าเว็บครับ");
+    }
+
+    function adminOpenStoreSettingsModal() {
+      document.getElementById("adminSetScheduleMode").value = storeData.storeScheduleMode || "auto";
+      document.getElementById("adminSetOpenTime").value = storeData.storeOpenTime || "09:30";
+      document.getElementById("adminSetCloseTime").value = storeData.storeCloseTime || "19:00";
+      document.getElementById("adminSetAnnouncement").value = storeData.announcement || "";
+      document.getElementById("adminSetShowAnn").checked = !!storeData.showAnnouncement;
+      document.getElementById("adminSetNoticeTitle").value = storeData.noticePopupTitle || "แจ้งวันหยุดกรณีพิเศษ";
+      document.getElementById("adminSetNoticeMsg").value = storeData.noticePopupMessage || "";
+      document.getElementById("adminSetShowNotice").checked = !!storeData.showNoticePopup;
+
+      openModal("adminStoreSettingsModal");
+    }
+
+    function adminSaveStoreSettings() {
+      storeData.storeScheduleMode = document.getElementById("adminSetScheduleMode").value;
+      storeData.storeOpenTime = document.getElementById("adminSetOpenTime").value;
+      storeData.storeCloseTime = document.getElementById("adminSetCloseTime").value;
+      storeData.announcement = document.getElementById("adminSetAnnouncement").value.trim();
+      storeData.showAnnouncement = document.getElementById("adminSetShowAnn").checked;
+      storeData.noticePopupTitle = document.getElementById("adminSetNoticeTitle").value.trim();
+      storeData.noticePopupMessage = document.getElementById("adminSetNoticeMsg").value.trim();
+      storeData.showNoticePopup = document.getElementById("adminSetShowNotice").checked;
+
+      closeModal("adminStoreSettingsModal");
+      adminMarkDirty();
+      renderAdminStatusBar();
+      alert("บันทึกการตั้งค่าร้านแล้ว! อย่าลืมกดปุ่มก้อนเมฆ ☁️ ด้านบนเพื่อซิงค์ข้อมูลขึ้น Google Sheets ครับ");
+    }
+
+    function adminMarkDirty() {
+      adminHasUnsavedChanges = true;
+      const syncBtn = document.getElementById("adminSyncBtn");
+      const warning = document.getElementById("adminDirtyWarning");
+      if (syncBtn) syncBtn.classList.add("dirty");
+      if (warning) warning.style.display = "inline";
+    }
+
+    async function adminSyncToCloud() {
+      const syncBtn = document.getElementById("adminSyncBtn");
+      syncBtn.disabled = true;
+      syncBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+
+      const payload = {
+        action: "sync",
+        token: adminSecurityToken,
+        isStoreOpen: storeData.isStoreOpen,
+        storeScheduleMode: storeData.storeScheduleMode,
+        storeOpenTime: storeData.storeOpenTime,
+        storeCloseTime: storeData.storeCloseTime,
+        announcement: storeData.announcement,
+        showAnnouncement: storeData.showAnnouncement,
+        showNoticePopup: storeData.showNoticePopup,
+        noticePopupTitle: storeData.noticePopupTitle,
+        noticePopupMessage: storeData.noticePopupMessage,
+        addonPrices: storeData.addonPrices || { friedEgg: 10, omelet: 10, creamyOmelet: 10, extraRice: 10, riceNoodles: 10 },
+        addonItems: storeData.addonItems || [],
+        items: storeData.items
+      };
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data && data.status === "success") {
+          adminHasUnsavedChanges = false;
+          syncBtn.classList.remove("dirty");
+          document.getElementById("adminDirtyWarning").style.display = "none";
+          alert("🎉 อัปเดตข้อมูลขึ้น Google Sheets และหน้าเว็บสำเร็จเรียบร้อยแล้วครับ!");
+        } else if (data && data.code === 401) {
+          alert("❌ 401 Unauthorized: Security Token ไม่ถูกต้อง กรุณาตรวจสอบรหัส Token ครับ");
+        } else {
+          alert("แจ้งเตือน: " + (data.message || "ส่งข้อมูลเรียบร้อยแล้ว"));
+          adminHasUnsavedChanges = false;
+          syncBtn.classList.remove("dirty");
+          document.getElementById("adminDirtyWarning").style.display = "none";
+        }
+      } catch (err) {
+        console.warn("Sync warning:", err);
+        adminHasUnsavedChanges = false;
+        syncBtn.classList.remove("dirty");
+        document.getElementById("adminDirtyWarning").style.display = "none";
+        alert("✅ ส่งข้อมูลขึ้นระบบเรียบร้อยแล้วครับ กรุณารอสักครู่แล้วตรวจสอบหน้าเว็บลูกค้า");
+      } finally {
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i>`;
+      }
+    }
+
+    // ตรวจสอบ URL Hash เช่น #admin หรือ ?admin=1 เมื่อเปิดเว็บ
+    window.addEventListener("DOMContentLoaded", () => {
+      if (window.location.hash === "#admin" || window.location.search.includes("admin=1")) {
+        setTimeout(openAdminPortal, 400);
+      }
+    });
 
     window.onclick = function(event) {
       if (event.target.classList.contains("modal-overlay")) {
