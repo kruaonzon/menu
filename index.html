@@ -1231,23 +1231,60 @@
     .admin-card-content {
       flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between;
     }
-    .admin-switch-wrap {
-      display: flex; align-items: center; gap: 6px; cursor: pointer;
+    .admin-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid #334155;
+      background: #1E293B;
+      color: #94A3B8;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
     }
-    .admin-toggle-switch {
-      position: relative; width: 40px; height: 22px; display: inline-block;
+    .admin-toggle-btn:active {
+      transform: scale(0.95);
     }
-    .admin-toggle-switch input { opacity: 0; width: 0; height: 0; }
-    .admin-slider {
-      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #334155; transition: .2s; border-radius: 22px;
+    .admin-toggle-btn.is-available {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34D399;
     }
-    .admin-slider:before {
-      position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
-      background-color: white; transition: .2s; border-radius: 50%;
+    .admin-toggle-btn.is-out {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #F87171;
     }
-    .admin-toggle-switch input:checked + .admin-slider { background-color: #10B981; }
-    .admin-toggle-switch input:checked + .admin-slider:before { transform: translateX(18px); }
+    .admin-toggle-track {
+      width: 28px;
+      height: 16px;
+      background: #475569;
+      border-radius: 10px;
+      position: relative;
+      transition: background 0.2s ease;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .admin-toggle-btn.is-available .admin-toggle-track {
+      background: #10B981;
+    }
+    .admin-toggle-thumb {
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .admin-toggle-btn.is-available .admin-toggle-thumb {
+      transform: translateX(12px);
+    }
     .admin-fab {
       position: fixed; bottom: 24px; right: 20px; width: 56px; height: 56px; border-radius: 50%;
       background: linear-gradient(135deg, #F59E0B, #D97706); color: #000; font-size: 22px;
@@ -1705,11 +1742,40 @@
             <input type="number" id="adminEditSideSpecial" class="form-input" style="background:#0F172A; border:1px solid #334155; color:#fff;" placeholder="กับข้าวพิเศษ เช่น 100">
           </div>
         </div>
-        <div class="form-group" style="margin-bottom:12px;">
-          <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;">
-            <input type="checkbox" id="adminEditHasAddons">
-            <span>อนุญาตให้เลือกท๊อปปิ้งไข่ดาว/ข้าวสวย</span>
+        <div class="form-group" style="background:#1E293B; padding:10px 12px; border-radius:8px; margin-bottom:12px;">
+          <label style="display:flex; align-items:center; justify-content:space-between; font-size:13px; cursor:pointer;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" id="adminEditHasAddons" onchange="adminToggleHasAddons(this.checked)">
+              <span style="font-weight:600;">อนุญาตให้เลือกท็อปปิ้ง / ตัวเลือกเสริม</span>
+            </div>
+            <span id="adminAddonCountBadge" style="font-size:11px; color:#F59E0B; background:rgba(245,158,11,0.15); padding:2px 6px; border-radius:4px; display:none;">0 ตัวเลือก</span>
           </label>
+          
+          <!-- กล่องแสดงรายการท็อปปิ้งให้ติ๊กเลือก และจัดการเพิ่ม/ลด -->
+          <div id="adminAddonsListWrap" style="display:none; margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.1);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-size:11px; color:#94A3B8;">ติ๊กเลือกท็อปปิ้งที่ต้องการเปิดใช้กับเมนูนี้:</span>
+              <div style="display:flex; gap:6px;">
+                <button type="button" class="tab-btn" onclick="adminSelectAllAddons(true)" style="font-size:10px; padding:2px 8px; background:#0F172A; color:#34D399; border:1px solid #334155; border-radius:4px; cursor:pointer;">เลือกทั้งหมด</button>
+                <button type="button" class="tab-btn" onclick="adminSelectAllAddons(false)" style="font-size:10px; padding:2px 8px; background:#0F172A; color:#94A3B8; border:1px solid #334155; border-radius:4px; cursor:pointer;">ล้าง</button>
+              </div>
+            </div>
+
+            <!-- รายการท็อปปิ้งที่เลือกได้ -->
+            <div id="adminAddonsCheckboxes" style="display:flex; flex-direction:column; gap:6px; max-height:160px; overflow-y:auto; padding-right:4px;"></div>
+
+            <!-- กล่องเพิ่มท็อปปิ้งใหม่เข้าร้าน -->
+            <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06);">
+              <div id="adminNewAddonForm" style="display:none; gap:6px; margin-bottom:8px;">
+                <input type="text" id="adminNewAddonName" class="form-input" style="flex:2; font-size:12px; background:#0F172A; border:1px solid #334155; color:#fff;" placeholder="ชื่อท็อปปิ้ง เช่น 🧀 ชีส">
+                <input type="number" id="adminNewAddonPrice" class="form-input" style="flex:1; font-size:12px; background:#0F172A; border:1px solid #334155; color:#fff;" placeholder="ราคา ฿">
+                <button type="button" onclick="adminAddNewStoreAddon()" style="padding:6px 12px; font-size:11px; font-weight:700; background:#10B981; color:#000; border:none; border-radius:6px; cursor:pointer;">เพิ่ม</button>
+              </div>
+              <button type="button" id="adminToggleAddonFormBtn" onclick="adminToggleAddonForm()" style="background:none; border:none; color:#F59E0B; font-size:11px; cursor:pointer; display:flex; align-items:center; gap:4px; padding:2px 0;">
+                <i class="fa-solid fa-plus-circle"></i> + เพิ่มตัวเลือกท็อปปิ้งใหม่เข้าร้าน
+              </button>
+            </div>
+          </div>
         </div>
         <div class="form-group" style="margin-bottom:14px;">
           <label style="font-size:12px; color:#94A3B8; display:block; margin-bottom:4px;">รูปภาพเมนู</label>
@@ -1938,6 +2004,12 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
     }
 
     async function fetchMenuData(force = false) {
+      // 🛡️ สำคัญมาก: หากอยู่ในโหมดแอดมิน หรือมีข้อมูลที่แก้ไขค้างอยู่และยังไม่ได้กดซิงค์ ห้ามดึงข้อมูลเก่ามาเขียนทับเด็ดขาด!
+      const adminModal = document.getElementById("adminPortalModal");
+      const isAdminActive = adminModal && (adminModal.style.display === "flex" || adminModal.classList.contains("active"));
+      if (adminHasUnsavedChanges || isAdminActive) {
+        return;
+      }
       if (isFetching && !force) return;
       isFetching = true;
 
@@ -2445,14 +2517,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       if (!item) return [];
       const allAddons = getActiveAddonItems();
 
-      // 1. ตรวจสอบว่าเมนูนี้ระบุรายการตัวเลือกเสริมเฉพาะเจาะจง (selectedAddonIds) หรือไม่
-      if (item.selectedAddonIds !== undefined && item.selectedAddonIds !== null && String(item.selectedAddonIds).trim() !== "") {
-        const selectedIds = String(item.selectedAddonIds).split(",").map(s => s.trim()).filter(Boolean);
-        if (selectedIds.length === 0) return [];
-        return allAddons.filter(a => selectedIds.includes(String(a.id)));
-      }
-
-      // 2. ตรวจสอบสถานะ hasAddons
+      // 1. ตรวจสอบสถานะ hasAddons ก่อน
       let hasAddons = true;
       if (item.hasAddons !== undefined && item.hasAddons !== null) {
         if (typeof item.hasAddons === "boolean") {
@@ -2465,6 +2530,14 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
         }
       }
       if (!hasAddons) return [];
+
+      // 2. ถ้าเปิดใช้งาน hasAddons ให้ตรวจสอบ selectedAddonIds เฉพาะเจาะจง
+      if (item.selectedAddonIds !== undefined && item.selectedAddonIds !== null) {
+        const raw = String(item.selectedAddonIds).trim();
+        if (raw === "" || raw === "none") return [];
+        const selectedIds = raw.split(",").map(s => s.trim()).filter(Boolean);
+        return allAddons.filter(a => selectedIds.includes(String(a.id)));
+      }
 
       // 3. กรณีข้อมูลเดิมที่ยังไม่ได้บันทึก selectedAddonIds แยก:
       // หมวดสมูทตี้ หรือเครื่องดื่ม จะยังไม่แสดงไข่/ข้าว จนกว่าจะมีการติ๊กเลือก
@@ -3154,7 +3227,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       }
       document.body.style.overflow = "auto";
       // รีเฟรชหน้าร้านลูกค้าให้แสดงข้อมูลล่าสุดทันที
-      renderMenu();
+      renderContinuousMenu();
       renderStoreStatus();
       updateDynamicSEO();
     }
@@ -3275,24 +3348,21 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
 
               <!-- Action Toolbar -->
               <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding-top:6px; border-top:1px solid rgba(255,255,255,0.06);">
-                <label class="admin-switch-wrap" onclick="adminToggleItemAvailable(${item.id})">
-                  <div class="admin-toggle-switch">
-                    <input type="checkbox" ${isAvail ? 'checked' : ''} onchange="adminToggleItemAvailable(${item.id})">
-                    <span class="admin-slider"></span>
-                  </div>
-                  <span style="font-size:11px; font-weight:600; color:${isAvail ? '#34D399' : '#F87171'};">
-                    ${isAvail ? 'พร้อมขาย' : 'หมด'}
+                <button type="button" class="admin-toggle-btn ${isAvail ? 'is-available' : 'is-out'}" onclick="adminToggleItemAvailable('${item.id}', event)" title="แตะเพื่อสลับสถานะ พร้อมขาย / สินค้าหมด">
+                  <span class="admin-toggle-track">
+                    <span class="admin-toggle-thumb"></span>
                   </span>
-                </label>
+                  <span>${isAvail ? 'พร้อมขาย' : 'สินค้าหมด'}</span>
+                </button>
 
                 <div style="display:flex; gap:6px;">
-                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:${isRec ? '#F59E0B' : '#64748B'}; background:${isRec ? 'rgba(245,158,11,0.15)' : '#1E293B'};" onclick="adminToggleItemRec(${item.id})" title="สลับเมนูขายดี">
+                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:${isRec ? '#F59E0B' : '#64748B'}; background:${isRec ? 'rgba(245,158,11,0.15)' : '#1E293B'};" onclick="adminToggleItemRec('${item.id}', event)" title="สลับเมนูขายดี">
                     <i class="fa-${isRec ? 'solid' : 'regular'} fa-star"></i>
                   </button>
-                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:#60A5FA; background:#1E293B;" onclick="adminOpenEditModal(${item.id})" title="แก้ไขเมนู">
+                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:#60A5FA; background:#1E293B;" onclick="adminOpenEditModal('${item.id}', event)" title="แก้ไขเมนู">
                     <i class="fa-solid fa-pen"></i>
                   </button>
-                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:#EF4444; background:#1E293B;" onclick="adminDeleteItem(${item.id})" title="ลบเมนู">
+                  <button class="admin-btn-icon" style="width:30px; height:30px; font-size:12px; color:#EF4444; background:#1E293B;" onclick="adminDeleteItem('${item.id}', event)" title="ลบเมนู">
                     <i class="fa-solid fa-trash-can"></i>
                   </button>
                 </div>
@@ -3303,29 +3373,168 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       }).join("");
     }
 
-    function adminToggleItemAvailable(id) {
-      const item = storeData.items.find(it => it.id == id);
+    function adminToggleItemAvailable(id, event) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      const item = storeData.items.find(it => String(it.id) === String(id));
       if (!item) return;
       item.isAvailable = (item.isAvailable === false) ? true : false;
       adminMarkDirty();
       renderAdminMenuList();
     }
 
-    function adminToggleItemRec(id) {
-      const item = storeData.items.find(it => it.id == id);
+    function adminToggleItemRec(id, event) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      const item = storeData.items.find(it => String(it.id) === String(id));
       if (!item) return;
       item.isRecommended = !item.isRecommended;
       adminMarkDirty();
       renderAdminMenuList();
     }
 
-    function adminDeleteItem(id) {
-      const item = storeData.items.find(it => it.id == id);
+    function adminDeleteItem(id, event) {
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      const item = storeData.items.find(it => String(it.id) === String(id));
       if (!item) return;
       if (confirm(`คุณต้องการลบเมนู "${item.name}" ใช่หรือไม่?`)) {
-        storeData.items = storeData.items.filter(it => it.id != id);
+        storeData.items = storeData.items.filter(it => String(it.id) !== String(id));
         adminMarkDirty();
         renderAdminMenuList();
+      }
+    }
+
+    function adminToggleHasAddons(checked) {
+      const wrap = document.getElementById("adminAddonsListWrap");
+      const badge = document.getElementById("adminAddonCountBadge");
+      if (wrap) wrap.style.display = checked ? "block" : "none";
+      if (badge) badge.style.display = checked ? "inline" : "none";
+      if (checked) {
+        const checkedCount = document.querySelectorAll(".admin-addon-chk:checked").length;
+        if (checkedCount === 0) {
+          adminSelectAllAddons(true);
+        } else {
+          adminUpdateSelectedAddonCount();
+        }
+      }
+    }
+
+    function adminRenderAddonsList(selectedIds = []) {
+      const listEl = document.getElementById("adminAddonsCheckboxes");
+      if (!listEl) return;
+      const allAddons = getActiveAddonItems();
+      const selectedSet = new Set(selectedIds.map(String));
+
+      if (allAddons.length === 0) {
+        listEl.innerHTML = `<div style="font-size:11px; color:#94A3B8; text-align:center; padding:8px;">ยังไม่มีท็อปปิ้งในระบบ กดปุ่ม + เพื่อเพิ่มใหม่ได้เลยครับ</div>`;
+        adminUpdateSelectedAddonCount();
+        return;
+      }
+
+      listEl.innerHTML = allAddons.map(addon => {
+        const isChecked = selectedSet.has(String(addon.id));
+        return `
+          <div style="display:flex; align-items:center; justify-content:space-between; background:#0F172A; padding:6px 10px; border-radius:6px; border:1px solid #334155;">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; flex:1; margin:0;">
+              <input type="checkbox" class="admin-addon-chk" data-id="${addon.id}" onchange="adminUpdateSelectedAddonCount()" ${isChecked ? "checked" : ""}>
+              <span style="font-size:12px; font-weight:500; color:#F8FAFC;">${addon.name}</span>
+              <span style="font-size:11px; color:#F59E0B; font-weight:600;">(+฿${addon.price})</span>
+            </label>
+            <button type="button" onclick="adminDeleteStoreAddon('${addon.id}')" title="ลบท็อปปิ้งนี้ออกจากร้าน" style="background:none; border:none; color:#94A3B8; font-size:11px; cursor:pointer; padding:3px 6px; border-radius:4px;" onmouseover="this.style.color='#EF4444'" onmouseout="this.style.color='#94A3B8'">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        `;
+      }).join("");
+
+      adminUpdateSelectedAddonCount();
+    }
+
+    function adminSelectAllAddons(selectAll) {
+      document.querySelectorAll(".admin-addon-chk").forEach(chk => {
+        chk.checked = !!selectAll;
+      });
+      adminUpdateSelectedAddonCount();
+    }
+
+    function adminUpdateSelectedAddonCount() {
+      const total = document.querySelectorAll(".admin-addon-chk").length;
+      const count = document.querySelectorAll(".admin-addon-chk:checked").length;
+      const badge = document.getElementById("adminAddonCountBadge");
+      if (badge) {
+        badge.textContent = `${count}/${total} ตัวเลือก`;
+      }
+    }
+
+    function adminToggleAddonForm() {
+      const form = document.getElementById("adminNewAddonForm");
+      if (!form) return;
+      const isHidden = (form.style.display === "none" || !form.style.display);
+      form.style.display = isHidden ? "flex" : "none";
+      if (isHidden) {
+        const nameInput = document.getElementById("adminNewAddonName");
+        if (nameInput) nameInput.focus();
+      }
+    }
+
+    function adminAddNewStoreAddon() {
+      const nameInput = document.getElementById("adminNewAddonName");
+      const priceInput = document.getElementById("adminNewAddonPrice");
+      const name = nameInput.value.trim();
+      const price = parseFloat(priceInput.value);
+
+      if (!name) {
+        alert("กรุณาระบุชื่อท็อปปิ้ง เช่น 🍳 ไข่ดาว หรือ 🧀 ชีส");
+        return;
+      }
+      if (isNaN(price) || price < 0) {
+        alert("กรุณาระบุราคาท็อปปิ้งที่ถูกต้องครับ (ระบุ 0 ได้ถ้าฟรี)");
+        return;
+      }
+
+      if (!Array.isArray(storeData.addonItems) || storeData.addonItems.length === 0) {
+        storeData.addonItems = JSON.parse(JSON.stringify(getActiveAddonItems()));
+      }
+
+      const newId = "addon_" + Date.now();
+      storeData.addonItems.push({
+        id: newId,
+        name: name,
+        price: price
+      });
+
+      const currentlyChecked = Array.from(document.querySelectorAll(".admin-addon-chk:checked")).map(c => c.dataset.id);
+      currentlyChecked.push(newId);
+
+      nameInput.value = "";
+      priceInput.value = "";
+      document.getElementById("adminNewAddonForm").style.display = "none";
+
+      adminRenderAddonsList(currentlyChecked);
+      adminMarkDirty();
+    }
+
+    function adminDeleteStoreAddon(addonId) {
+      if (!Array.isArray(storeData.addonItems) || storeData.addonItems.length === 0) {
+        storeData.addonItems = JSON.parse(JSON.stringify(getActiveAddonItems()));
+      }
+      const addon = storeData.addonItems.find(a => String(a.id) === String(addonId));
+      if (!addon) return;
+
+      if (confirm(`คุณต้องการลบท็อปปิ้ง "${addon.name}" ออกจากระบบของร้านใช่หรือไม่?`)) {
+        storeData.addonItems = storeData.addonItems.filter(a => String(a.id) !== String(addonId));
+        const currentlyChecked = Array.from(document.querySelectorAll(".admin-addon-chk:checked"))
+          .map(c => c.dataset.id)
+          .filter(id => id !== String(addonId));
+        adminRenderAddonsList(currentlyChecked);
+        adminMarkDirty();
       }
     }
 
@@ -3342,7 +3551,12 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       document.getElementById("adminSideWrap").style.display = "none";
       document.getElementById("adminEditSideNormal").value = "";
       document.getElementById("adminEditSideSpecial").value = "";
+      
       document.getElementById("adminEditHasAddons").checked = false;
+      document.getElementById("adminAddonsListWrap").style.display = "none";
+      document.getElementById("adminAddonCountBadge").style.display = "none";
+      adminRenderAddonsList(getActiveAddonItems().map(a => String(a.id)));
+
       document.getElementById("adminEditImageUrl").value = "";
       document.getElementById("adminImgPreviewWrap").style.display = "none";
       document.getElementById("adminEditIsRec").checked = (adminCurrentCategory === "เมนูขายดี");
@@ -3372,7 +3586,19 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       document.getElementById("adminEditSideNormal").value = item.sideDishNormalPrice || "";
       document.getElementById("adminEditSideSpecial").value = item.sideDishSpecialPrice || "";
 
-      document.getElementById("adminEditHasAddons").checked = !!item.hasAddons;
+      const hasAddons = !!item.hasAddons;
+      document.getElementById("adminEditHasAddons").checked = hasAddons;
+      document.getElementById("adminAddonsListWrap").style.display = hasAddons ? "block" : "none";
+      document.getElementById("adminAddonCountBadge").style.display = hasAddons ? "inline" : "none";
+
+      let selectedIds = [];
+      if (item.selectedAddonIds !== undefined && item.selectedAddonIds !== null && String(item.selectedAddonIds).trim() !== "") {
+        selectedIds = String(item.selectedAddonIds).split(",").map(s => s.trim()).filter(Boolean);
+      } else if (hasAddons) {
+        selectedIds = getActiveAddonItems().map(a => String(a.id));
+      }
+      adminRenderAddonsList(selectedIds);
+
       document.getElementById("adminEditImageUrl").value = item.imageUrl || "";
       adminPreviewImg(item.imageUrl);
 
@@ -3443,17 +3669,23 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       const sideNormal = hasSide ? (parseFloat(document.getElementById("adminEditSideNormal").value) || null) : null;
       const sideSpecial = hasSide ? (parseFloat(document.getElementById("adminEditSideSpecial").value) || null) : null;
       const hasAddons = document.getElementById("adminEditHasAddons").checked;
+      let selectedAddonIds = "";
+      if (hasAddons) {
+        selectedAddonIds = Array.from(document.querySelectorAll(".admin-addon-chk:checked"))
+          .map(el => el.dataset.id)
+          .join(",");
+      }
       const imageUrl = document.getElementById("adminEditImageUrl").value.trim();
       const isRecommended = document.getElementById("adminEditIsRec").checked;
       const isAvailable = document.getElementById("adminEditIsAvail").checked;
 
       if (idVal) {
-        const item = storeData.items.find(it => it.id == idVal);
+        const item = storeData.items.find(it => String(it.id) === String(idVal));
         if (item) {
           Object.assign(item, {
             name, category, normalPrice, specialPrice, hasSpecialPrice: hasSpecial,
             hasSideDish: hasSide, sideDishNormalPrice: sideNormal, sideDishSpecialPrice: sideSpecial,
-            hasAddons, imageUrl, isRecommended, isAvailable
+            hasAddons, selectedAddonIds, imageUrl, isRecommended, isAvailable
           });
         }
       } else {
@@ -3461,14 +3693,14 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
         storeData.items.unshift({
           id: newId, name, category, normalPrice, specialPrice, hasSpecialPrice: hasSpecial,
           hasSideDish: hasSide, sideDishNormalPrice: sideNormal, sideDishSpecialPrice: sideSpecial,
-          hasAddons, imageUrl, isRecommended, isAvailable
+          hasAddons, selectedAddonIds, imageUrl, isRecommended, isAvailable
         });
       }
 
       closeModal("adminItemEditModal");
       adminMarkDirty();
       renderAdminMenuList();
-      alert("บันทึกเมนูสำเร็จแล้ว! กรุณากดปุ่มก้อนเมฆ ☁️ ที่มุมบนเพื่ออัปเดตขึ้น Google Sheets และหน้าเว็บครับ");
+      showToast("✅ บันทึกเมนูนี้เรียบร้อย (แก้ไขต่อได้เลย เมื่อเสร็จแล้วกดปุ่มก้อนเมฆ ☁️)");
     }
 
     function adminOpenStoreSettingsModal() {
@@ -3506,7 +3738,7 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       closeModal("adminStoreSettingsModal");
       adminMarkDirty();
       renderAdminStatusBar();
-      alert("บันทึกการตั้งค่าร้านแล้ว! อย่าลืมกดปุ่มก้อนเมฆ ☁️ ด้านบนเพื่อซิงค์ข้อมูลขึ้น Google Sheets ครับ");
+      showToast("✅ บันทึกการตั้งค่าร้านแล้ว (กดก้อนเมฆ ☁️ เพื่อส่งขึ้นระบบ)");
     }
 
     function adminMarkDirty() {
@@ -3514,7 +3746,16 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       const syncBtn = document.getElementById("adminSyncBtn");
       const warning = document.getElementById("adminDirtyWarning");
       if (syncBtn) syncBtn.classList.add("dirty");
-      if (warning) warning.style.display = "inline";
+      if (warning) {
+        warning.style.display = "inline";
+        warning.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> มีข้อมูลรอซิงค์ (กดปุ่มก้อนเมฆ ☁️ ด้านบนเมื่อแก้ไขครบแล้ว)`;
+      }
+      // 💾 บันทึกการแก้ไขลง localStorage ทันที ป้องกันข้อมูลหายเวลาแก้ไขหลายรายการหรือสลับหน้าจอ
+      try {
+        localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(storeData));
+      } catch (e) {
+        console.warn("Failed to save draft:", e);
+      }
     }
 
     async function adminSyncToCloud() {
