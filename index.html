@@ -1675,21 +1675,39 @@
     </button>
   </div>
 
-  <!-- 🔒 Security Token Auth Dialog -->
+  <!-- 🔒 Security Token Auth Dialog (หน้าต่างลอยใส่รหัสเข้าสู่ระบบจัดการร้าน) -->
   <div id="adminAuthModal" class="modal-overlay" style="z-index:10050;">
-    <div class="modal-content" style="background:#111827; border:1px solid #1E2D4A; color:#fff; max-width:380px; text-align:center;">
-      <div style="margin-bottom:12px;"><i class="fa-solid fa-shield-halved" style="font-size:36px; color:#F59E0B;"></i></div>
-      <h3 style="color:#fff; margin-bottom:6px;">เข้าสู่ระบบจัดการร้าน</h3>
-      <p style="font-size:12px; color:#94A3B8; margin-bottom:16px;">กรุณากรอก Security Token เพื่อยืนยันว่าเป็นเจ้าของร้าน</p>
-      <div style="position:relative; margin-bottom:14px;">
-        <input type="password" id="adminTokenInput" class="form-input" placeholder="ใส่รหัส Security Token" value="KRUA_ONSON_SECRET_2026" onkeydown="if(event.key==='Enter') verifyAdminToken();" style="background:#1E293B; border:1px solid #334155; color:#fff; text-align:center; font-size:14px; padding-right:40px;">
-        <button type="button" onclick="toggleTokenVisibility()" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; color:#94A3B8; cursor:pointer;" title="แสดง/ซ่อนรหัส">
+    <div class="modal-content" style="background:#111827; border:1px solid #1E2D4A; color:#fff; max-width:390px; text-align:center; padding:22px 18px; border-radius:18px; box-shadow:0 12px 36px rgba(0,0,0,0.65);">
+      <div style="margin-bottom:10px;">
+        <div style="display:inline-flex; align-items:center; justify-content:center; width:60px; height:60px; border-radius:50%; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.3);">
+          <i class="fa-solid fa-shield-halved" style="font-size:28px; color:#F59E0B;"></i>
+        </div>
+      </div>
+      <h3 style="color:#fff; margin-bottom:4px; font-size:18px; font-weight:700;">เข้าสู่ระบบจัดการร้าน</h3>
+      <p style="font-size:12px; color:#94A3B8; margin-bottom:14px; line-height:1.5;">กรุณากรอกรหัส Security Token ก่อนเข้าหน้าแก้ไขเมนูและสถานะร้าน</p>
+
+      <div id="adminAuthError" style="display:none; background:rgba(239,68,68,0.18); border:1px solid #EF4444; color:#FCA5A5; padding:8px 12px; border-radius:8px; font-size:12px; margin-bottom:12px; text-align:center;"></div>
+
+      <div style="position:relative; margin-bottom:12px;">
+        <input type="password" id="adminTokenInput" class="form-input" placeholder="ใส่รหัส Security Token" onkeydown="if(event.key==='Enter') verifyAdminToken();" style="background:#1E293B; border:1px solid #334155; color:#fff; text-align:center; font-size:14px; padding:12px 40px 12px 14px; letter-spacing:1px; width:100%; border-radius:10px;">
+        <button type="button" onclick="toggleTokenVisibility()" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:#94A3B8; cursor:pointer; padding:6px; font-size:15px;" title="แสดง/ซ่อนรหัส">
           <i id="tokenEyeIcon" class="fa-solid fa-eye"></i>
         </button>
       </div>
+
+      <label style="display:flex; align-items:center; justify-content:center; gap:8px; font-size:12px; color:#CBD5E1; margin-bottom:12px; cursor:pointer; user-select:none;">
+        <input type="checkbox" id="adminRememberMe" checked style="accent-color:#F59E0B; width:16px; height:16px; cursor:pointer;">
+        <span>จดจำการเข้าสู่ระบบบนเครื่องนี้ (ครั้งต่อไปไม่ต้องใส่รหัส)</span>
+      </label>
+
+      <div style="background:#0F172A; border:1px dashed #334155; border-radius:8px; padding:8px 10px; margin-bottom:14px; font-size:11px; color:#94A3B8;">
+        รหัสมาตรฐาน: <code style="background:#1E293B; color:#F59E0B; padding:2px 6px; border-radius:4px; font-family:monospace; user-select:all; cursor:pointer;" onclick="document.getElementById('adminTokenInput').value='KRUA_ONSON_SECRET_2026'; if(document.getElementById('adminAuthError')) document.getElementById('adminAuthError').style.display='none';" title="แตะเพื่อกรอกอัตโนมัติ">KRUA_ONSON_SECRET_2026</code>
+        <div style="font-size:10px; color:#64748B; margin-top:2px;">(แตะที่รหัสสีเหลืองเพื่อกรอกอัตโนมัติ)</div>
+      </div>
+
       <div style="display:flex; gap:10px;">
-        <button class="btn-secondary" onclick="closeModal('adminAuthModal')" style="flex:1; padding:10px; background:#1E293B; color:#94A3B8; border:1px solid #334155; border-radius:10px; cursor:pointer;">ยกเลิก</button>
-        <button class="confirm-btn" onclick="verifyAdminToken()" style="flex:1; padding:10px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer;">เข้าสู่ระบบ</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('adminAuthModal')" style="flex:1; padding:12px; background:#1E293B; color:#94A3B8; border:1px solid #334155; border-radius:10px; cursor:pointer; font-size:14px; font-weight:600;">ยกเลิก</button>
+        <button type="button" class="confirm-btn" onclick="verifyAdminToken()" style="flex:1; padding:12px; background:#F59E0B; color:#000; font-weight:700; border-radius:10px; border:none; cursor:pointer; font-size:14px;">เข้าสู่ระบบ</button>
       </div>
     </div>
   </div>
@@ -3139,9 +3157,8 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       return t || DEFAULT_SECURITY_TOKEN;
     }
 
-    // อ่านค่า Token และทำความสะอาดทันที เพื่อแก้ไขกรณีบันทึกคำว่า 'Security Token:' ค้างไว้
-    let adminSecurityToken = sanitizeSecurityToken(localStorage.getItem("admin_security_token") || DEFAULT_SECURITY_TOKEN);
-    localStorage.setItem("admin_security_token", adminSecurityToken);
+    // อ่านค่า Token จากหน่วยความจำของเครื่อง (ถ้ามี)
+    let adminSecurityToken = sanitizeSecurityToken(localStorage.getItem("admin_security_token") || sessionStorage.getItem("admin_security_token") || "");
 
     let adminCurrentCategory = "all";
     let adminSearchQuery = "";
@@ -3179,34 +3196,88 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       }
     }
 
+    // 🔒 เปิดโหมด Admin: หากเครื่องนี้เคยล็อกอินแล้ว จะเข้าหน้าจัดการทันทีโดยไม่ต้องใส่รหัสอีก
+    // หากยังไม่เคยล็อกอิน หรือกด Logout ไปแล้ว จะมีหน้าต่างลอยถาม Security Token ขึ้นมาก่อน
     function openAdminPortal() {
-      const saved = localStorage.getItem("admin_security_token");
-      if (!saved) {
+      const isLocalAuth = localStorage.getItem("admin_authenticated") === "true";
+      const isSessionAuth = sessionStorage.getItem("admin_authenticated") === "true";
+      const savedToken = localStorage.getItem("admin_security_token") || sessionStorage.getItem("admin_security_token");
+
+      if ((isLocalAuth || isSessionAuth) && savedToken && savedToken.trim().length > 0) {
+        adminSecurityToken = sanitizeSecurityToken(savedToken);
+        launchAdminView();
+      } else {
+        // ยังไม่ได้ล็อกอิน หรือกดออกจากระบบไปแล้ว -> เปิดหน้าต่างลอยให้กรอกรหัส Token
+        const errBox = document.getElementById("adminAuthError");
+        if (errBox) {
+          errBox.style.display = "none";
+          errBox.textContent = "";
+        }
+        const inp = document.getElementById("adminTokenInput");
+        if (inp) {
+          inp.value = "";
+          inp.type = "password";
+          const icon = document.getElementById("tokenEyeIcon");
+          if (icon) icon.className = "fa-solid fa-eye";
+        }
         openModal("adminAuthModal");
         setTimeout(() => {
           const inp = document.getElementById("adminTokenInput");
-          if (inp) {
-            inp.value = DEFAULT_SECURITY_TOKEN;
-            inp.focus();
-            inp.select();
-          }
+          if (inp) inp.focus();
         }, 150);
-      } else {
-        adminSecurityToken = sanitizeSecurityToken(saved);
-        launchAdminView();
       }
     }
 
+    // 🔒 ตรวจสอบรหัส Token และบันทึกการจดจำอุปกรณ์
     function verifyAdminToken() {
       const inp = document.getElementById("adminTokenInput");
+      const errBox = document.getElementById("adminAuthError");
+      const rememberCheckbox = document.getElementById("adminRememberMe");
       const rawVal = inp ? inp.value.trim() : "";
+
       if (!rawVal) {
-        alert("กรุณากรอก Security Token ครับ");
+        if (errBox) {
+          errBox.textContent = "กรุณากรอกรหัส Security Token ครับ";
+          errBox.style.display = "block";
+        } else {
+          alert("กรุณากรอก Security Token ครับ");
+        }
+        if (inp) inp.focus();
         return;
       }
-      adminSecurityToken = sanitizeSecurityToken(rawVal);
-      localStorage.setItem("admin_security_token", adminSecurityToken);
+
+      const cleanToken = sanitizeSecurityToken(rawVal);
+
+      // ตรวจสอบความถูกต้องของ Token
+      if (cleanToken !== DEFAULT_SECURITY_TOKEN && cleanToken.length < 5) {
+        if (errBox) {
+          errBox.textContent = "❌ Security Token ไม่ถูกต้อง กรุณาตรวจสอบรหัสอีกครั้งครับ";
+          errBox.style.display = "block";
+        } else {
+          alert("❌ Security Token ไม่ถูกต้อง กรุณาตรวจสอบรหัสอีกครั้งครับ");
+        }
+        if (inp) {
+          inp.focus();
+          inp.select();
+        }
+        return;
+      }
+
+      adminSecurityToken = cleanToken;
+      const shouldRemember = rememberCheckbox ? rememberCheckbox.checked : true;
+
+      if (shouldRemember) {
+        localStorage.setItem("admin_security_token", adminSecurityToken);
+        localStorage.setItem("admin_authenticated", "true");
+      } else {
+        sessionStorage.setItem("admin_security_token", adminSecurityToken);
+        sessionStorage.setItem("admin_authenticated", "true");
+        localStorage.removeItem("admin_security_token");
+        localStorage.removeItem("admin_authenticated");
+      }
+
       closeModal("adminAuthModal");
+      showToast(shouldRemember ? "✅ เข้าสู่ระบบสำเร็จ (ระบบจะจดจำเครื่องนี้ไว้ในครั้งถัดไป)" : "✅ เข้าสู่ระบบสำเร็จ", "success");
       launchAdminView();
     }
 
@@ -3233,13 +3304,26 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
       updateDynamicSEO();
     }
 
+    // 🚪 ออกจากระบบ Admin: ล้างข้อมูล Token และสถานะการจดจำ เพื่อให้ครั้งถัดไปต้องใส่รหัสใหม่
     function adminLogout() {
-      if (confirm("ต้องการออกจากระบบจัดการร้าน และล้างรหัส Token ใช่หรือไม่?")) {
-        localStorage.removeItem("admin_security_token");
-        adminSecurityToken = DEFAULT_SECURITY_TOKEN;
-        closeAdminPortal();
-        alert("ออกจากระบบจัดการร้านเรียบร้อยแล้วครับ");
+      if (adminHasUnsavedChanges) {
+        if (!confirm("⚠️ มีข้อมูลที่แก้ไขแล้วแต่ยังไม่ได้บันทึกขึ้นระบบ (ยังไม่ได้กดก้อนเมฆ ☁️)\n\nหากออกจากระบบ ข้อมูลที่แก้ไขอาจสูญหาย\n\nต้องการออกจากระบบจัดการร้านหรือไม่?")) {
+          return;
+        }
+      } else {
+        if (!confirm("ต้องการออกจากระบบจัดการร้านครัวออนซอนใช่หรือไม่?\n\n(เมื่อออกจากระบบ ครั้งถัดไปที่เข้าโหมด Admin จะต้องใส่รหัส Token ใหม่อีกครั้ง)")) {
+          return;
+        }
       }
+
+      localStorage.removeItem("admin_security_token");
+      localStorage.removeItem("admin_authenticated");
+      sessionStorage.removeItem("admin_security_token");
+      sessionStorage.removeItem("admin_authenticated");
+      adminSecurityToken = "";
+
+      closeAdminPortal();
+      showToast("🚪 ออกจากระบบจัดการร้านเรียบร้อยแล้ว", "info");
     }
 
     function renderAdminStatusBar() {
@@ -3894,10 +3978,15 @@ const DEFAULT_STORE_DATA = {"isStoreOpen":true,"storeScheduleMode":"auto","store
           document.getElementById("adminDirtyWarning").style.display = "none";
           alert("🎉 อัปเดตข้อมูลขึ้น Google Sheets และหน้าเว็บสำเร็จเรียบร้อยแล้วครับ!");
         } else if (data && data.code === 401) {
+          localStorage.removeItem("admin_authenticated");
+          localStorage.removeItem("admin_security_token");
+          sessionStorage.removeItem("admin_authenticated");
+          sessionStorage.removeItem("admin_security_token");
           const reentered = prompt("❌ 401 Unauthorized: Security Token ไม่ถูกต้อง\n\n(รหัสมาตรฐานของร้านคือ: KRUA_ONSON_SECRET_2026)\n\nกรุณาใส่รหัส Security Token เพื่อซิงค์ข้อมูลใหม่อีกครั้ง:", DEFAULT_SECURITY_TOKEN);
           if (reentered) {
             adminSecurityToken = sanitizeSecurityToken(reentered);
             localStorage.setItem("admin_security_token", adminSecurityToken);
+            localStorage.setItem("admin_authenticated", "true");
             adminSyncToCloud();
             return;
           }
